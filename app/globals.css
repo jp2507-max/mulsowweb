@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-/* Tailwind v4 theme tokens */
 @theme {
   /* Brand colors (modern sports palette) */
   --color-brand-primary: #C1121F;
@@ -24,7 +23,7 @@
   --color-success: #10B981;
   --color-warning: #F59E0B;
 
-  /* Breakpoints (Tailwind v4 tokens) */
+  /* Breakpoints */
   --breakpoint-sm: 40rem;   /* 640px */
   --breakpoint-md: 48rem;   /* 768px */
   --breakpoint-lg: 64rem;   /* 1024px */
@@ -79,5 +78,172 @@ h1, h2, h3, h4, h5, h6 {
   /* Page container */
   .container-site {
     @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8;
+  }
+
+  /* Hero Section - Performance Optimized for LCP */
+  .hero-section {
+    @apply relative overflow-hidden;
+    /* Optimized padding - not forcing full viewport for better LCP positioning */
+    padding: clamp(4rem, 12vw, 8rem) 0;
+    /* Reasonable min-height that doesn't push content below fold */
+    min-height: clamp(500px, 70vh, 700px);
+  }
+
+  .hero-bg {
+    @apply absolute inset-0 -z-10;
+  }
+
+  /* Subtle CSS-only gradients - 2024 organic trend */
+  .hero-gradient-1 {
+    @apply absolute top-0 left-0 w-full h-full;
+    background: linear-gradient(135deg, var(--color-brand-light) 0%, transparent 40%);
+    opacity: 0.3;
+  }
+
+  .hero-gradient-2 {
+    @apply absolute bottom-0 right-0 w-4/5 h-4/5;
+    background: linear-gradient(45deg, var(--color-neutral-100) 0%, transparent 70%);
+    opacity: 0.5;
+  }
+
+  /* Modern organic shapes - performance-friendly CSS */
+  .hero-shape-1 {
+    @apply absolute -top-32 -right-32;
+    width: clamp(300px, 40vw, 500px);
+    height: clamp(300px, 40vw, 500px);
+    background: linear-gradient(135deg, var(--color-brand-accent), var(--color-brand-primary));
+    opacity: 0.05;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: rotate(15deg);
+  }
+
+  .hero-shape-2 {
+    @apply absolute -bottom-20 -left-20;
+    width: clamp(200px, 25vw, 320px);
+    height: clamp(200px, 25vw, 320px);
+    background: linear-gradient(45deg, var(--color-brand-light), var(--color-neutral-200));
+    opacity: 0.08;
+    border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+  }
+
+  .hero-content {
+    @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8 relative z-10 text-center flex flex-col justify-center;
+    min-height: clamp(400px, 50vh, 500px);
+  }
+
+  .hero-text {
+    @apply mb-10 md:mb-14 lg:mb-16;
+  }
+
+  /* Bold, athletic typography - 2024 sports design trend */
+  .hero-title {
+    @apply font-black leading-none mb-6;
+    /* Responsive typography using clamp for better performance */
+    font-size: clamp(3rem, 8vw, 6rem);
+    letter-spacing: -0.03em;
+    font-family: var(--font-heading);
+  }
+
+  .hero-title-main {
+    @apply block mb-2;
+    /* Modern gradient text effect - 2024 trend */
+    background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-accent) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Subtle text shadow for depth */
+    filter: drop-shadow(0 2px 4px rgba(193, 18, 31, 0.1));
+  }
+
+  .hero-title-subtitle {
+    @apply block text-ink-primary font-semibold;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+  }
+
+  .hero-subtitle {
+    @apply text-ink-secondary max-w-4xl mx-auto leading-relaxed;
+    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+    font-weight: 400;
+    font-family: var(--font-body);
+  }
+
+  /* Three CTA grid - modern sports organization pattern */
+  .hero-ctas {
+    @apply grid gap-4 md:gap-6 max-w-5xl mx-auto;
+    /* Responsive grid: stacked on mobile, 3 columns on desktop */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  @media (min-width: 768px) {
+    .hero-ctas {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .hero-cta {
+    @apply w-full transform transition-all duration-200;
+  }
+
+  .hero-cta-primary {
+    @apply hover:scale-105 hover:shadow-2xl;
+  }
+
+  .hero-cta-secondary {
+    @apply hover:scale-105 hover:shadow-lg;
+  }
+
+  .hero-cta-tertiary {
+    @apply hover:scale-105 hover:shadow-md;
+  }
+
+  .hero-cta-icon {
+    @apply w-5 h-5 mr-3 flex-shrink-0;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-cta {
+      @apply hover:scale-100;
+    }
+    .card-hover {
+      @apply hover:scale-100;
+    }
+    .btn-primary {
+      @apply active:scale-100;
+    }
+    .btn-outline {
+      @apply active:scale-100;
+    }
+  }
+
+  /* Enhanced focus states for accessibility */
+  .hero-cta:focus-visible {
+    @apply ring-4 ring-brand-primary ring-offset-4;
+  }
+
+  /* Smooth animations for sponsor teaser */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeInUp {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  /* Line clamp utility for sponsor descriptions */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }

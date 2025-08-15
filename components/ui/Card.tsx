@@ -1,4 +1,6 @@
 import * as React from "react";
+import { cx } from "@/lib/utils/cx";
+import { secureRel } from "../../lib/utils/secure-rel";
 
 export interface CardProps {
   title?: string;
@@ -8,20 +10,6 @@ export interface CardProps {
   children?: React.ReactNode;
   className?: string;
   hover?: boolean; // apply interactive hover styles
-}
-
-function cx(...classes: Array<string | false | null | undefined>): string {
-  return classes.filter(Boolean).join(" ");
-}
-
-function secureRel(rel: string | undefined, target?: React.HTMLAttributeAnchorTarget): string | undefined {
-  if (target === "_blank") {
-    const base = rel ? rel.split(/\s+/) : [];
-    if (!base.includes("noopener")) base.push("noopener");
-    if (!base.includes("noreferrer")) base.push("noreferrer");
-    return base.join(" ");
-  }
-  return rel;
 }
 
 export function Card({ title, href, target, rel, children, className, hover }: CardProps) {

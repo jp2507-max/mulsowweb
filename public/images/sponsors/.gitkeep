@@ -1,0 +1,11 @@
+# Sponsor logos directory
+# 
+# This directory will contain sponsor logo files in PNG or SVG format.
+# Logo files should be named using the sponsor ID from app/data/sponsors.ts
+# 
+# Example:
+# - autohaus-mueller.png
+# - baeckerei-schmidt.svg
+# - sparkasse-regional.png
+# 
+# Logos should be optimized for web use and maintain consistent sizing.

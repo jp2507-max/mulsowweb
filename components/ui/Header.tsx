@@ -3,10 +3,6 @@ import * as React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-function cx(...classes: Array<string | false | null | undefined>): string {
-  return classes.filter(Boolean).join(" ");
-}
-
 const navItems = [
   { label: "Spielplan", href: "/spielplan" },
   { label: "Sponsoren", href: "/sponsoren" },
@@ -16,25 +12,69 @@ const navItems = [
   { label: "Fanshop", href: "/fanshop" },
 ] as const;
 
-export interface HeaderProps {
-  className?: string;
-}
-
-export function Header({ className }: HeaderProps) {
+export function Header() {
   const pathname = usePathname() || "/";
   const normalize = (p: string) => (p !== "/" && p.endsWith("/") ? p.slice(0, -1) : p);
 
   return (
-    <header className={cx("border-b border-neutral-200 bg-white/80 backdrop-blur", className)}>
-      <div className="container-site py-4 md:py-5">
-        <div className="flex items-center justify-between gap-6">
-          <Link href="/" className="inline-flex items-baseline gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded-md">
-            <span className="text-xl md:text-2xl font-bold" style={{ fontFamily: "var(--font-heading)" }}>Mulsower SV 61</span>
+    <header 
+      style={{
+        borderBottom: '1px solid #E2E8F0',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        backdropFilter: 'blur(8px)'
+      }}
+    >
+      <div 
+        style={{
+          maxWidth: '1280px',
+          margin: '0 auto',
+          padding: '1rem 1.5rem'
+        }}
+      >
+        <div 
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: '1.5rem'
+          }}
+        >
+          <Link 
+            href="/" 
+            style={{
+              display: 'inline-flex',
+              alignItems: 'baseline',
+              gap: '0.5rem',
+              textDecoration: 'none',
+              borderRadius: '6px',
+              padding: '0.25rem'
+            }}
+          >
+            <span 
+              style={{ 
+                fontSize: 'clamp(1.25rem, 4vw, 1.5rem)',
+                fontWeight: 'bold',
+                fontFamily: 'var(--font-heading)',
+                color: '#0F172A'
+              }}
+            >
+              Mulsower SV 61
+            </span>
           </Link>
 
-          <nav aria-label="Hauptnavigation" className="">
+          <nav aria-label="Hauptnavigation">
             {/* Always-visible nav on small screens (no JS hamburger) */}
-            <ul className="flex flex-wrap items-center gap-3 md:gap-5">
+            <ul 
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                gap: 'clamp(0.75rem, 2vw, 1.25rem)',
+                listStyle: 'none',
+                margin: 0,
+                padding: 0
+              }}
+            >
               {navItems.map((item) => {
                 const isActive = normalize(pathname) === item.href;
                 return (
@@ -42,12 +82,26 @@ export function Header({ className }: HeaderProps) {
                     <Link
                       href={item.href}
                       aria-current={isActive ? "page" : undefined}
-                      className={cx(
-                        "px-2 py-1 rounded-md text-sm md:text-base transition-colors",
-                        "text-ink-secondary hover:text-ink-primary",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2",
-                        isActive && "text-brand-primary border-b-2 border-brand-primary"
-                      )}
+                      style={{
+                        padding: '0.5rem 0.75rem',
+                        borderRadius: '6px',
+                        fontSize: 'clamp(0.875rem, 2vw, 1rem)',
+                        transition: 'colors 0.2s',
+                        color: isActive ? '#C1121F' : '#475569',
+                        textDecoration: 'none',
+                        borderBottom: isActive ? '2px solid #C1121F' : 'none',
+                        fontWeight: isActive ? '600' : '400'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (!isActive) {
+                          e.currentTarget.style.color = '#0F172A';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive) {
+                          e.currentTarget.style.color = '#475569';
+                        }
+                      }}
                     >
                       {item.label}
                     </Link>

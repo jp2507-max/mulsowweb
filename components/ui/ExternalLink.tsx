@@ -1,17 +1,8 @@
 import * as React from "react";
+import { secureRel } from "../../lib/utils/secure-rel";
 
 export interface ExternalLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   children: React.ReactNode;
-}
-
-function secureRel(rel: string | undefined, target?: React.HTMLAttributeAnchorTarget): string | undefined {
-  if (target === "_blank") {
-    const base = rel ? rel.split(/\s+/) : [];
-    if (!base.includes("noopener")) base.push("noopener");
-    if (!base.includes("noreferrer")) base.push("noreferrer");
-    return base.join(" ");
-  }
-  return rel;
 }
 
 export const ExternalLink = React.forwardRef<HTMLAnchorElement, ExternalLinkProps>(
