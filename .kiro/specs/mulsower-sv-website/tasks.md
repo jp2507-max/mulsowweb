@@ -157,7 +157,10 @@
     - _Requirements: 11.1, 11.3_
 
 - [ ] 8. SEO and Metadata Implementation
-  - [ ] 8.1 Set up centralized site configuration
+  - [x] 8.1 Set up centralized site configuration
+
+
+
 
     - Create app/config/site.ts with base URL and site metadata
     - Define single OG image with correct dimensions for all pages
@@ -165,14 +168,23 @@
     - Add favicon and app icons as part of SEO/meta deliverables
     - _Requirements: 9.1, 9.2, 9.5, 7.6_
 
-  - [ ] 8.2 Implement App Router metadata for all pages
+  - [x] 8.2 Implement App Router metadata for all pages
+
+
+
+
+
     - Add unique titles and descriptions for each page
     - Configure Open Graph metadata using centralized config
     - Set up canonical URLs using base URL
     - Ensure proper meta tags for German content
     - _Requirements: 9.1, 9.2, 9.3, 9.4_
 
-  - [ ] 8.3 Create SEO infrastructure files
+  - [x] 8.3 Create SEO infrastructure files
+
+
+
+
     - Generate dynamic sitemap (app/sitemap.ts) using centralized base URL
     - Create static robots.txt file (app/robots.txt)
     - Ensure proper URL structure for static export

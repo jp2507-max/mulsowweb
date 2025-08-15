@@ -43,13 +43,23 @@ export function Header() {
             href="/" 
             style={{
               display: 'inline-flex',
-              alignItems: 'baseline',
-              gap: '0.5rem',
+              alignItems: 'center',
+              gap: '0.75rem',
               textDecoration: 'none',
               borderRadius: '6px',
               padding: '0.25rem'
             }}
           >
+            <img 
+              src="/logo.svg" 
+              alt="Mulsower SV 61 Wappen" 
+              style={{
+                width: 'clamp(2rem, 5vw, 2.5rem)',
+                height: 'clamp(2rem, 5vw, 2.5rem)',
+                flexShrink: 0
+              }}
+              loading="eager"
+            />
             <span 
               style={{ 
                 fontSize: 'clamp(1.25rem, 4vw, 1.5rem)',

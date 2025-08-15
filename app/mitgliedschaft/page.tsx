@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
+import { generatePageMetadata } from "../config/site";
 
 export const dynamic = "error";
 
-export const metadata: Metadata = {
-  title: "Mitgliedschaft - Mulsower SV 61",
-  description: "Werden Sie Mitglied beim Mulsower SV 61. Informationen zur Mitgliedschaft und Mitgliedsantrag zum Download.",
-};
+export const metadata: Metadata = generatePageMetadata({
+  title: "Mitgliedschaft & Aufnahmeantrag",
+  description: "Werden Sie Mitglied beim Mulsower SV 61. Informationen zur Vereinsmitgliedschaft, Beiträge und Aufnahmeantrag zum Download.",
+  path: "/mitgliedschaft"
+});
 
 export default function MembershipPage() {
   return (

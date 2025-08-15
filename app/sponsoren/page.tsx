@@ -1,13 +1,15 @@
 import { Metadata } from 'next';
 import { getAllSponsors } from '../data/sponsors';
 import { ExternalLink } from '../../components/ui/ExternalLink';
+import { generatePageMetadata } from '../config/site';
 
 export const dynamic = "error";
 
-export const metadata: Metadata = {
-  title: 'Sponsoren - Mulsower SV 61',
-  description: 'Unsere Sponsoren und Partner unterstützen den Mulsower SV 61. Erfahren Sie mehr über die Unternehmen, die unseren Verein fördern.',
-};
+export const metadata: Metadata = generatePageMetadata({
+  title: "Unsere Sponsoren & Partner",
+  description: "Unsere Sponsoren und Partner unterstützen den Mulsower SV 61. Erfahren Sie mehr über die lokalen Unternehmen, die unseren Amateurfußballverein fördern.",
+  path: "/sponsoren"
+});
 
 export default function SponsorsPage() {
   const sponsors = getAllSponsors();

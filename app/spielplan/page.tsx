@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
+import { generatePageMetadata } from "../config/site";
 
 export const dynamic = "error";
 
-export const metadata: Metadata = {
-  title: "Spielplan - Mulsower SV 61",
-  description: "Aktuelle Spielpläne und Ergebnisse des Mulsower SV 61 auf FUSSBALL.DE",
-};
+export const metadata: Metadata = generatePageMetadata({
+  title: "Spielplan & Ergebnisse",
+  description: "Aktuelle Spielpläne, Ergebnisse und Tabellenstände des Mulsower SV 61. Alle Termine und Spielberichte auf der offiziellen FUSSBALL.DE Plattform.",
+  path: "/spielplan"
+});
 
 export default function SchedulePage() {
   return (

@@ -135,15 +135,16 @@ export default function NotFoundPage() {
 
         {/* Browser Back Button */}
         <div className="text-center mt-12">
-          <button 
-            onClick={() => window.history.back()}
-            className="btn btn-ghost text-ink-tertiary hover:text-ink-primary"
+          <Button 
+            href="/"
+            variant="ghost"
+            className="text-ink-tertiary hover:text-ink-primary"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             Zurück zur vorherigen Seite
-          </button>
+          </Button>
         </div>
       </div>
     </main>

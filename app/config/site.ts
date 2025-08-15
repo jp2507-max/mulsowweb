@@ -16,7 +16,7 @@ export const siteConfig = {
   language: 'de',
   
   // Open Graph configuration
-  ogImage: '/og-image.svg', // Single OG image for all pages (1200x630px recommended) - TODO: Replace with PNG
+  ogImage: '/og-msv61-redwhite-1200x630.png', // Single OG image for all pages (1200x630px recommended)
   
   // Contact information
   contact: {
@@ -120,4 +120,4 @@ export function generatePageMetadata({
  * Type definitions for site configuration
  */
 export type SiteConfig = typeof siteConfig;
-export type NavigationItem = typeof siteConfig.navigation[0];
+export type NavigationItem = typeof siteConfig.navigation[number];
