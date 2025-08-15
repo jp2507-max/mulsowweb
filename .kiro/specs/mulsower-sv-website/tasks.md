@@ -185,6 +185,7 @@
 
 
 
+
     - Generate dynamic sitemap (app/sitemap.ts) using centralized base URL
     - Create static robots.txt file (app/robots.txt)
     - Ensure proper URL structure for static export
@@ -192,6 +193,10 @@
 
 - [ ] 9. Static Export Configuration and Server Setup
   - [ ] 9.1 Configure Next.js for static export
+
+
+
+
     - Set up next.config.mjs with output: 'export'
     - Configure trailingSlash: true (recommended for Apache)
     - Use plain `<img>` tags everywhere (no Next.js image optimization)
