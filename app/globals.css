@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/* Tailwind v4 theme tokens */
+@theme {
+  /* Brand colors (modern sports palette) */
+  --color-brand-primary: #C1121F;
+  --color-brand-secondary: #8B0000;
+  --color-brand-accent: #FF4444;
+  --color-brand-light: #FFE5E5;
+
+  /* Ink / text colors */
+  --color-ink-primary: #0F172A;
+  --color-ink-secondary: #475569;
+  --color-ink-tertiary: #94A3B8;
+
+  /* Neutral scale (subset) */
+  --color-neutral-50: #F8FAFC;
+  --color-neutral-100: #F1F5F9;
+  --color-neutral-200: #E2E8F0;
+  --color-neutral-800: #1E293B;
+  --color-neutral-900: #0F172A;
+
+  /* Success/Warning */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+
+  /* Breakpoints (Tailwind v4 tokens) */
+  --breakpoint-sm: 40rem;   /* 640px */
+  --breakpoint-md: 48rem;   /* 768px */
+  --breakpoint-lg: 64rem;   /* 1024px */
+  --breakpoint-xl: 80rem;   /* 1280px */
+}
+
+/* Global typography wiring to next/font variables set in app/layout.tsx */
+:root {
+  --font-body: var(--font-inter, ui-sans-serif, system-ui, sans-serif);
+  --font-heading: var(--font-oswald, ui-sans-serif, system-ui, sans-serif);
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink-primary);
+  background-color: var(--color-neutral-50);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Core utilities for buttons and cards */
+@layer utilities {
+  /* Button base and sizes */
+  .btn {
+    @apply inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+  .btn-sm { @apply px-4 py-2 text-sm; }
+  .btn-md { @apply px-5 py-3 text-base; }
+  .btn-lg { @apply px-6 py-4 text-lg; }
+
+  /* Button variants */
+  .btn-primary {
+    @apply bg-brand-primary text-white hover:bg-brand-secondary active:scale-95 focus-visible:ring-brand-primary shadow-lg hover:shadow-xl;
+  }
+  .btn-outline {
+    @apply border-2 border-brand-primary text-brand-primary bg-transparent hover:bg-brand-primary hover:text-white active:scale-95;
+  }
+  .btn-ghost {
+    @apply text-ink-primary hover:bg-neutral-100;
+  }
+
+  /* Card */
+  .card {
+    @apply bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200;
+  }
+  .card-hover {
+    @apply hover:shadow-xl hover:scale-[1.02] hover:border-brand-light transition-all duration-300;
+  }
+
+  /* Page container */
+  .container-site {
+    @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8;
+  }
+}
