@@ -1,20 +1,108 @@
+import type { Metadata } from "next";
+import { Button } from "@/components/ui/Button";
+
 export const dynamic = "error";
+
+export const metadata: Metadata = {
+  title: "Spielplan - Mulsower SV 61",
+  description: "Aktuelle Spielpläne und Ergebnisse des Mulsower SV 61 auf FUSSBALL.DE",
+};
 
 export default function SchedulePage() {
   return (
-    <main className="container-site py-10">
-      <h1 className="text-3xl font-bold mb-4">Spielplan</h1>
-      <p className="text-ink-secondary mb-6">
-        Der offizielle Spielplan ist auf FUSSBALL.DE verfügbar.
-      </p>
-      <a
-        className="btn btn-primary btn-md"
-        href="https://www.fussball.de/verein/mulsower-sv-61-mecklenburg-vorpommern/-/id/00ES8GNBNG000024VV0AG08LVUPGND5I#!/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Spielplan auf FUSSBALL.DE öffnen
-      </a>
+    <main className="container-site py-16 md:py-24">
+      <div className="max-w-4xl mx-auto text-center">
+        {/* Header Section */}
+        <div className="mb-12">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-ink-primary mb-6">
+            Spielplan & Ergebnisse
+          </h1>
+          <p className="text-lg md:text-xl text-ink-secondary leading-relaxed max-w-2xl mx-auto">
+            Alle aktuellen Spieltermine, Ergebnisse und Tabellenstände unserer Mannschaften 
+            findest du auf der offiziellen FUSSBALL.DE Plattform.
+          </p>
+        </div>
+
+        {/* CTA Section */}
+        <div className="mb-16">
+          <div className="card max-w-2xl mx-auto text-center">
+            <div className="mb-6">
+              <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-4">
+                Offizieller Spielplan
+              </h2>
+              <p className="text-ink-secondary">
+                Besuche unsere offizielle Vereinsseite auf FUSSBALL.DE für alle 
+                aktuellen Informationen zu Spielterminen und Ergebnissen.
+              </p>
+            </div>
+            
+            <Button
+              variant="primary"
+              size="lg"
+              href="https://www.fussball.de/verein/mulsower-sv-61-mecklenburg-vorpommern/-/id/00ES8GNBNG000024VV0AG08LVUPGND5I#!/"
+              target="_blank"
+              className="w-full sm:w-auto text-lg px-8 py-4 hover:scale-105 transition-transform duration-200"
+            >
+              <svg 
+                className="w-5 h-5 mr-3" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" 
+                />
+              </svg>
+              Spielplan auf FUSSBALL.DE öffnen
+            </Button>
+          </div>
+        </div>
+
+        {/* Additional Information */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="card text-left">
+            <h3 className="text-xl font-semibold font-heading text-ink-primary mb-3">
+              Was findest du dort?
+            </h3>
+            <ul className="text-ink-secondary space-y-2">
+              <li className="flex items-start">
+                <span className="text-brand-primary mr-2">•</span>
+                Aktuelle Spieltermine aller Mannschaften
+              </li>
+              <li className="flex items-start">
+                <span className="text-brand-primary mr-2">•</span>
+                Ergebnisse vergangener Spiele
+              </li>
+              <li className="flex items-start">
+                <span className="text-brand-primary mr-2">•</span>
+                Aktuelle Tabellenstände
+              </li>
+              <li className="flex items-start">
+                <span className="text-brand-primary mr-2">•</span>
+                Spielberichte und Statistiken
+              </li>
+            </ul>
+          </div>
+
+          <div className="card text-left">
+            <h3 className="text-xl font-semibold font-heading text-ink-primary mb-3">
+              Immer aktuell
+            </h3>
+            <p className="text-ink-secondary mb-4">
+              FUSSBALL.DE ist die offizielle Plattform des Deutschen Fußball-Bundes. 
+              Hier werden alle Spieltermine und Ergebnisse automatisch aktualisiert.
+            </p>
+            <p className="text-sm text-ink-tertiary">
+              Die Seite öffnet sich in einem neuen Tab, damit du jederzeit zu 
+              unserer Vereinsseite zurückkehren kannst.
+            </p>
+          </div>
+        </div>
+      </div>
     </main>
   );
 }

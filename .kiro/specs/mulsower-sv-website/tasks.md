@@ -110,14 +110,24 @@
     - _Requirements: 4.2, 4.3, 7.5_
 
 - [ ] 6. Schedule and External Integration Pages
-  - [ ] 6.1 Build schedule page (/spielplan) with clear CTA
+  - [x] 6.1 Build schedule page (/spielplan) with clear CTA
+
+
+
+
     - Create prominent CTA button linking to FUSSBALL.DE
     - Use modern button styling with hover effects
     - Ensure external link opens in new tab with `rel="noopener noreferrer"` security attributes
     - Add clear messaging about external schedule source
     - _Requirements: 1.2, 1.3, 1.4, 7.5_
 
-  - [ ] 6.2 Implement membership page (/mitgliedschaft)
+  - [x] 6.2 Implement membership page (/mitgliedschaft)
+
+
+
+
+
+
     - Design clean layout with membership information
     - Create download button for PDF membership application
     - Display club contact information (address and email)
@@ -125,14 +135,21 @@
     - _Requirements: 3.1, 3.3, 3.4_
 
 - [ ] 7. Legal and Error Pages
-  - [ ] 7.1 Create Impressum page with legal compliance
+  - [x] 7.1 Create Impressum page with legal compliance
+
+
+
+
     - Implement required German legal sections (§5 DDG, representation, etc.)
     - Mark incomplete sections as TODOs clearly
     - Display club address and email information
     - Ensure proper heading hierarchy and accessibility
     - _Requirements: 6.1, 6.2, 6.3_
 
-  - [ ] 7.2 Build custom 404 page (app/not-found.tsx)
+  - [x] 7.2 Build custom 404 page (app/not-found.tsx)
+
+
+
     - Create helpful 404 page with navigation options
     - Maintain consistent branding and layout
     - Add links back to main site sections
@@ -141,6 +158,7 @@
 
 - [ ] 8. SEO and Metadata Implementation
   - [ ] 8.1 Set up centralized site configuration
+
     - Create app/config/site.ts with base URL and site metadata
     - Define single OG image with correct dimensions for all pages
     - Set up German language configuration (`lang="de"` and `og:locale="de_DE"`)

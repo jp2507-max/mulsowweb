@@ -1,0 +1,24 @@
+{
+  "name": "Mulsower SV 61",
+  "short_name": "MSV 61",
+  "description": "Offizieller Internetauftritt des Mulsower SV 61 - Amateurfußballverein",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#C1121F",
+  "lang": "de",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
