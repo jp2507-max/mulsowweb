@@ -69,9 +69,14 @@ ErrorDocument 404 /404.html
 
 # Alternative cache control headers for better browser support
 <IfModule mod_headers.c>
-    # Cache static assets
-    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|webp|svg|woff|woff2|pdf)$">
+    # Cache static assets (long-lived) - exclude PDFs which have a shorter Expires
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|webp|svg|woff|woff2)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # PDFs: align Cache-Control with Expires (1 month)
+    <FilesMatch "\.(pdf)$">
+        Header set Cache-Control "public, max-age=2592000"
     </FilesMatch>
     
     # Don't cache HTML files

@@ -51,7 +51,11 @@ export function Header() {
             <nav aria-label="Hauptnavigation" role="navigation">
               <ul className="header-nav" role="list">
                 {navItems.map((item) => {
-                  const isActive = normalize(pathname) === item.href;
+                  // Normalize both the current pathname and the nav item's href so
+                  // trailing-slash differences don't prevent a match. This keeps
+                  // active-state behavior consistent for internal routes like
+                  // "/spielplan" vs "/spielplan/".
+                  const isActive = normalize(pathname) === normalize(item.href as string);
                   return (
                     <li key={String(item.href)} role="listitem">
                       {item.href && typeof item.href === 'string' && item.href.startsWith('http') ? (
