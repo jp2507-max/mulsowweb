@@ -122,13 +122,23 @@ ErrorDocument 404 /404.html
 ServerSignature Off
 
 # Prevent access to sensitive files
-<FilesMatch "^\.">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
-
-# Prevent access to backup and temporary files
-<FilesMatch "\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist)$">
-    Order allow,deny
-    Deny from all
-</FilesMatch>
+# Use Apache 2.4+ authz syntax with a 2.2 fallback for compatibility
+<IfModule mod_authz_core.c>
+    <FilesMatch "^\.">
+        Require all denied
+    </FilesMatch>
+    <FilesMatch "\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    # Fallback for Apache 2.2 and older
+    <FilesMatch "^\.">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+    <FilesMatch "\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>

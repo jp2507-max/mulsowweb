@@ -308,8 +308,19 @@ h6 {
     @apply w-5 h-5 mr-3 flex-shrink-0;
   }
 
-  /* Reduced motion support */
+  /* Comprehensive reduced motion support */
   @media (prefers-reduced-motion: reduce) {
+    /* Disable all transforms and animations */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* Specific component overrides */
     .hero-cta {
       @apply hover:scale-100;
     }
@@ -324,6 +335,26 @@ h6 {
 
     .btn-outline {
       @apply active:scale-100;
+    }
+
+    /* Disable fade animations */
+    .animate-fadeInUp {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    /* Disable page transitions */
+    body.fade-init,
+    body.fade-in {
+      opacity: 1 !important;
+      transition: none !important;
+    }
+
+    /* Disable hover effects that use transforms */
+    .hover-lift,
+    .hover-scale {
+      transform: none !important;
     }
   }
 
@@ -483,5 +514,52 @@ h6 {
     .card-hover {
       will-change: auto;
     }
+  }
+
+  /* Image performance optimizations */
+  img {
+    /* Prevent layout shift */
+    height: auto;
+    max-width: 100%;
+    
+    /* Optimize rendering */
+    image-rendering: auto;
+    
+    /* Prevent dragging for better UX */
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+  }
+
+  /* Lazy loading placeholder styles */
+  img[loading="lazy"] {
+    /* Smooth transition when image loads */
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  /* Optimize image containers */
+  .image-container {
+    /* Prevent layout shift */
+    position: relative;
+    overflow: hidden;
+  }
+
+  .image-container::before {
+    /* Aspect ratio placeholder */
+    content: '';
+    display: block;
+    width: 100%;
+    padding-bottom: var(--aspect-ratio, 56.25%); /* Default 16:9 */
+  }
+
+  .image-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }

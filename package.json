@@ -6,7 +6,12 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "analyze": "node scripts/analyze-bundle.js",
+    "build:analyze": "npm run build && npm run analyze",
+    "verify:performance": "node scripts/verify-performance.js",
+    "audit:final": "node scripts/final-audit.js",
+    "audit:full": "npm run build && npm run audit:final"
   },
   "dependencies": {
     "next": "15.4.6",

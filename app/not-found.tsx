@@ -52,7 +52,7 @@ export default function NotFoundPage() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <Button 
-                href="/spielplan" 
+                href="/spielplan/" 
                 variant="outline" 
                 size="md"
                 className="w-full"
@@ -64,7 +64,7 @@ export default function NotFoundPage() {
               </Button>
               
               <Button 
-                href="/sponsoren" 
+                href="/sponsoren/" 
                 variant="outline" 
                 size="md"
                 className="w-full"
@@ -76,7 +76,7 @@ export default function NotFoundPage() {
               </Button>
               
               <Button 
-                href="/mitgliedschaft" 
+                href="/mitgliedschaft/" 
                 variant="outline" 
                 size="md"
                 className="w-full"
@@ -88,7 +88,7 @@ export default function NotFoundPage() {
               </Button>
               
               <Button 
-                href="/impressum" 
+                href="/impressum/" 
                 variant="outline" 
                 size="md"
                 className="w-full"

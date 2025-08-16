@@ -245,7 +245,12 @@
     - Verify screen reader compatibility
     - _Requirements: 7.1, 7.2, 7.3, 7.4_
 
-  - [ ] 10.3 Add performance enhancements
+  - [x] 10.3 Add performance enhancements
+
+
+
+
+
     - Implement native lazy loading for images
     - Add reduced motion support for animations
     - Confirm next/font uses display behavior that avoids layout shift (CLS < 0.1)
@@ -253,7 +258,12 @@
     - _Requirements: 8.4, 8.5, 8.6_
 
 - [ ] 11. Final Integration and Deployment Preparation
-  - [ ] 11.1 Complete end-to-end testing
+  - [x] 11.1 Complete end-to-end testing
+
+
+
+
+
     - Test all navigation links and external redirects
     - Verify PDF download functionality
     - Check responsive design on all screen sizes
@@ -265,16 +275,26 @@
     - Content check: verify address/email correctness on /mitgliedschaft and /impressum
     - _Requirements: 8.3, 8.4, 12.4, 12.5_
 
-  - [ ] 11.2 Prepare deployment package
+  - [x] 11.2 Prepare deployment package
+
+
+
+
+
     - Generate static export build in /out directory
     - Verify all static assets are properly included
     - Checklist: .htaccess lives in deploy root next to index.html (NOT under public/)
     - Verify caching rules: HTML not long-cached, static assets long-cached
     - Upload to staging subdirectory/domain at IONOS to validate .htaccess before going live
-    - Create deployment checklist for IONOS upload
+    - Create deployment checklist for IONOS upload (verify with bravesearch)
     - _Requirements: 12.2, 12.3, 12.4_
 
-  - [ ] 11.3 Final performance and accessibility audit
+  - [x] 11.3 Final performance and accessibility audit
+
+
+
+
+
     - Run Lighthouse audit on all pages
     - Verify Core Web Vitals targets are met (including CLS < 0.1 font loading)
     - Test accessibility with automated tools

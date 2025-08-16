@@ -3,14 +3,15 @@ import * as React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cx } from "@/lib/utils/cx";
+import { Image } from "./Image";
 
 const navItems = [
-  { label: "Spielplan", href: "/spielplan" },
-  { label: "Sponsoren", href: "/sponsoren" },
-  { label: "Mitgliedschaft", href: "/mitgliedschaft" },
-  { label: "Impressum", href: "/impressum" },
+  { label: "Spielplan", href: "/spielplan/" },
+  { label: "Sponsoren", href: "/sponsoren/" },
+  { label: "Mitgliedschaft", href: "/mitgliedschaft/" },
+  { label: "Impressum", href: "/impressum/" },
   // Fanshop handled by server redirect via .htaccess
-  { label: "Fanshop", href: "/fanshop" },
+  { label: "Fanshop", href: "/fanshop/" },
 ] as const;
 
 export function Header() {
@@ -32,13 +33,13 @@ export function Header() {
               className="header-logo"
               aria-label="Mulsower SV 61 - Zur Startseite"
             >
-              <img 
+              <Image 
                 src="/logo.svg" 
                 alt="Mulsower SV 61 Vereinswappen" 
                 className="header-logo-image"
-                loading="eager"
-                width="40"
-                height="40"
+                priority={true}
+                width={40}
+                height={40}
               />
               <span className="header-logo-text">
                 Mulsower SV 61
@@ -58,7 +59,7 @@ export function Header() {
                           "header-nav-link",
                           isActive && "header-nav-link-active"
                         )}
-                        {...(item.href === "/fanshop" && {
+                        {...(item.href === "/fanshop/" && {
                           "aria-label": "Fanshop - Öffnet externe Website"
                         })}
                       >

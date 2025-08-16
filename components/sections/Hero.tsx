@@ -30,7 +30,7 @@ export function Hero() {
           <Button 
             variant="primary" 
             size="lg"
-            href="/spielplan"
+            href="/spielplan/"
             className="hero-cta hero-cta-primary"
             aria-label="Spielplan ansehen - Aktuelle Termine und Ergebnisse"
           >
@@ -51,7 +51,7 @@ export function Hero() {
           <Button 
             variant="outline" 
             size="lg"
-            href="/mitgliedschaft"
+            href="/mitgliedschaft/"
             className="hero-cta hero-cta-secondary"
             aria-label="Mitglied werden - Informationen zur Vereinsmitgliedschaft"
           >
@@ -72,7 +72,7 @@ export function Hero() {
           <Button 
             variant="ghost" 
             size="lg"
-            href="/fanshop"
+            href="/fanshop/"
             className="hero-cta hero-cta-tertiary"
             aria-label="Fanshop besuchen - Vereinsartikel und Merchandise"
           >

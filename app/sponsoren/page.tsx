@@ -114,7 +114,7 @@ export default function SponsorsPage() {
                 Kontaktieren Sie uns für weitere Informationen über Sponsoring-Möglichkeiten.
               </p>
               <a
-                href="/mitgliedschaft"
+                href="/mitgliedschaft/"
                 className="btn btn-lg btn-primary hover:scale-105 active:scale-95"
               >
                 Kontakt aufnehmen

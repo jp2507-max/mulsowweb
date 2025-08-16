@@ -13,7 +13,7 @@ export function Footer() {
     "Garvensdorfer Weg 8",
     "18233 Carinerland",
   ];
-  const email = "info@mulsower-sv.de";
+  const email = "info@mulsower-sv61.de";
 
   return (
     <footer 

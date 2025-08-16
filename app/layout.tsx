@@ -9,18 +9,20 @@ import { generatePageMetadata } from "./config/site";
 
 const inter = Inter({
   subsets: ['latin'],
-  display: 'swap',
+  display: 'swap', // Optimal for CLS - shows fallback immediately, swaps when loaded
   variable: '--font-inter',
   preload: true,
   fallback: ['system-ui', 'arial', 'sans-serif'],
+  adjustFontFallback: true, // Automatically adjust fallback metrics to match web font
 });
 
 const oswald = Oswald({
   subsets: ['latin'],
-  display: 'swap',
+  display: 'swap', // Optimal for CLS - shows fallback immediately, swaps when loaded
   variable: '--font-oswald',
   preload: true,
   fallback: ['system-ui', 'arial', 'sans-serif'],
+  adjustFontFallback: true, // Automatically adjust fallback metrics to match web font
 });
 
 export const metadata: Metadata = {
