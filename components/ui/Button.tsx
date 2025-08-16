@@ -44,6 +44,8 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
 
     if (href) {
       const anchorRel = secureRel(rel, target);
+      const isExternal = target === "_blank" || href.startsWith("http");
+      
       return (
         <a
           ref={ref as React.Ref<HTMLAnchorElement>}
@@ -52,9 +54,18 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
           rel={anchorRel}
           download={download}
           className={classes}
+          role="button"
+          {...(isExternal && !rest["aria-label"] && {
+            "aria-label": `${typeof children === "string" ? children : "Link"} - Öffnet in neuem Tab`
+          })}
           {...(rest as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
         >
           {children}
+          {isExternal && (
+            <span className="sr-only">
+              (öffnet in neuem Tab)
+            </span>
+          )}
         </a>
       );
     }
@@ -63,6 +74,7 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
       <button
         ref={ref as React.Ref<HTMLButtonElement>}
         className={classes}
+        type={rest.type || "button"}
         {...rest}
       >
         {children}

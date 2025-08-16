@@ -15,12 +15,12 @@ export default function SponsorsPage() {
   const sponsors = getAllSponsors();
 
   return (
-    <main className="min-h-screen bg-neutral-50">
+    <main className="min-h-screen bg-neutral-50" role="main">
       {/* Hero Section */}
-      <section className="bg-white border-b border-neutral-200">
-        <div className="container-site py-16 md:py-20 lg:py-24">
+      <section className="bg-white border-b border-neutral-200" aria-labelledby="sponsors-page-title">
+        <div className="container-site py-16 md:py-20 lg:py-24" id="main-content">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-ink-primary mb-6">
+            <h1 id="sponsors-page-title" className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-ink-primary mb-6">
               Unsere Sponsoren
             </h1>
             <p className="text-lg md:text-xl text-ink-secondary leading-relaxed">
@@ -35,7 +35,11 @@ export default function SponsorsPage() {
       <section className="py-16 md:py-20 lg:py-24">
         <div className="container-site">
           {/* Responsive sponsor grid - 2-3-4 columns as specified */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+          <div 
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8"
+            role="list"
+            aria-label="Liste aller Sponsoren"
+          >
             {sponsors.map((sponsor, index) => (
               <div
                 key={sponsor.id}
@@ -44,15 +48,20 @@ export default function SponsorsPage() {
                   animationDelay: `${index * 100}ms`,
                   animationFillMode: 'both'
                 }}
+                role="listitem"
               >
                 <ExternalLink 
                   href={sponsor.url} 
                   className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded-2xl"
+                  aria-label={`${sponsor.name} - Sponsor-Website besuchen`}
                 >
                   {/* Detailed sponsor card with modern hover effects */}
                   <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200 h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:scale-105 hover:border-brand-light group-hover:shadow-xl group-hover:scale-105 group-hover:border-brand-light">
                     {/* Logo placeholder with sponsor initial */}
-                    <div className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+                    <div 
+                      className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300"
+                      aria-hidden="true"
+                    >
                       <span 
                         className="text-white font-bold text-2xl md:text-3xl"
                         aria-hidden="true"
@@ -82,6 +91,8 @@ export default function SponsorsPage() {
                         stroke="currentColor" 
                         viewBox="0 0 24 24"
                         aria-hidden="true"
+                        role="img"
+                        aria-label="Externer Link"
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>

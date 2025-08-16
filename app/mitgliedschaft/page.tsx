@@ -12,7 +12,7 @@ export const metadata: Metadata = generatePageMetadata({
 
 export default function MembershipPage() {
   return (
-    <main className="container-site py-16 md:py-24">
+    <main className="container-site py-16 md:py-24" role="main" id="main-content">
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12 md:mb-16">
@@ -133,6 +133,7 @@ export default function MembershipPage() {
             href="/05_2025_Aufnahmeantrag.pdf"
             download="Aufnahmeantrag_Mulsower_SV_61.pdf"
             className="w-full sm:w-auto text-lg px-8 py-4 hover:scale-105 transition-transform duration-200"
+            aria-label="Aufnahmeantrag als PDF-Datei herunterladen"
           >
             <svg 
               className="w-6 h-6 mr-3" 
@@ -140,6 +141,8 @@ export default function MembershipPage() {
               stroke="currentColor" 
               viewBox="0 0 24 24"
               aria-hidden="true"
+              role="img"
+              aria-label="Download-Symbol"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>

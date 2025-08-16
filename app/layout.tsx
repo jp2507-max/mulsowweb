@@ -3,18 +3,24 @@ import { Inter, Oswald } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/ui/Header";
 import { Footer } from "@/components/ui/Footer";
+import { PageFadeController } from "@/components/utility/PageFadeController";
+import { PerformanceOptimizer, PerformanceMonitorWrapper } from "@/components/utility/PerformanceOptimizer";
 import { generatePageMetadata } from "./config/site";
 
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-inter',
+  preload: true,
+  fallback: ['system-ui', 'arial', 'sans-serif'],
 });
 
 const oswald = Oswald({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-oswald',
+  preload: true,
+  fallback: ['system-ui', 'arial', 'sans-serif'],
 });
 
 export const metadata: Metadata = {
@@ -46,10 +52,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="de" className={`${inter.variable} ${oswald.variable}`}>
-      <body className={inter.className}>
+      <head>
+        <PerformanceOptimizer />
+      </head>
+      <body className={`${inter.className} antialiased`}>
+        <PageFadeController />
         <Header />
         {children}
         <Footer />
+        <PerformanceMonitorWrapper />
       </body>
     </html>
   );

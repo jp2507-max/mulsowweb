@@ -192,7 +192,11 @@
     - _Requirements: 9.5, 9.6_
 
 - [ ] 9. Static Export Configuration and Server Setup
-  - [ ] 9.1 Configure Next.js for static export
+  - [x] 9.1 Configure Next.js for static export
+
+
+
+
 
 
 
@@ -204,7 +208,11 @@
     - Test static build generation
     - _Requirements: 12.1, 8.3_
 
-  - [ ] 9.2 Create .htaccess configuration for IONOS hosting
+  - [x] 9.2 Create .htaccess configuration for IONOS hosting
+
+
+
+
     - Set up fanshop redirect via Apache (302 to external URL) - NOT Next.js config
     - Configure custom 404 error document (wired via server config)
     - Add modern security headers: X-Content-Type-Options, X-Frame-Options, Referrer-Policy (NO legacy X-XSS-Protection)
@@ -212,14 +220,24 @@
     - _Requirements: 2.4, 2.5, 11.2, 7.5_
 
 - [ ] 10. Performance Optimization and Testing
-  - [ ] 10.1 Optimize for Core Web Vitals
+  - [x] 10.1 Optimize for Core Web Vitals
+
+
+
+
+
     - Ensure LCP ≤ 2.5s by optimizing hero section loading
     - Minimize CLS < 0.1 with proper font loading and layout
     - Optimize INP ≤ 200ms - explicitly test interaction (e.g., opening mobile menu)
     - Test with Lighthouse to achieve ≥90 performance score
     - _Requirements: 8.1, 8.2_
 
-  - [ ] 10.2 Implement accessibility features
+  - [x] 10.2 Implement accessibility features
+
+
+
+
+
     - Add visible focus states for all interactive elements
     - Ensure proper heading hierarchy throughout site
     - Add alt text for all images and icons

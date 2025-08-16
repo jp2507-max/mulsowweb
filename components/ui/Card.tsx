@@ -16,10 +16,20 @@ export function Card({ title, href, target, rel, children, className, hover }: C
   const interactive = Boolean(href);
   const applyHover = hover ?? interactive;
   const classes = cx("card", applyHover && "card-hover", className);
+  const isExternal = href && (target === "_blank" || href.startsWith("http"));
 
   const content = (
     <div className={classes}>
-      {title ? <h3 className="text-xl font-semibold mb-2">{title}</h3> : null}
+      {title ? (
+        <h3 className="text-xl font-semibold mb-2">
+          {title}
+          {isExternal && (
+            <span className="sr-only">
+              (öffnet externe Website)
+            </span>
+          )}
+        </h3>
+      ) : null}
       {children}
     </div>
   );
@@ -29,7 +39,13 @@ export function Card({ title, href, target, rel, children, className, hover }: C
   const anchorRel = secureRel(rel, target ?? "_blank");
 
   return (
-    <a href={href} target={target ?? "_blank"} rel={anchorRel} className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary rounded-2xl">
+    <a 
+      href={href} 
+      target={target ?? "_blank"} 
+      rel={anchorRel} 
+      className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded-2xl"
+      aria-label={title ? `${title}${isExternal ? " - Öffnet externe Website" : ""}` : undefined}
+    >
       {content}
     </a>
   );

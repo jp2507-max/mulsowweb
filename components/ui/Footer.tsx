@@ -17,7 +17,8 @@ export function Footer() {
 
   return (
     <footer 
-      aria-label="Fußzeile"
+      role="contentinfo"
+      aria-label="Website-Fußzeile mit Kontaktinformationen"
       style={{
         borderTop: '1px solid #E2E8F0',
         backgroundColor: 'rgba(255, 255, 255, 0.7)',
@@ -57,6 +58,7 @@ export function Footer() {
                 color: '#475569',
                 lineHeight: '1.5'
               }}
+              aria-label="Vereinsadresse"
             >
               {addressLines.map((line, i) => (
                 <div key={i}>{line}</div>
@@ -89,6 +91,7 @@ export function Footer() {
                 onMouseLeave={(e) => {
                   e.currentTarget.style.color = '#475569';
                 }}
+                aria-label={`E-Mail senden an ${email}`}
               >
                 {email}
               </a>

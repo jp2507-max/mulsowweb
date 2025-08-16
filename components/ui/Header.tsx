@@ -2,6 +2,7 @@
 import * as React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { cx } from "@/lib/utils/cx";
 
 const navItems = [
   { label: "Spielplan", href: "/spielplan" },
@@ -17,112 +18,61 @@ export function Header() {
   const normalize = (p: string) => (p !== "/" && p.endsWith("/") ? p.slice(0, -1) : p);
 
   return (
-    <header 
-      style={{
-        borderBottom: '1px solid #E2E8F0',
-        backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        backdropFilter: 'blur(8px)'
-      }}
-    >
-      <div 
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: '1rem 1.5rem'
-        }}
-      >
-        <div 
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1.5rem'
-          }}
-        >
-          <Link 
-            href="/" 
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.75rem',
-              textDecoration: 'none',
-              borderRadius: '6px',
-              padding: '0.25rem'
-            }}
-          >
-            <img 
-              src="/logo.svg" 
-              alt="Mulsower SV 61 Wappen" 
-              style={{
-                width: 'clamp(2rem, 5vw, 2.5rem)',
-                height: 'clamp(2rem, 5vw, 2.5rem)',
-                flexShrink: 0
-              }}
-              loading="eager"
-            />
-            <span 
-              style={{ 
-                fontSize: 'clamp(1.25rem, 4vw, 1.5rem)',
-                fontWeight: 'bold',
-                fontFamily: 'var(--font-heading)',
-                color: '#0F172A'
-              }}
+    <>
+      {/* Skip link for keyboard navigation */}
+      <a href="#main-content" className="skip-link">
+        Zum Hauptinhalt springen
+      </a>
+      
+      <header className="header" role="banner">
+        <div className="header-container">
+          <div className="header-content">
+            <Link 
+              href="/" 
+              className="header-logo"
+              aria-label="Mulsower SV 61 - Zur Startseite"
             >
-              Mulsower SV 61
-            </span>
-          </Link>
+              <img 
+                src="/logo.svg" 
+                alt="Mulsower SV 61 Vereinswappen" 
+                className="header-logo-image"
+                loading="eager"
+                width="40"
+                height="40"
+              />
+              <span className="header-logo-text">
+                Mulsower SV 61
+              </span>
+            </Link>
 
-          <nav aria-label="Hauptnavigation">
-            {/* Always-visible nav on small screens (no JS hamburger) */}
-            <ul 
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                alignItems: 'center',
-                gap: 'clamp(0.75rem, 2vw, 1.25rem)',
-                listStyle: 'none',
-                margin: 0,
-                padding: 0
-              }}
-            >
-              {navItems.map((item) => {
-                const isActive = normalize(pathname) === item.href;
-                return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      aria-current={isActive ? "page" : undefined}
-                      style={{
-                        padding: '0.5rem 0.75rem',
-                        borderRadius: '6px',
-                        fontSize: 'clamp(0.875rem, 2vw, 1rem)',
-                        transition: 'colors 0.2s',
-                        color: isActive ? '#C1121F' : '#475569',
-                        textDecoration: 'none',
-                        borderBottom: isActive ? '2px solid #C1121F' : 'none',
-                        fontWeight: isActive ? '600' : '400'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isActive) {
-                          e.currentTarget.style.color = '#0F172A';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isActive) {
-                          e.currentTarget.style.color = '#475569';
-                        }
-                      }}
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
+            <nav aria-label="Hauptnavigation" role="navigation">
+              <ul className="header-nav" role="list">
+                {navItems.map((item) => {
+                  const isActive = normalize(pathname) === item.href;
+                  return (
+                    <li key={item.href} role="listitem">
+                      <Link
+                        href={item.href}
+                        aria-current={isActive ? "page" : undefined}
+                        className={cx(
+                          "header-nav-link",
+                          isActive && "header-nav-link-active"
+                        )}
+                        {...(item.href === "/fanshop" && {
+                          "aria-label": "Fanshop - Öffnet externe Website"
+                        })}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }
 

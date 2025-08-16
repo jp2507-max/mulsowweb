@@ -12,7 +12,7 @@ export const metadata: Metadata = generatePageMetadata({
 
 export default function Home() {
   return (
-    <main>
+    <main role="main">
       <Hero />
       <SponsorTeaser />
       <ContactSnippet />

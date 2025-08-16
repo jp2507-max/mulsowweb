@@ -12,7 +12,7 @@ export const metadata: Metadata = generatePageMetadata({
 
 export default function SchedulePage() {
   return (
-    <main className="container-site py-16 md:py-24">
+    <main className="container-site py-16 md:py-24" role="main" id="main-content">
       <div className="max-w-4xl mx-auto text-center">
         {/* Header Section */}
         <div className="mb-12">
@@ -44,6 +44,7 @@ export default function SchedulePage() {
               href="https://www.fussball.de/verein/mulsower-sv-61-mecklenburg-vorpommern/-/id/00ES8GNBNG000024VV0AG08LVUPGND5I#!/"
               target="_blank"
               className="w-full sm:w-auto text-lg px-8 py-4 hover:scale-105 transition-transform duration-200"
+              aria-label="Spielplan auf FUSSBALL.DE öffnen - Öffnet externe Website in neuem Tab"
             >
               <svg 
                 className="w-5 h-5 mr-3" 
@@ -51,6 +52,8 @@ export default function SchedulePage() {
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
                 aria-hidden="true"
+                role="img"
+                aria-label="Externer Link Symbol"
               >
                 <path 
                   strokeLinecap="round" 
