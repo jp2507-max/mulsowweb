@@ -4,14 +4,16 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cx } from "@/lib/utils/cx";
 import { Image } from "./Image";
+import { siteConfig } from '@/app/config/site';
+import { secureRel } from '@/lib/utils/secure-rel';
 
 const navItems = [
   { label: "Spielplan", href: "/spielplan/" },
   { label: "Sponsoren", href: "/sponsoren/" },
   { label: "Mitgliedschaft", href: "/mitgliedschaft/" },
   { label: "Impressum", href: "/impressum/" },
-  // Fanshop handled by server redirect via .htaccess
-  { label: "Fanshop", href: "/fanshop/" },
+  // Fanshop is an external link — open in new tab to avoid client-side routing to a missing internal page
+  { label: "Fanshop", href: siteConfig.externalLinks.fanshop, external: true },
 ] as const;
 
 export function Header() {
@@ -51,20 +53,32 @@ export function Header() {
                 {navItems.map((item) => {
                   const isActive = normalize(pathname) === item.href;
                   return (
-                    <li key={item.href} role="listitem">
-                      <Link
-                        href={item.href}
-                        aria-current={isActive ? "page" : undefined}
-                        className={cx(
-                          "header-nav-link",
-                          isActive && "header-nav-link-active"
-                        )}
-                        {...(item.href === "/fanshop/" && {
-                          "aria-label": "Fanshop - Öffnet externe Website"
-                        })}
-                      >
-                        {item.label}
-                      </Link>
+                    <li key={String(item.href)} role="listitem">
+                      {item.href && typeof item.href === 'string' && item.href.startsWith('http') ? (
+                        <a
+                          href={item.href}
+                          target="_blank"
+                          rel={secureRel(undefined, '_blank')}
+                          className={cx(
+                            "header-nav-link",
+                            isActive && "header-nav-link-active"
+                          )}
+                          aria-label={item.label === 'Fanshop' ? 'Fanshop - Öffnet externe Website' : undefined}
+                        >
+                          {item.label}
+                        </a>
+                      ) : (
+                        <Link
+                          href={(item.href as string) || '#'}
+                          aria-current={isActive ? "page" : undefined}
+                          className={cx(
+                            "header-nav-link",
+                            isActive && "header-nav-link-active"
+                          )}
+                        >
+                          {item.label}
+                        </Link>
+                      )}
                     </li>
                   );
                 })}

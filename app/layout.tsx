@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/ui/Header";
 import { Footer } from "@/components/ui/Footer";
 import { PageFadeController } from "@/components/utility/PageFadeController";
+import { ScrollRevealController } from "@/components/utility/ScrollRevealController";
 import { PerformanceOptimizer, PerformanceMonitorWrapper } from "@/components/utility/PerformanceOptimizer";
 import { generatePageMetadata } from "./config/site";
 
@@ -59,6 +60,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} antialiased`}>
         <PageFadeController />
+  <ScrollRevealController />
         <Header />
         {children}
         <Footer />

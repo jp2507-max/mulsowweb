@@ -5,8 +5,28 @@
  * Run with: node scripts/analyze-bundle.js
  */
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
+/* eslint-enable @typescript-eslint/no-require-imports */
+
+// Recursively walk a directory and return full paths for files with the given extension
+function walkFiles(rootDir, ext) {
+  const results = [];
+  if (!fs.existsSync(rootDir)) return results;
+
+  const entries = fs.readdirSync(rootDir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(rootDir, entry.name);
+    if (entry.isDirectory()) {
+      results.push(...walkFiles(fullPath, ext));
+    } else if (entry.isFile()) {
+      if (!ext || fullPath.endsWith(ext)) results.push(fullPath);
+    }
+  }
+
+  return results;
+}
 
 function analyzeBundle() {
   console.log('🔍 Analyzing bundle for performance optimization...\n');
@@ -40,15 +60,15 @@ function analyzeStaticFiles(staticDir) {
   
   const jsDir = path.join(staticDir, 'chunks');
   if (fs.existsSync(jsDir)) {
-    const jsFiles = fs.readdirSync(jsDir).filter(f => f.endsWith('.js'));
+    const jsFiles = walkFiles(jsDir, '.js');
     let totalJsSize = 0;
-    
-    jsFiles.forEach(file => {
-      const filePath = path.join(jsDir, file);
+
+    jsFiles.forEach(filePath => {
       const stats = fs.statSync(filePath);
       const sizeKB = Math.round(stats.size / 1024);
       totalJsSize += sizeKB;
-      
+      const file = path.basename(filePath);
+
       if (sizeKB > 100) {
         console.log(`  ⚠️  Large JS file: ${file} (${sizeKB}KB)`);
       }
@@ -64,16 +84,21 @@ function analyzeStaticFiles(staticDir) {
   
   const cssDir = path.join(staticDir, 'css');
   if (fs.existsSync(cssDir)) {
-    const cssFiles = fs.readdirSync(cssDir).filter(f => f.endsWith('.css'));
+    // Use the same recursive walker as for JS so we include nested hashed subdirectories
+    const cssFiles = walkFiles(cssDir, '.css');
     let totalCssSize = 0;
-    
-    cssFiles.forEach(file => {
-      const filePath = path.join(cssDir, file);
+
+    cssFiles.forEach(filePath => {
       const stats = fs.statSync(filePath);
       const sizeKB = Math.round(stats.size / 1024);
       totalCssSize += sizeKB;
+      const file = path.basename(filePath);
+
+      if (sizeKB > 100) {
+        console.log(`  ⚠️  Large CSS file: ${file} (${sizeKB}KB)`);
+      }
     });
-    
+
     console.log(`  📊 Total CSS: ${totalCssSize}KB`);
     if (totalCssSize > 50) {
       console.log('  ⚠️  CSS bundle is large. Consider purging unused styles.');
@@ -86,25 +111,27 @@ function analyzeStaticFiles(staticDir) {
 function analyzeHtmlFiles(outDir) {
   console.log('\n📄 HTML files analysis:');
   
-  const htmlFiles = fs.readdirSync(outDir).filter(f => f.endsWith('.html'));
-  
-  htmlFiles.forEach(file => {
-    const filePath = path.join(outDir, file);
+  // Recursively collect all .html files under outDir (includes nested index.html files)
+  // Hidden directories (dot-prefixed) are traversed as well by design.
+  const htmlFiles = walkFiles(outDir, '.html');
+
+  htmlFiles.forEach(filePath => {
+    // Display path relative to the outDir for more readable logs
+    const displayPath = path.relative(outDir, filePath) || path.basename(filePath);
     const content = fs.readFileSync(filePath, 'utf8');
     
-    // Check for performance issues
-    const issues = [];
+  // Check for performance issues
     
     if (content.includes('loading="lazy"')) {
-      console.log(`  ✅ ${file}: Uses lazy loading`);
+      console.log(`  ✅ ${displayPath}: Uses lazy loading`);
     }
     
     if (content.includes('preload')) {
-      console.log(`  ✅ ${file}: Uses resource preloading`);
+      console.log(`  ✅ ${displayPath}: Uses resource preloading`);
     }
     
     if (content.includes('font-display:swap')) {
-      console.log(`  ✅ ${file}: Optimized font loading`);
+      console.log(`  ✅ ${displayPath}: Optimized font loading`);
     }
     
     // Check for large inline styles/scripts
@@ -112,7 +139,7 @@ function analyzeHtmlFiles(outDir) {
     if (inlineStyleMatches) {
       const totalInlineCSS = inlineStyleMatches.join('').length;
       if (totalInlineCSS > 5000) {
-        console.log(`  ⚠️  ${file}: Large inline CSS (${Math.round(totalInlineCSS/1024)}KB)`);
+        console.log(`  ⚠️  ${displayPath}: Large inline CSS (${Math.round(totalInlineCSS/1024)}KB)`);
       }
     }
   });

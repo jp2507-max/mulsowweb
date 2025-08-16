@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '../ui/Button';
+import { siteConfig } from '@/app/config/site';
 
 export function Hero() {
   return (
@@ -72,7 +73,8 @@ export function Hero() {
           <Button 
             variant="ghost" 
             size="lg"
-            href="/fanshop/"
+            href={siteConfig.externalLinks.fanshop}
+            target="_blank"
             className="hero-cta hero-cta-tertiary"
             aria-label="Fanshop besuchen - Vereinsartikel und Merchandise"
           >

@@ -1,14 +1,20 @@
 import * as React from "react";
 import { cx } from "@/lib/utils/cx";
 
-export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+export interface ImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src' | 'alt' | 'width' | 'height'> {
   src: string;
   alt: string;
-  width?: number;
-  height?: number;
+  width?: string | number;
+  height?: string | number;
   priority?: boolean;
   className?: string;
   sizes?: string;
+  /**
+   * Mark the image as purely decorative. When true, the component
+   * will set alt to an empty string, add aria-hidden, and make the
+   * image non-draggable for improved UX and accessibility.
+   */
+  decorative?: boolean;
 }
 
 /**
@@ -27,12 +33,13 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(
       sizes,
       loading,
       decoding = "async",
+      decorative = false,
       ...rest
     },
     ref
   ) => {
-    // Determine loading strategy
-    const loadingStrategy = loading || (priority ? "eager" : "lazy");
+  // Determine loading strategy
+  const loadingStrategy = loading || (priority ? "eager" : "lazy");
     
     // Generate srcset for responsive images if sizes provided
     const srcSet = React.useMemo(() => {
@@ -43,11 +50,20 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(
       return undefined;
     }, [src, sizes]);
 
+    // Extract potentially provided draggable/style from rest so we can
+    // compute sensible defaults when the image is decorative.
+  const { draggable: restDraggable, style: restStyle, ...restProps } = rest as Partial<ImageProps>;
+
+    const finalAlt = decorative ? "" : alt;
+    const ariaHidden = decorative ? true : undefined;
+    const draggableAttr = typeof restDraggable !== "undefined" ? restDraggable : decorative ? false : undefined;
+
     return (
       <img
+        {...restProps}
         ref={ref}
         src={src}
-        alt={alt}
+        alt={finalAlt}
         width={width}
         height={height}
         loading={loadingStrategy}
@@ -61,6 +77,9 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(
           (width && height) ? "aspect-auto" : undefined,
           className
         )}
+        // Accessibility and drag behavior
+        aria-hidden={ariaHidden}
+        draggable={draggableAttr}
         // Performance optimizations
         style={{
           // Prevent layout shift by reserving space
@@ -69,9 +88,8 @@ export const Image = React.forwardRef<HTMLImageElement, ImageProps>(
           }),
           // Optimize rendering
           imageRendering: "auto",
-          ...rest.style,
+          ...(restStyle || {}),
         }}
-        {...rest}
       />
     );
   }

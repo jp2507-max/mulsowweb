@@ -53,18 +53,24 @@ function checkNativeLazyLoading() {
   } else {
     const imageContent = fs.readFileSync(imageComponentPath, 'utf8');
     
-    // Check for lazy loading implementation
-    if (!imageContent.includes('loading={loadingStrategy}') && !imageContent.includes('priority ? "eager" : "lazy"')) {
+    // Check for lazy loading implementation using regex to be robust to whitespace
+    const loadingPropRegex = /loading\s*=\s*("[^"]*"|'[^']*'|\{[^}]*\})/; 
+    // decoding should be either a literal "async" or an expression
+    const decodingPropRegex = /decoding\s*=\s*("async"|\{[^}]*\})/;
+    // presence test for priority prop (may be boolean shorthand or assigned)
+    const priorityPropRegex = /\bpriority\b\s*(=\s*("[^"]*"|'[^']*'|\{[^}]*\}))?/;
+
+    if (!loadingPropRegex.test(imageContent) && !/priority\s*\?\s*"eager"\s*:\s*"lazy"/.test(imageContent)) {
       issues.push('Native lazy loading not implemented in Image component');
       passed = false;
     }
-    
-    if (!imageContent.includes('decoding = "async"') && !imageContent.includes('decoding={decoding}')) {
+
+    if (!decodingPropRegex.test(imageContent)) {
       issues.push('Async decoding not implemented');
       passed = false;
     }
-    
-    if (!imageContent.includes('priority')) {
+
+    if (!priorityPropRegex.test(imageContent)) {
       issues.push('Priority loading option not available');
       passed = false;
     }

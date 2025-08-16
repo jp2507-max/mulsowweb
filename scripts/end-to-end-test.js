@@ -123,15 +123,27 @@ test('External links include proper security attributes', () => {
     const externalLinkPattern = /target="_blank"[^>]*>/g;
     const externalLinks = content.match(externalLinkPattern) || [];
     
-    // All external links should have rel="noopener noreferrer"
-    const hasSecureLinks = externalLinks.every(link => 
-      link.includes('rel="noopener noreferrer"')
-    );
-    
+    // All external links should include both noopener and noreferrer in their rel attribute
+    // Parse the rel attribute, split into tokens (whitespace or comma separated),
+    // normalize to lower-case and strip surrounding punctuation, then ensure both
+    // tokens are present. Links with no rel attribute are treated as failing.
+    const hasSecureLinks = externalLinks.every(link => {
+      // Extract the rel attribute value (support single or double quotes)
+      const relMatch = link.match(/rel\s*=\s*(?:(["'])(.*?)\1)/i);
+      if (!relMatch) return false; // missing rel entirely -> fail
+      const relValue = relMatch[2];
+      // Split on whitespace or commas, normalize and strip non-word characters
+      const tokens = relValue
+        .split(/[\s,]+/)
+        .map(t => t.toLowerCase().replace(/[^a-z0-9-]/g, ''))
+        .filter(Boolean);
+      return tokens.includes('noopener') && tokens.includes('noreferrer');
+    });
+
     if (!hasSecureLinks && externalLinks.length > 0) {
       console.log(`   ${page}: External links missing security attributes`);
     }
-    
+
     return hasSecureLinks || externalLinks.length === 0;
   });
 });

@@ -32,6 +32,18 @@
   /* 1024px */
   --breakpoint-xl: 80rem;
   /* 1280px */
+
+  /* Motion tokens - central source of truth for animation timing and easing */
+  --motion-ease-quick: cubic-bezier(0.2, 0, 0.2, 1);
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --motion-duration-xxs: 80ms;
+  --motion-duration-xs: 120ms;
+  --motion-duration-sm: 150ms;
+  --motion-duration-md: 200ms;
+  --motion-duration-lg: 300ms;
+  --motion-duration-xl: 420ms;
 }
 
 /* Global typography wiring to next/font variables set in app/layout.tsx */
@@ -75,9 +87,21 @@ h6 {
 /* Core utilities for buttons and cards */
 @layer utilities {
 
+  /* Motion-specific transition utility: restricts transitions to transform and opacity only */
+  .transition-motion {
+    transition-property: transform, opacity;
+    transition-timing-function: var(--motion-ease);
+    transition-duration: var(--motion-duration-md);
+  }
+
+
   /* Button base and sizes */
   .btn {
-    @apply inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  @apply inline-flex items-center justify-center font-semibold rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  /* Only animate transform and opacity to avoid layout/paint jank */
+  transition-property: transform, opacity;
+  transition-duration: var(--motion-duration-md);
+  transition-timing-function: var(--motion-ease);
   }
 
   .btn-sm {
@@ -111,7 +135,11 @@ h6 {
   }
 
   .card-hover {
-    @apply hover:shadow-xl hover:scale-[1.02] hover:border-brand-light transition-all duration-300;
+  @apply hover:scale-[1.02] hover:border-brand-light;
+  /* Hover: animate transform/opacity only */
+  transition-property: transform, opacity;
+  transition-duration: var(--motion-duration-lg);
+  transition-timing-function: var(--motion-ease);
   }
 
   /* Page container */
@@ -289,7 +317,10 @@ h6 {
   }
 
   .hero-cta {
-    @apply w-full transform transition-all duration-200;
+  @apply w-full transform;
+  transition-property: transform, opacity;
+  transition-duration: var(--motion-duration-md);
+  transition-timing-function: var(--motion-ease);
   }
 
   .hero-cta-primary {
@@ -391,8 +422,12 @@ h6 {
 
   /* Skip link for keyboard navigation */
   .skip-link {
-    @apply absolute -top-10 left-4 z-50 bg-brand-primary text-white px-4 py-2 rounded-md font-medium;
-    @apply focus:top-4 transition-all duration-200;
+  @apply absolute -top-10 left-4 z-50 bg-brand-primary text-white px-4 py-2 rounded-md font-medium;
+  @apply focus:top-4;
+  /* Focus reveal should be quick and only affect transform/opacity */
+  transition-property: transform, opacity, top;
+  transition-duration: var(--motion-duration-sm);
+  transition-timing-function: var(--motion-ease-quick);
   }
 
   /* Screen reader only text */
@@ -526,11 +561,9 @@ h6 {
     image-rendering: auto;
     
     /* Prevent dragging for better UX */
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    user-drag: none;
+    -webkit-user-drag: none; /* keep WebKit support */
+    -webkit-user-select: none; /* older WebKit */
+    user-select: none; /* broad support */
   }
 
   /* Lazy loading placeholder styles */

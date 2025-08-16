@@ -58,7 +58,7 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
                   className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded-2xl"
                   aria-label={`${sponsor.name} - Sponsor-Website besuchen`}
                 >
-                  <Card className="h-full bg-white border border-neutral-200 hover:border-brand-light hover:shadow-xl hover:scale-105 transition-all duration-300 p-6 md:p-8 text-center">
+                  <Card className="h-full bg-white border border-neutral-200 hover:border-brand-light hover:scale-105 transition-motion p-6 md:p-8 text-center">
                     {/* Placeholder for logo - will be replaced with actual logos later */}
                     <div 
                       className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-lg flex items-center justify-center"
@@ -87,9 +87,9 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
 
         {/* CTA to full sponsors page */}
         <div className="text-center">
-          <a
+      <a
             href="/sponsoren/"
-            className="inline-flex items-center px-8 py-4 bg-brand-primary text-white font-semibold rounded-xl hover:bg-brand-secondary hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
+            className="inline-flex items-center px-8 py-4 bg-brand-primary text-white font-semibold rounded-xl hover:bg-brand-secondary hover:scale-105 active:scale-95 transition-motion shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2"
             aria-label="Alle Sponsoren ansehen - Zur vollständigen Sponsoren-Übersicht"
           >
             Alle Sponsoren ansehen
@@ -98,9 +98,7 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
-              aria-hidden="true"
-              role="img"
-              aria-label="Pfeil nach rechts"
+        aria-hidden="true"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>

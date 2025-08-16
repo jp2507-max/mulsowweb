@@ -56,7 +56,7 @@ export default function SponsorsPage() {
                   aria-label={`${sponsor.name} - Sponsor-Website besuchen`}
                 >
                   {/* Detailed sponsor card with modern hover effects */}
-                  <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200 h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:scale-105 hover:border-brand-light group-hover:shadow-xl group-hover:scale-105 group-hover:border-brand-light">
+                  <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200 h-full flex flex-col transition-motion hover:scale-105 hover:border-brand-light group-hover:scale-105 group-hover:border-brand-light">
                     {/* Logo placeholder with sponsor initial */}
                     <div 
                       className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300"

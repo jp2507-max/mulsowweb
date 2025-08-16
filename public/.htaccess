@@ -6,7 +6,8 @@
 # ============================================================================
 
 # Fanshop redirect - 302 temporary redirect to external shop
-Redirect 302 /fanshop https://msv61.fan12.de/
+# Use RedirectMatch to match both /fanshop and /fanshop/ exactly and avoid accidental prefix matches
+RedirectMatch 302 ^/fanshop/?$ https://msv61.fan12.de/
 
 # ============================================================================
 # ERROR HANDLING
