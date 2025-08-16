@@ -1,0 +1,150 @@
+# .htaccess - Apache configuration for IONOS hosting
+# Place this file in the web root (same level as index.html) after deployment
+
+# ============================================================================
+# REDIRECTS
+# ============================================================================
+
+# Fanshop redirect - 302 temporary redirect to external shop
+# Use RedirectMatch to match both /fanshop and /fanshop/ exactly and avoid accidental prefix matches
+RedirectMatch 302 ^/fanshop/?$ https://msv61.fan12.de/
+
+# ============================================================================
+# ERROR HANDLING
+# ============================================================================
+
+# Custom 404 error page
+ErrorDocument 404 /404.html
+
+# ============================================================================
+# SECURITY HEADERS
+# ============================================================================
+
+# Modern security headers (avoiding deprecated X-XSS-Protection)
+<IfModule mod_headers.c>
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options nosniff
+    
+    # Prevent clickjacking attacks
+    Header always set X-Frame-Options DENY
+    
+    # Control referrer information
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Optional: Basic Content Security Policy
+    # Allows self-hosted content, external images, inline styles, and self-hosted scripts
+    Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self'"
+</IfModule>
+
+# ============================================================================
+# PERFORMANCE CACHING
+# ============================================================================
+
+# Cache static assets for 1 year, but NOT HTML files
+<IfModule mod_expires.c>
+    ExpiresActive on
+    
+    # Long cache for static assets (1 year)
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType application/pdf "access plus 1 month"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    
+    # Short cache for HTML files (1 hour) - allows for quick updates
+    ExpiresByType text/html "access plus 1 hour"
+    
+    # JSON files (sitemap, manifest) - moderate cache
+    ExpiresByType application/json "access plus 1 day"
+    ExpiresByType application/manifest+json "access plus 1 day"
+</IfModule>
+
+# Alternative cache control headers for better browser support
+<IfModule mod_headers.c>
+    # Cache static assets (long-lived) - exclude PDFs which have a shorter Expires
+    <FilesMatch "\.(css|js|png|jpg|jpeg|gif|webp|svg|woff|woff2)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # PDFs: align Cache-Control with Expires (1 month)
+    <FilesMatch "\.(pdf)$">
+        Header set Cache-Control "public, max-age=2592000"
+    </FilesMatch>
+    
+    # Don't cache HTML files
+    <FilesMatch "\.(html|htm)$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+    </FilesMatch>
+    
+    # Moderate cache for JSON files
+    <FilesMatch "\.(json)$">
+        Header set Cache-Control "public, max-age=86400"
+    </FilesMatch>
+</IfModule>
+
+# ============================================================================
+# COMPRESSION
+# ============================================================================
+
+# Enable gzip compression for better performance
+<IfModule mod_deflate.c>
+    # Compress HTML, CSS, JavaScript, Text, XML and fonts
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/vnd.ms-fontobject
+    AddOutputFilterByType DEFLATE application/x-font
+    AddOutputFilterByType DEFLATE application/x-font-opentype
+    AddOutputFilterByType DEFLATE application/x-font-otf
+    AddOutputFilterByType DEFLATE application/x-font-truetype
+    AddOutputFilterByType DEFLATE application/x-font-ttf
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE font/opentype
+    AddOutputFilterByType DEFLATE font/otf
+    AddOutputFilterByType DEFLATE font/ttf
+    AddOutputFilterByType DEFLATE image/svg+xml
+    AddOutputFilterByType DEFLATE image/x-icon
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/xml
+</IfModule>
+
+# ============================================================================
+# ADDITIONAL OPTIMIZATIONS
+# ============================================================================
+
+# Remove server signature for security
+ServerSignature Off
+
+# Prevent access to sensitive files
+# Use Apache 2.4+ authz syntax with a 2.2 fallback for compatibility
+<IfModule mod_authz_core.c>
+    <FilesMatch "^\.">
+        Require all denied
+    </FilesMatch>
+    <FilesMatch "\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist)$">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+<IfModule !mod_authz_core.c>
+    # Fallback for Apache 2.2 and older
+    <FilesMatch "^\.">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+    <FilesMatch "\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+</IfModule>
