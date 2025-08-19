@@ -1,10 +1,13 @@
 import React from 'react';
 import { Button } from '../ui/Button';
 import { siteConfig } from '@/app/config/site';
+import HeroReadyClient from '@/components/utility/HeroReadyClient';
 
 export function Hero() {
+  // Move hero image readiness to a client component to avoid calling
+  // a client hook from server-rendered component (RSC limitation)
   return (
-    <section className="hero-section" aria-label="Willkommen beim Mulsower SV 61">
+    <section className="hero-section" data-heavy aria-label="Willkommen beim Mulsower SV 61">
       {/* Background with subtle gradients and organic shapes - CSS-only for performance */}
       <div className="hero-bg" aria-hidden="true">
         <div className="hero-gradient-1"></div>
@@ -12,6 +15,19 @@ export function Hero() {
         <div className="hero-shape-1"></div>
         <div className="hero-shape-2"></div>
       </div>
+
+      {/* Decorative hero image used to coordinate hero text animation timing.
+          Image is prioritized for LCP and NOT lazy-loaded so decode() can be relied on.
+          It's presentational (aria-hidden) and has explicit dimensions via CSS to avoid CLS. */}
+      <img
+        id="hero-img"
+        src="/og-msv61-redwhite-1200x630.png"
+        alt=""
+        aria-hidden="true"
+        className="hero-decorative"
+      />
+  {/* Client-only component to mark hero-ready after image decode */}
+  <HeroReadyClient />
 
       {/* Hero content - optimized for LCP, streamlined for 2024 trends */}
       <div className="hero-content" id="main-content">

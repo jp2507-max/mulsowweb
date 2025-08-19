@@ -79,6 +79,23 @@ function PerformanceMonitor() {
         console.log('INP:', metric.value, metric.value < 200 ? '✅ Good' : '❌ Needs improvement');
       });
     });
+    // Also monitor long tasks (development only)
+    try {
+      if (typeof PerformanceObserver !== 'undefined') {
+        const obs = new PerformanceObserver((list) => {
+          for (const entry of list.getEntries()) {
+            // entry may be a LongTaskTiming; use a permissive cast for dev-only logging
+            const dur = ((entry as unknown) as { duration?: number }).duration ?? 0;
+            if (dur > 50) {
+              console.warn('Dev Performance: long task', Math.round(dur));
+            }
+          }
+        });
+        obs.observe({ type: 'longtask', buffered: true } as PerformanceObserverInit);
+      }
+    } catch {
+      // ignore - best-effort dev monitoring
+    }
   }
   
   return null;

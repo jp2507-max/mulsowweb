@@ -15,7 +15,7 @@ export interface CardProps {
 export function Card({ title, href, target, rel, children, className, hover }: CardProps) {
   const interactive = Boolean(href);
   const applyHover = hover ?? interactive;
-  const classes = cx("card", applyHover && "card-hover", className);
+  const classes = cx("card touch-feedback", applyHover && "card-hover", className);
   const isExternal = href && (target === "_blank" || href.startsWith("http"));
 
   const content = (
@@ -43,7 +43,7 @@ export function Card({ title, href, target, rel, children, className, hover }: C
       href={href} 
       target={target ?? "_blank"} 
       rel={anchorRel} 
-      className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded-2xl"
+      className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded-2xl touch-feedback"
       aria-label={title ? `${title}${isExternal ? " - Öffnet externe Website" : ""}` : undefined}
     >
       {content}

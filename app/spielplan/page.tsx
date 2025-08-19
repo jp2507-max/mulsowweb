@@ -12,7 +12,7 @@ export const metadata: Metadata = generatePageMetadata({
 
 export default function SchedulePage() {
   return (
-    <main className="container-site py-16 md:py-24" role="main" id="main-content">
+    <main data-heavy className="container-site py-16 md:py-24" role="main" id="main-content">
       <div className="max-w-4xl mx-auto text-center">
         {/* Header Section */}
         <div className="mb-12">

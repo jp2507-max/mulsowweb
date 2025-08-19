@@ -5,7 +5,11 @@ import { Header } from "@/components/ui/Header";
 import { Footer } from "@/components/ui/Footer";
 import { PageFadeController } from "@/components/utility/PageFadeController";
 import { ScrollRevealController } from "@/components/utility/ScrollRevealController";
+import SmoothScrollInit from "@/components/utility/SmoothScroll";
+import HeaderOffsetSync from "@/components/utility/HeaderOffsetSync";
 import { PerformanceOptimizer, PerformanceMonitorWrapper } from "@/components/utility/PerformanceOptimizer";
+import DeviceMotion from "@/components/utility/DeviceMotion";
+import FocusReveal from "@/components/utility/FocusReveal";
 import { generatePageMetadata } from "./config/site";
 
 const inter = Inter({
@@ -59,10 +63,22 @@ export default function RootLayout({
         <PerformanceOptimizer />
       </head>
       <body className={`${inter.className} antialiased`}>
+  <a href="#main" className="skip-link sr-only focusable">Zum Inhalt springen</a>
+  <DeviceMotion />
         <PageFadeController />
   <ScrollRevealController />
+    <FocusReveal />
+    {/* Initialize header offset sync so native hash navigation and
+      scrollIntoView targets get automatically offset for a sticky header. */}
+    <HeaderOffsetSync headerSelector=".header" />
+    {/* Initialize small smooth scroll helper for same-page anchors. This
+      is static-export safe — the component is a "use client" module and
+      will only run in the browser. */}
+    <SmoothScrollInit />
         <Header />
-        {children}
+        <main id="main" tabIndex={-1}>
+          {children}
+        </main>
         <Footer />
         <PerformanceMonitorWrapper />
       </body>

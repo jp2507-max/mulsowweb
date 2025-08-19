@@ -44,6 +44,12 @@
   --motion-duration-md: 200ms;
   --motion-duration-lg: 300ms;
   --motion-duration-xl: 420ms;
+  /* Touch-optimized durations: 20% longer for better touch feedback per Requirement 5.3 */
+  --motion-duration-touch-xxs: 96ms; /* 80ms * 1.2 */
+  --motion-duration-touch-xs: 144ms; /* 120ms * 1.2 */
+  --motion-duration-touch-sm: 180ms; /* 150ms * 1.2 */
+  --motion-duration-touch-md: 240ms; /* 200ms * 1.2 */
+  --motion-duration-touch-lg: 360ms; /* 300ms * 1.2 */
 }
 
 /* Global typography wiring to next/font variables set in app/layout.tsx */
@@ -253,6 +259,40 @@ h6 {
     contain: layout style;
   }
 
+  /* Decorative hero image: ensure it doesn't contribute to layout shift */
+  .hero-decorative {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.02; /* nearly invisible decorative image */
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Hero ready state: animate hero text only after hero image has decoded.
+     This prevents LCP jank by ensuring the hero image is ready before text
+     animates into view. Animation uses only transform/opacity. */
+  .hero-title,
+  .hero-subtitle,
+  .hero-ctas {
+    opacity: 0;
+    transform: translateY(12px);
+    transition-property: opacity, transform;
+    transition-duration: var(--motion-duration-md);
+    transition-timing-function: var(--motion-ease);
+    will-change: opacity, transform;
+  }
+
+  /* When the documentElement has .hero-ready, animate content in */
+  .hero-ready .hero-title,
+  .hero-ready .hero-subtitle,
+  .hero-ready .hero-ctas {
+    opacity: 1;
+    transform: none;
+  }
+
   .hero-text {
     @apply mb-10 md:mb-14 lg:mb-16;
   }
@@ -430,6 +470,78 @@ h6 {
   transition-timing-function: var(--motion-ease-quick);
   }
 
+  /* Navigation underline animation - uses transform/opacity only */
+  .nav-link-underline {
+    position: relative;
+    display: inline-block;
+  }
+
+  .nav-link-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    opacity: 0;
+    transition-property: transform, opacity;
+    transition-duration: var(--motion-duration-sm);
+    transition-timing-function: var(--motion-ease);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .header-nav-link:hover .nav-link-underline::after,
+    .header-nav-link-active .nav-link-underline::after {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .header-nav-link:active .nav-link-underline::after {
+      transform: scaleX(1);
+      opacity: 1;
+      transition-duration: var(--motion-duration-xxs);
+    }
+  }
+
+  /* Logo micro-interaction: subtle scale and tiny rotation (<=3deg), transform-only */
+  .header-logo-interactive {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition-property: transform;
+    transition-duration: var(--motion-duration-sm);
+    transition-timing-function: var(--motion-ease);
+    will-change: transform;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .header-logo-interactive:hover {
+      transform: translateY(-2px) scale(1.03) rotate(-1.5deg);
+    }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .header-logo-interactive:active {
+      transform: scale(0.98);
+      transition-duration: var(--motion-duration-xxs);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-link-underline::after,
+    .header-logo-interactive {
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+      will-change: auto !important;
+    }
+  }
+
   /* Screen reader only text */
   .sr-only {
     position: absolute;
@@ -441,6 +553,21 @@ h6 {
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+  }
+
+  /* Make sr-only elements visible when they receive keyboard focus
+     so skip-links and other keyboard traps can be used by keyboard users */
+  .sr-only.focusable:focus,
+  .sr-only.focusable:focus-visible {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    clip: auto;
+    overflow: visible;
+    white-space: normal;
+    transform: translateY(0);
+    z-index: 9999;
   }
 
   /* High contrast mode support */
@@ -471,6 +598,62 @@ h6 {
     }
   }
 
+  /* Sponsor card hover effect using pseudo-element shadow animation
+     - Animates transform and pseudo-element opacity only (no box-shadow transitions)
+     - Uses media queries to separate hover vs touch behavior
+     - Respects prefers-reduced-motion */
+  .sponsor-card {
+    position: relative;
+    transition-property: transform, opacity;
+    transition-duration: var(--motion-duration-sm);
+    transition-timing-function: var(--motion-ease);
+    will-change: transform;
+  }
+
+  .sponsor-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* static shadow; we only animate opacity of the pseudo-element to avoid paint jank */
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transition: opacity var(--motion-duration-sm) var(--motion-ease);
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .sponsor-card:hover {
+      transform: translateY(-6px) scale(1.02);
+    }
+
+    .sponsor-card:hover::before {
+      opacity: 1;
+    }
+  }
+
+  /* Touch devices: use :active for immediate feedback and shorter duration */
+  @media (hover: none) and (pointer: coarse) {
+    .sponsor-card:active {
+      transform: scale(0.98);
+      transition-duration: var(--motion-duration-xxs);
+    }
+    .sponsor-card:active::before {
+      opacity: 1;
+      transition-duration: var(--motion-duration-xxs);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sponsor-card,
+    .sponsor-card::before {
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+      will-change: auto !important;
+    }
+  }
+
   .animate-fadeInUp {
     animation: fadeInUp 0.6s ease-out;
   }
@@ -494,6 +677,19 @@ h6 {
       opacity: 1;
       transition: opacity 180ms cubic-bezier(0.2, 0, 0, 1);
     }
+
+    /* Enable CSS smooth scrolling when user has not requested reduced motion.
+       This keeps scroll-based navigation feeling polished while respecting
+       accessibility preferences per Requirement 3.1. */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Utility class to opt-in smooth scrolling on specific containers or
+       for programmatic usage (e.g. internal nav wrappers) */
+    .smooth-scroll {
+      scroll-behavior: smooth;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -503,6 +699,28 @@ h6 {
       opacity: 1 !important;
       transition: none !important;
     }
+  }
+
+  /* Honor explicit data-motion override on <html> to force-disable scrolling
+     animations even when prefers-reduced-motion is not present. This supports
+     Requirement 6.2 (data-motion="reduced" override). */
+  html[data-motion="reduced"] {
+    scroll-behavior: auto !important;
+  }
+
+  /* CSS variable used by client code to offset in-page anchors for sticky headers.
+     Default fallback keeps a reasonable value; JS may update this to match header height. */
+  :root {
+    --scroll-offset: 80px;
+  }
+
+  /* Apply scroll-margin-top to all elements with an id so native hash navigation
+     and scrollIntoView honor the header offset. This is a CSS-first approach and
+     avoids extra scroll corrections in JS. */
+  [id] {
+    scroll-margin-top: var(--scroll-offset);
+    /* For browsers that support scroll-padding, also set a global padding on the root scroller */
+    scroll-padding-top: var(--scroll-offset);
   }
 
   /* Performance optimizations for interactions (INP) */
@@ -537,6 +755,37 @@ h6 {
     transition: transform 0.1s ease-out;
   }
 
+  /* Touch feedback utility: short scale + subtle opacity change for touch devices
+     Uses slightly increased durations on touch devices to improve perceived feedback
+     per Requirement 5.1 and 5.3 */
+  .touch-feedback {
+    /* noop for non-touch environments; touch rules applied in media query below */
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .touch-feedback {
+      /* Ensure a sensible default transition for touch interactions */
+      transition-property: transform, opacity;
+      transition-duration: var(--motion-duration-touch-sm);
+      transition-timing-function: var(--motion-ease);
+      will-change: transform, opacity;
+    }
+
+    .touch-feedback:active {
+      transform: scale(0.985);
+      opacity: 0.95;
+      /* Active state should be snappy */
+      transition-duration: var(--motion-duration-touch-xxs);
+      transition-timing-function: var(--motion-ease);
+      will-change: transform, opacity;
+    }
+
+    .touch-feedback:focus-visible {
+      outline: 2px solid var(--color-brand-primary);
+      outline-offset: 2px;
+    }
+  }
+
   /* Prevent layout thrashing during animations */
   .hero-cta,
   .card-hover {
@@ -548,6 +797,114 @@ h6 {
     .hero-cta,
     .card-hover {
       will-change: auto;
+    }
+  }
+
+  /* Performance: mark large/expensive sections as heavy so the browser can skip rendering until visible
+     Implements requirement 2.3: prefer content-visibility and provide a safe fallback for older browsers */
+  @supports (content-visibility: auto) {
+    section[data-heavy] {
+      content-visibility: auto;
+      contain-intrinsic-size: 1px 800px;
+    }
+  }
+
+  @supports not (content-visibility: auto) {
+    section[data-heavy] {
+      /* Conservative fallback to reduce reflow impact on browsers without content-visibility */
+      min-height: 400px;
+    }
+  }
+
+  /* Utility to indicate a component should only animate a single transform at a time.
+     This is a developer guidance utility - it sets will-change and documents intent.
+     Use on components that must avoid concurrent transform animations (e.g. nested
+     elements that both animate on the same frame). This cannot be enforced by CSS
+     but helps signal intended usage to authors and tools. */
+  .single-transform-only {
+    will-change: transform;
+    /* keep hints minimal; remove will-change after animation completes in JS if used */
+  }
+
+  /* Stagger group helper: apply .stagger-group to a container and each direct child
+     will receive a progressive transition-delay. Delays stagger by 60ms and are
+     capped so total group delay does not exceed 400ms (as per requirement 2.2 / 6.3).
+     This class is intentionally conservative and uses transition-delay for CSS
+     reveals; JS-based reveal systems can also apply these classes to coordinate
+     staggered animations. */
+  .stagger-group.reveal > * {
+    opacity: 0;
+    transform: translateY(12px);
+    transition-property: opacity, transform;
+    transition-duration: var(--motion-duration-md);
+    transition-timing-function: var(--motion-ease);
+  }
+
+  .stagger-group.reveal.animate > *:nth-child(1) { transition-delay: 0ms; }
+  .stagger-group.reveal.animate > *:nth-child(2) { transition-delay: 60ms; }
+  .stagger-group.reveal.animate > *:nth-child(3) { transition-delay: 120ms; }
+  .stagger-group.reveal.animate > *:nth-child(4) { transition-delay: 180ms; }
+  .stagger-group.reveal.animate > *:nth-child(5) { transition-delay: 240ms; }
+  .stagger-group.reveal.animate > *:nth-child(6) { transition-delay: 300ms; }
+  /* Cap at 400ms for any items after 7+ (safeguard) */
+  .stagger-group.reveal.animate > *:nth-child(n+7) { transition-delay: 360ms; }
+
+
+  /* Scroll reveal utilities - base reveal candidate + variants
+     - Content is visible by default; .reveal is only added by JS to enhance
+     - Animate only transform and opacity for performance
+     - Variants: fade, slide-up, scale-in
+  */
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px) scale(1);
+    transition-property: opacity, transform;
+    transition-duration: var(--motion-duration-md);
+    transition-timing-function: var(--motion-ease);
+    will-change: opacity, transform;
+  }
+
+  /* Variant: fade only (no translate) */
+  .reveal--fade.reveal {
+    transform: none;
+  }
+
+  /* Variant: slide up (stronger Y offset) */
+  .reveal--slide-up.reveal {
+    transform: translateY(20px) scale(1);
+  }
+
+  /* Variant: scale-in (slightly smaller to begin) */
+  .reveal--scale-in.reveal {
+    transform: translateY(6px) scale(0.98);
+  }
+
+  /* When revealed, make visible and reset transforms */
+  .reveal.in {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal.in,
+    .reveal--fade,
+    .reveal--slide-up,
+    .reveal--scale-in {
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+      will-change: auto !important;
+    }
+
+    /* Ensure hero animations are disabled for reduced motion */
+    .hero-title,
+    .hero-subtitle,
+    .hero-ctas {
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+      will-change: auto !important;
     }
   }
 
@@ -594,5 +951,77 @@ h6 {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  /* Accessible overlay/backdrop for modals and drawers
+     - Uses backdrop-filter where supported with a solid rgba fallback
+     - Keeps overlay implementation light and purely CSS-first
+     - Does not animate blur; only opacity/transform of content is allowed
+     - Respects prefers-reduced-motion and data-motion="reduced" overrides */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* default solid fallback so content remains readable if backdrop-filter unavailable */
+    background: rgba(255, 255, 255, 0.75);
+    z-index: 60;
+    padding: 1.25rem;
+  }
+
+  /* Use backdrop-filter when supported; do not depend on it for readability */
+  @supports ((backdrop-filter: blur(6px)) or (-webkit-backdrop-filter: blur(6px))) {
+    .overlay {
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      /* Slightly more transparent when blur is available */
+      background: rgba(255, 255, 255, 0.42);
+    }
+  }
+
+  /* Overlay content container */
+  .overlay-panel {
+    background: rgba(255, 255, 255, 1);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.12);
+    max-width: 96vw;
+    width: min(720px, 100%);
+    max-height: 90vh;
+    overflow: auto;
+    padding: 1.25rem;
+    outline: none;
+    transition-property: transform, opacity;
+    transition-duration: var(--motion-duration-md);
+    transition-timing-function: var(--motion-ease);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .overlay-panel {
+      transition: none !important;
+    }
+  }
+
+  html[data-motion="reduced"] .overlay-panel {
+    transition: none !important;
+  }
+
+  /* When an overlay is open we set [data-overlay-open] on the <body>.
+     Apply inert-like hiding for non-overlay content for screen readers and
+     disable pointer events to prevent accidental interaction. This is a
+     progressive enhancement; Overlay.tsx will set/unset the attribute. */
+  body[data-overlay-open="true"] > :not(.overlay) {
+    pointer-events: none;
+    user-select: none;
+  }
+
+  body[data-overlay-open="true"] main,
+  body[data-overlay-open="true"] header,
+  body[data-overlay-open="true"] footer {
+    /* Visual fallback for overlay open state: reduce pointer interactions and visual emphasis
+       (screen-reader hiding must still be applied via JS using aria-hidden attributes). */
+    pointer-events: none;
+    opacity: 0.6;
+    filter: blur(0.2px);
   }
 }

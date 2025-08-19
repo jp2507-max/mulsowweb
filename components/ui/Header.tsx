@@ -32,7 +32,7 @@ export function Header() {
           <div className="header-content">
             <Link 
               href="/" 
-              className="header-logo"
+              className="header-logo header-logo-interactive touch-feedback"
               aria-label="Mulsower SV 61 - Zur Startseite"
             >
               <Image 
@@ -65,7 +65,8 @@ export function Header() {
                           rel={secureRel(undefined, '_blank')}
                           className={cx(
                             "header-nav-link",
-                            isActive && "header-nav-link-active"
+                            isActive && "header-nav-link-active",
+                            "touch-feedback"
                           )}
                           aria-label={item.label === 'Fanshop' ? 'Fanshop - Öffnet externe Website' : undefined}
                         >
@@ -77,10 +78,11 @@ export function Header() {
                           aria-current={isActive ? "page" : undefined}
                           className={cx(
                             "header-nav-link",
-                            isActive && "header-nav-link-active"
+                            isActive && "header-nav-link-active",
+                            "touch-feedback"
                           )}
                         >
-                          {item.label}
+                            <span className="nav-link-underline">{item.label}</span>
                         </Link>
                       )}
                     </li>

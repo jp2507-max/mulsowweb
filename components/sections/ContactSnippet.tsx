@@ -6,10 +6,10 @@ interface ContactSnippetProps {
 
 export default function ContactSnippet({ className = '' }: ContactSnippetProps) {
   return (
-    <section className={`py-16 md:py-20 bg-white ${className}`} aria-labelledby="contact-heading">
+  <section className={`py-16 md:py-20 bg-white ${className}`} aria-labelledby="contact-heading">
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
         {/* Section Header */}
-        <div className="text-center mb-12 md:mb-16">
+    <div className="text-center mb-12 md:mb-16 reveal-candidate reveal--fade">
           <h2 id="contact-heading" className="text-3xl md:text-4xl lg:text-5xl font-bold font-heading text-ink-primary mb-4">
             Kontakt
           </h2>
@@ -22,10 +22,10 @@ export default function ContactSnippet({ className = '' }: ContactSnippetProps) 
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             {/* Address Card */}
-            <div className="card text-center md:text-left">
+      <div className="card card-hover text-center md:text-left reveal-candidate reveal--slide-up">
               <div className="mb-6">
                 <div 
-                  className="w-16 h-16 mx-auto md:mx-0 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center"
+          className="w-16 h-16 mx-auto md:mx-0 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center reveal-candidate reveal--scale-in"
                   aria-hidden="true"
                 >
                   <svg 
@@ -54,10 +54,10 @@ export default function ContactSnippet({ className = '' }: ContactSnippetProps) 
             </div>
 
             {/* Email Card */}
-            <div className="card text-center md:text-left">
+    <div className="card card-hover text-center md:text-left reveal-candidate reveal--slide-up">
               <div className="mb-6">
                 <div 
-                  className="w-16 h-16 mx-auto md:mx-0 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center"
+      className="w-16 h-16 mx-auto md:mx-0 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center reveal-candidate reveal--scale-in"
                   aria-hidden="true"
                 >
                   <svg 
@@ -103,7 +103,7 @@ export default function ContactSnippet({ className = '' }: ContactSnippetProps) 
           </div>
 
           {/* Additional Contact Information */}
-          <div className="mt-12 text-center">
+          <div className="mt-12 text-center reveal-candidate reveal--fade">
             <div className="inline-flex items-center px-6 py-3 bg-neutral-100 rounded-xl text-ink-secondary" role="note">
               <svg 
                 className="w-5 h-5 mr-3 text-brand-primary" 

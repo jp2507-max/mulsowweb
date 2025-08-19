@@ -33,6 +33,8 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
   ) => {
     const classes = cx(
       "btn",
+  /* touch-feedback provides short :active scale/opacity for touch devices */
+  "touch-feedback",
       size === "sm" && "btn-sm",
       size === "md" && "btn-md",
       size === "lg" && "btn-lg",
