@@ -12,25 +12,47 @@ export default function FocusReveal() {
   React.useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    // Don't run when reduced motion is requested or data-motion override disables animations
-    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const dataReduced = document.documentElement.getAttribute('data-motion') === 'reduced';
-    if (prefersReduced || dataReduced) return;
+  // Respect reduced motion preferences but don't early-return.
+  // We always reveal focused content (add the `in` class) so keyboard users
+  // can see the element. Animation-related classes are only added when
+  // neither the media query nor the data attribute request reduced motion.
+  const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dataReduced = document.documentElement.getAttribute('data-motion') === 'reduced';
 
     function onFocus(e: FocusEvent) {
       const target = e.target as Element | null;
       if (!target) return;
 
-      // Find closest reveal candidate
+      // Find closest reveal candidate and always ensure it is visible by
+      // adding the `in` class. Don't early-return based on reduced-motion.
       const reveal = (target as Element).closest?.('.reveal') as HTMLElement | null;
-      if (reveal && !reveal.classList.contains('in')) {
-        reveal.classList.add('in');
+      if (!reveal) return;
 
-        // If the reveal is inside a stagger-group, ensure the container gets animate class
-        const stagger = (reveal as HTMLElement).closest?.('.stagger-group') as HTMLElement | null;
-        if (stagger && !stagger.classList.contains('animate')) {
-          stagger.classList.add('animate');
-        }
+      if (!reveal.classList.contains('in')) {
+        reveal.classList.add('in');
+      }
+
+      // If the reveal is inside a stagger-group, add the `animate` class
+      // only when animations are allowed. When reduced-motion is requested
+      // we still keep the element visible (the `in` class) but skip adding
+      // animation-related classes so transitions don't run.
+      const stagger = (reveal as HTMLElement).closest?.('.stagger-group') as HTMLElement | null;
+      if (!stagger) return;
+
+      const canAnimate = !prefersReduced && !dataReduced;
+      if (canAnimate && !stagger.classList.contains('animate')) {
+        stagger.classList.add('animate');
+
+        // Clean up animate class after the animation ends so the DOM isn't
+        // permanently modified. This removal only touches animation classes
+        // and never removes the `in` class, preserving visibility for
+        // reduced-motion users.
+        const onAnimationEnd = () => {
+          stagger.classList.remove('animate');
+          stagger.removeEventListener('animationend', onAnimationEnd);
+        };
+
+        stagger.addEventListener('animationend', onAnimationEnd);
       }
     }
 

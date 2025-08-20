@@ -15,9 +15,9 @@ export default function SponsorsPage() {
   const sponsors = getAllSponsors();
 
   return (
-    <main className="min-h-screen bg-neutral-50" role="main">
+    <main className="min-h-screen" role="main">
       {/* Hero Section */}
-      <section className="bg-white border-b border-neutral-200" aria-labelledby="sponsors-page-title">
+      <section className="border-b border-neutral-200/60" aria-labelledby="sponsors-page-title">
         <div className="container-site py-16 md:py-20 lg:py-24" id="main-content">
           <div className="text-center max-w-4xl mx-auto">
             <h1 id="sponsors-page-title" className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-ink-primary mb-6">

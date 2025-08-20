@@ -56,6 +56,26 @@
 :root {
   --font-body: var(--font-inter, ui-sans-serif, system-ui, sans-serif);
   --font-heading: var(--font-oswald, ui-sans-serif, system-ui, sans-serif);
+  /* Decorative background intensity controls */
+  --bg-blob-opacity: 0.12;
+  --bg-noise-opacity: 0.035;
+  /* Spotlight defaults (center-top-ish) */
+  --spot-x: 50%;
+  --spot-y: 40%;
+}
+
+/* Tuning presets – switch by setting data-bg="subtle|brand|bold" on <html> */
+html[data-bg="subtle"] {
+  --bg-blob-opacity: 0.08;
+  --bg-noise-opacity: 0.02;
+}
+html[data-bg="brand"] {
+  --bg-blob-opacity: 0.12;
+  --bg-noise-opacity: 0.035;
+}
+html[data-bg="bold"] {
+  --bg-blob-opacity: 0.18;
+  --bg-noise-opacity: 0.05;
 }
 
 /* Critical CSS for above-the-fold content */
@@ -69,6 +89,118 @@ body {
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* Site-wide decorative background: lightweight, brand-aligned, and accessible */
+.site-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10; /* Behind everything */
+  pointer-events: none;
+  contain: strict;
+}
+
+/* Base red/white gradient wash using brand tokens */
+.site-bg__wash {
+  position: absolute;
+  inset: 0;
+  background:
+    /* Interactive stadium-light spotlight (very soft) */
+    radial-gradient(800px 400px at var(--spot-x) var(--spot-y), rgba(255,255,255,0.9), rgba(255,255,255,0.55) 40%, rgba(255,255,255,0.0) 75%),
+    /* Neutral cool tint base (dramatically less red) */
+    radial-gradient(1200px 600px at 85% 10%, rgba(193, 18, 31, 0.06), transparent 70%),
+    radial-gradient(900px 500px at 10% 85%, rgba(255, 85, 85, 0.05), transparent 65%),
+    linear-gradient(180deg, #ffffff 0%, var(--color-neutral-50) 60%, #ffffff 100%);
+}
+
+/* Soft animated blobs: transform-only animation, extremely slow for elegance */
+.site-bg__blob {
+  position: absolute;
+  filter: blur(40px);
+  opacity: var(--bg-blob-opacity);
+  transform: translateZ(0);
+  will-change: transform;
+  background: radial-gradient(circle at 30% 30%, var(--color-brand-primary), var(--color-brand-accent));
+}
+
+.site-bg__blob--a {
+  width: clamp(320px, 40vw, 560px);
+  height: clamp(320px, 40vw, 560px);
+  left: -8%;
+  top: 12%;
+  border-radius: 50% 40% 60% 50% / 60% 50% 40% 50%;
+  animation: bg-float-a 36s var(--motion-ease-smooth) infinite alternate;
+}
+
+.site-bg__blob--b {
+  width: clamp(260px, 35vw, 500px);
+  height: clamp(260px, 35vw, 500px);
+  right: -6%;
+  bottom: 8%;
+  border-radius: 40% 60% 50% 60% / 50% 60% 50% 40%;
+  animation: bg-float-b 42s var(--motion-ease-smooth) infinite alternate;
+}
+
+@keyframes bg-float-a {
+  from { transform: translate3d(0, 0, 0) rotate(0.001deg); }
+  to   { transform: translate3d(20px, -16px, 0) rotate(0.001deg); }
+}
+
+@keyframes bg-float-b {
+  from { transform: translate3d(0, 0, 0) rotate(0.001deg); }
+  to   { transform: translate3d(-14px, 18px, 0) rotate(0.001deg); }
+}
+
+/* Very subtle noise to break banding; pure CSS mask via data URI */
+.site-bg__noise {
+  position: absolute;
+  inset: -20%;
+  opacity: var(--bg-noise-opacity); /* keep extremely light */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.5"/></svg>');
+  background-size: 160px 160px;
+}
+
+/* Subtle vertical pinstripes like a jersey pattern */
+.site-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(15, 23, 42, 0.02) 0px,
+    rgba(15, 23, 42, 0.02) 2px,
+    rgba(255, 255, 255, 0.0) 2px,
+    rgba(255, 255, 255, 0.0) 18px
+  );
+  mix-blend-mode: multiply;
+}
+
+/* Giant crest watermark (uses existing /public/logo.svg) */
+.site-bg__vignette::after {
+  content: "";
+  position: absolute;
+  right: -120px;
+  bottom: -80px;
+  width: min(38vw, 560px);
+  height: min(38vw, 560px);
+  background: url('/logo.svg') no-repeat center / contain;
+  opacity: 0.035;
+  filter: saturate(0) contrast(1.05);
+}
+
+/* Gentle vignette to keep edges calm, improving perceived depth */
+.site-bg__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(1200px 600px at 50% 0%, rgba(0,0,0,0.04), transparent 70%),
+              radial-gradient(1200px 600px at 50% 100%, rgba(0,0,0,0.04), transparent 70%);
+  mix-blend-mode: multiply;
+}
+
+/* Respect reduced motion: freeze blobs */
+@media (prefers-reduced-motion: reduce) {
+  .site-bg__blob { animation: none !important; }
 }
 
 h1,
@@ -92,6 +224,94 @@ h6 {
 
 /* Core utilities for buttons and cards */
 @layer utilities {
+  /* Cross-Page View Transitions: subtle fade that respects reduced motion */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.32s;
+  }
+  ::view-transition-old(root) { animation-name: vt-fade-out; }
+  ::view-transition-new(root) { animation-name: vt-fade-in; }
+
+  @keyframes vt-fade-out { to { opacity: 0; filter: saturate(0.98) blur(0.5px); } }
+  @keyframes vt-fade-in { from { opacity: 0; filter: saturate(0.98) blur(0.5px); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) { animation: none !important; }
+  }
+
+  /* Hero word rotator: calm vertical word switcher (CSS-only) */
+  .hero-rotator {
+    --size: clamp(1.1rem, 2.2vw, 1.5rem);
+    --line: calc(var(--size) * 1.2); /* single line box height tied to font-size */
+    display: block; /* ensure it sits on its own line below subtitle */
+    height: var(--line);
+    line-height: var(--line);
+    overflow: hidden;
+    color: var(--color-ink-secondary); /* softer than title */
+    opacity: 0.95;
+    font-size: var(--size);
+    font-weight: 600;
+  margin: 1.5rem auto 1.5rem; /* extra spacing from subtitle and CTAs */
+    max-width: 40ch; /* keep a tidy line length */
+    text-align: center;
+  position: relative;
+  isolation: isolate;
+  contain: paint; /* ensure children cannot paint outside this box */
+  }
+  .hero-rotator-inner > span {
+    display: block;
+    height: var(--line);
+    line-height: var(--line);
+    padding: 0 0.2em;
+  }
+  .hero-rotator {
+    /* count of items and total duration */
+    --n: 4;
+    --t: 12s;
+  }
+  .hero-rotator-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: calc(var(--line) * var(--n));
+  display: block;
+    will-change: transform;
+    transform: translateZ(0);
+    animation: rotY var(--t) steps(var(--n), end) infinite;
+  }
+  @keyframes rotY {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(calc(var(--line) * -1 * (var(--n) - 1))); }
+  }
+  @media (prefers-reduced-motion: reduce) { .hero-rotator-inner { animation: none; } }
+
+  /* Subtle football pitch chalk background + film grain */
+  .pitch-bg { position: relative; isolation: isolate; background: #ffffff; }
+  .pitch-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+  z-index: -11; /* ensure below hero-bg (-z-10) */
+    opacity: 0.045;
+    background:
+      radial-gradient(80vmax 80vmax at 20% 0%, transparent 80%, var(--color-neutral-900) 80.5%) no-repeat,
+      repeating-linear-gradient(0deg, var(--color-neutral-900), var(--color-neutral-900) 2px, transparent 2px, transparent 24px),
+      repeating-linear-gradient(90deg, var(--color-neutral-900), var(--color-neutral-900) 2px, transparent 2px, transparent 24px);
+    mask: radial-gradient(closest-side, #000 70%, transparent 100%);
+  }
+  .pitch-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  z-index: -11; /* keep grain beneath hero-bg as well */
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.25'/></svg>");
+    background-size: 120px 120px;
+  }
 
   /* Motion-specific transition utility: restricts transitions to transform and opacity only */
   .transition-motion {
@@ -120,6 +340,16 @@ h6 {
 
   .btn-lg {
     @apply px-6 py-4 text-lg;
+  }
+
+  /* Optional shapes/variants (opt-in) */
+  .btn-pill {
+    @apply rounded-full;
+    /* slightly wider horizontal padding works well for pills */
+  }
+
+  .btn-soft {
+    @apply bg-neutral-100 text-ink-primary border border-neutral-200 shadow-sm hover:bg-white hover:shadow-md;
   }
 
   /* Button variants */
@@ -204,6 +434,12 @@ h6 {
     @apply text-brand-primary border-b-2 border-brand-primary font-semibold;
   }
 
+  /* Eyebrow text utility: small, uppercased label above headlines */
+  .eyebrow {
+    @apply text-xs tracking-wider uppercase text-ink-tertiary font-medium;
+    letter-spacing: 0.12em;
+  }
+
   /* Hero Section - Performance Optimized for LCP */
   .hero-section {
     @apply relative overflow-hidden;
@@ -250,6 +486,14 @@ h6 {
     background: linear-gradient(45deg, var(--color-brand-light), var(--color-neutral-200));
     opacity: 0.08;
     border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+  }
+
+  /* Hero-only contrast overlay (sits above hero-bg, below content) */
+  .hero-overlay {
+    @apply absolute inset-0 z-0; /* behind hero-content (z-10), above hero-bg (-z-10) */
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.66) 45%, rgba(255,255,255,0.42) 100%);
   }
 
   .hero-content {
@@ -713,14 +957,17 @@ h6 {
   :root {
     --scroll-offset: 80px;
   }
+  /* Ensure the root scroller applies scroll-padding to respect sticky header
+     offsets for native hash navigation and programmatic scrolling. */
+  html {
+    scroll-padding-top: var(--scroll-offset);
+  }
 
   /* Apply scroll-margin-top to all elements with an id so native hash navigation
      and scrollIntoView honor the header offset. This is a CSS-first approach and
      avoids extra scroll corrections in JS. */
   [id] {
     scroll-margin-top: var(--scroll-offset);
-    /* For browsers that support scroll-padding, also set a global padding on the root scroller */
-    scroll-padding-top: var(--scroll-offset);
   }
 
   /* Performance optimizations for interactions (INP) */
@@ -883,6 +1130,23 @@ h6 {
   .reveal.in {
     opacity: 1;
     transform: none;
+  }
+
+  /* Simple marquee (sponsors) */
+  .marquee {
+    display: inline-block;
+    min-width: 200%;
+    animation: marquee-scroll 24s linear infinite;
+    will-change: transform;
+  }
+
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee { animation: none !important; transform: none !important; }
   }
 
   @media (prefers-reduced-motion: reduce) {

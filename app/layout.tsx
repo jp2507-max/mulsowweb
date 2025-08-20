@@ -5,12 +5,15 @@ import { Header } from "@/components/ui/Header";
 import { Footer } from "@/components/ui/Footer";
 import { PageFadeController } from "@/components/utility/PageFadeController";
 import { ScrollRevealController } from "@/components/utility/ScrollRevealController";
-import SmoothScrollInit from "@/components/utility/SmoothScroll";
+import { SmoothScrollInit } from "@/components/utility/SmoothScroll";
 import HeaderOffsetSync from "@/components/utility/HeaderOffsetSync";
 import { PerformanceOptimizer, PerformanceMonitorWrapper } from "@/components/utility/PerformanceOptimizer";
 import DeviceMotion from "@/components/utility/DeviceMotion";
 import FocusReveal from "@/components/utility/FocusReveal";
 import { generatePageMetadata } from "./config/site";
+import SiteBackground from "@/components/ui/SiteBackground";
+import InteractiveSpotlight from "@/components/ui/InteractiveSpotlight";
+import ViewTransitionRouter from "@/components/utility/ViewTransitionRouter";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -58,13 +61,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="de" className={`${inter.variable} ${oswald.variable}`}>
+    <html lang="de" data-bg="brand" className={`${inter.variable} ${oswald.variable}`}>
       <head>
         <PerformanceOptimizer />
+  {/* Cross-document View Transitions for smooth static page changes */}
+  <meta name="view-transition" content="same-origin" />
       </head>
       <body className={`${inter.className} antialiased`}>
   <a href="#main" className="skip-link sr-only focusable">Zum Inhalt springen</a>
   <DeviceMotion />
+        {/* Global decorative background (non-interactive, behind all content) */}
+        <SiteBackground />
+  {/* Desktop-only interactive ambience: moving stadium-light spotlight */}
+  <InteractiveSpotlight />
         <PageFadeController />
   <ScrollRevealController />
     <FocusReveal />
@@ -75,6 +84,8 @@ export default function RootLayout({
       is static-export safe — the component is a "use client" module and
       will only run in the browser. */}
     <SmoothScrollInit />
+  {/* Enable SPA view transitions where supported to complement cross-document meta */}
+  <ViewTransitionRouter />
         <Header />
         <main id="main" tabIndex={-1}>
           {children}

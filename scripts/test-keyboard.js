@@ -1,8 +1,8 @@
 // Keyboard navigation checks: skip link presence, focusable elements, and axe-core keyboard checks
-const fs = require('fs');
-const path = require('path');
-const { JSDOM } = require('jsdom');
-const axeCore = require('axe-core');
+import fs from 'fs';
+import path from 'path';
+import { JSDOM } from 'jsdom';
+import * as axeCore from 'axe-core';
 
 async function main() {
   const fixturePath = path.join(__dirname, 'fixtures', 'animations-fixture.html');
@@ -35,21 +35,50 @@ async function main() {
   console.log('OK: Skip link targets', href);
 
   // 2) Check that interactive elements are keyboard-focusable
-  const btn = doc.querySelector('.btn');
-  const sponsor = doc.querySelector('.sponsor-card');
-  const focusableChecks = [];
-  if (btn) focusableChecks.push({ el: btn, name: '.btn' });
-  if (sponsor) focusableChecks.push({ el: sponsor, name: '.sponsor-card' });
+  // Iterate all matches for .btn and .sponsor-card and apply tabbability rules:
+  // - native controls (BUTTON, INPUT, SELECT, TEXTAREA) are tabbable
+  // - anchors (A) are tabbable only if they have an href attribute
+  // - tabindex="0" is tabbable
+  // - tabindex="-1" or absence of tabindex on non-native, non-href anchors is not tabbable
+  const selectors = [
+    { selector: '.btn', name: '.btn' },
+    { selector: '.sponsor-card', name: '.sponsor-card' }
+  ];
 
+  const nativeControls = ['BUTTON', 'INPUT', 'SELECT', 'TEXTAREA'];
   let failed = false;
-  focusableChecks.forEach(item => {
-    const hasTab = item.el.hasAttribute('tabindex') || ['BUTTON', 'A', 'INPUT', 'SELECT', 'TEXTAREA'].includes(item.el.tagName);
-    if (!hasTab) {
-      console.error(`FAIL: ${item.name} is not keyboard-focusable (no tabindex and not a native control).`);
-      failed = true;
-    } else {
-      console.log(`OK: ${item.name} appears focusable.`);
+
+  selectors.forEach(({ selector, name }) => {
+    const nodes = Array.from(doc.querySelectorAll(selector));
+    if (nodes.length === 0) {
+      console.warn(`WARN: No elements found for selector ${selector}`);
+      return;
     }
+
+    nodes.forEach((el, idx) => {
+      const tag = el.tagName;
+      const tabindexAttr = el.getAttribute('tabindex');
+      let tabbable = false;
+
+      if (nativeControls.includes(tag)) {
+        tabbable = true;
+      } else if (tag === 'A') {
+        // Anchors only tabbable if they have an href attribute with a value
+        tabbable = el.hasAttribute('href') && (el.getAttribute('href') || '').trim() !== '';
+      } else if (tabindexAttr !== null && tabindexAttr === '0') {
+        tabbable = true;
+      } else {
+        tabbable = false;
+      }
+
+      const desc = `${name}${nodes.length > 1 ? `[${idx}]` : ''} <${tag.toLowerCase()}>`;
+      if (!tabbable) {
+        console.error(`FAIL: ${desc} is not keyboard-focusable (tag=${tag}, tabindex=${tabindexAttr})`);
+        failed = true;
+      } else {
+        console.log(`OK: ${desc} appears focusable.`);
+      }
+    });
   });
 
   if (failed) process.exit(1);

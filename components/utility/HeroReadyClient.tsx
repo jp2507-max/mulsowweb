@@ -1,5 +1,5 @@
 "use client";
-import useHeroReady from './HeroReady';
+import { useHeroReady } from './HeroReady';
 
 export default function HeroReadyClient() {
   useHeroReady();

@@ -14,7 +14,12 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
   const displaySponsors = getHomepageSponsors().slice(0, maxItems);
 
   return (
-    <section data-heavy className={`py-16 md:py-20 bg-neutral-50 ${className}`} aria-labelledby="sponsors-heading">
+    <section data-heavy className={`relative py-16 md:py-20 ${className}`} aria-labelledby="sponsors-heading">
+      {/* Soft curved top divider using a radial gradient (no images) */}
+      <div aria-hidden="true" className="absolute -top-10 left-0 right-0 h-10 pointer-events-none" style={{
+        background: 'radial-gradient(80% 20px at 50% 100%, rgba(0,0,0,0.12), transparent 70%)',
+        opacity: 0.06
+      }} />
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
         {/* Section Header */}
   <div className="text-center mb-12 md:mb-16 reveal-candidate reveal--fade">
@@ -24,6 +29,18 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
           <p className="text-lg md:text-xl text-ink-secondary max-w-2xl mx-auto">
             Wir danken unseren Sponsoren für die Unterstützung des Mulsower SV 61
           </p>
+        </div>
+
+        {/* Optional Sponsor marquee — shown above grid, pauses on hover/reduced motion */}
+        <div className="mb-10 overflow-hidden rounded-xl border border-neutral-200 bg-white/60 backdrop-blur-[1px]" aria-hidden="true">
+          <div className="marquee whitespace-nowrap">
+            {displaySponsors.concat(displaySponsors).map((s, i) => (
+              <span key={`mq-${s.id}-${i}`} className="inline-flex items-center px-6 py-3 text-ink-secondary text-sm">
+                {s.name}
+                <span className="mx-4 opacity-30">•</span>
+              </span>
+            ))}
+          </div>
         </div>
 
         {/* Sponsor Grid - Responsive 2-3-6 columns with lazy loading */}
