@@ -18,16 +18,23 @@ export function useHeroReady(): void {
       return;
     }
 
-    try {
+  try {
       const img = document.getElementById('hero-img') as HTMLImageElement | null;
       if (!img) {
         // No image - still mark ready so animations can proceed
-        document.documentElement.classList.add('hero-ready');
+    document.documentElement.classList.add('hero-ready');
+    // Also add animate trigger - small delay so CSS animations run visibly
+    window.setTimeout(() => document.documentElement.classList.add('hero-animate'), 40);
         return;
       }
 
       // If decode isn't supported, fallback to load event with a short timeout
-      const markReady = () => document.documentElement.classList.add('hero-ready');
+      const markReady = () => {
+        document.documentElement.classList.add('hero-ready');
+        // Add a separate class that triggers the animate keyframes. Use a slight
+        // delay to ensure the ready class is applied and layout has stabilized.
+        window.setTimeout(() => document.documentElement.classList.add('hero-animate'), 40);
+      };
 
       if (img.decode) {
         img.decode().then(markReady).catch(markReady);

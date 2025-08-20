@@ -69,7 +69,7 @@
 ### ✅ 8. Contact Information Consistency
 - **Status:** PASSED
 - **Details:** Contact information is consistent across all pages
-- **Email:** `info@mulsower-sv61.de` (consistent across all pages)
+- **Email:** `info@mulsower-sv.de` (consistent across all pages)
 - **Address:** Consistent club address on membership and legal pages
 
 ### ✅ 9. Trailing Slash Consistency

@@ -20,10 +20,10 @@ export const siteConfig = {
   
   // Contact information
   contact: {
-    email: 'info@mulsower-sv61.de',
+  email: 'info@mulsower-sv.de',
     address: {
-      street: 'Dorfstraße 1',
-      city: '19067 Mulsow',
+  street: 'Garvensdorfer Weg 8',
+  city: '18233 Carinerland',
       country: 'Deutschland'
     }
   },
@@ -39,7 +39,6 @@ export const siteConfig = {
     { name: 'Spielplan', href: '/spielplan' },
     { name: 'Sponsoren', href: '/sponsoren' },
     { name: 'Mitgliedschaft', href: '/mitgliedschaft' },
-    { name: 'Impressum', href: '/impressum' },
     { name: 'Fanshop', href: '/fanshop', external: true }
   ],
   
@@ -50,6 +49,13 @@ export const siteConfig = {
     keywords: ['Mulsower SV 61', 'Fußball', 'Amateurfußball', 'Mecklenburg-Vorpommern', 'Verein'] as string[],
     author: 'Mulsower SV 61',
     robots: 'index, follow'
+  },
+
+  // Feature flags and UI options
+  features: {
+    // Animated logo feature removed — keep flags for future use but disabled.
+    animatedLogo: false,
+    riveLogoSrc: undefined,
   }
 } as const;
 

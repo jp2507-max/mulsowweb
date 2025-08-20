@@ -6,11 +6,13 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-  "test:axe": "node scripts/axe-animations.js",
-  "test:reduced-motion": "node scripts/test-reduced-motion.js",
-  "test:contrast": "node scripts/test-contrast.js",
-  "test:keyboard": "node scripts/test-keyboard.js",
-  "test:axe:all": "npm run test:axe && npm run test:reduced-motion && npm run test:contrast && npm run test:keyboard",
+  "optimize:hero": "node ./scripts/optimize-hero.js",
+    "test:axe": "node scripts/axe-animations.js",
+    "test:reduced-motion": "node scripts/test-reduced-motion.js",
+    "test:anchors-css": "node scripts/test-anchors-css.js",
+    "test:contrast": "node scripts/test-contrast.js",
+    "test:keyboard": "node scripts/test-keyboard.js",
+    "test:axe:all": "npm run test:axe && npm run test:reduced-motion && npm run test:anchors-css && npm run test:contrast && npm run test:keyboard",
     "lint": "next lint",
     "analyze": "node scripts/analyze-bundle.js",
     "build:analyze": "npm run build && npm run analyze",
@@ -19,6 +21,8 @@
     "audit:full": "npm run build && npm run audit:final"
   },
   "dependencies": {
+    "lenis": "^1.1.19",
+    "motion": "^12.23.12",
     "next": "15.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -34,7 +38,8 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
     "jsdom": "^26.1.0",
-    "tailwindcss": "^4",
+  "sharp": "^0.33.4",
+  "tailwindcss": "^4",
     "typescript": "^5"
   }
 }

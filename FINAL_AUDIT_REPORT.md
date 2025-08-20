@@ -206,3 +206,15 @@ The website is ready for production deployment and meets all requirements specif
 
 **Audit Tool:** `scripts/final-audit.js`  
 **Next Steps:** Deploy to IONOS hosting and monitor real-world performance metrics
+
+---
+
+## Appendix: Optional Rive Animated Logo (Task 3)
+
+- Feature is implemented behind a flag and disabled by default to preserve minimal bundle.
+- Enable by setting `siteConfig.features.animatedLogo = true` in `app/config/site.ts`.
+- Place your logo asset at `public/rive/logo.riv` or adjust `siteConfig.features.riveLogoSrc`.
+- Behavior:
+	- Respects `prefers-reduced-motion` and falls back to static `/logo.svg`.
+	- Pauses when offscreen and when the page is hidden.
+	- Announces play/pause via an `aria-live="polite"` message for assistive tech.

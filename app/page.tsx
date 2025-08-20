@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Hero from '../components/sections/Hero';
+import NextMatchWidget from '../components/sections/NextMatchWidget';
 import SponsorTeaser from '../components/sections/SponsorTeaser';
 import ContactSnippet from '../components/sections/ContactSnippet';
 import { generatePageMetadata } from './config/site';
@@ -14,6 +15,7 @@ export default function Home() {
   return (
     <main role="main">
       <Hero />
+  <NextMatchWidget />
       <SponsorTeaser />
       <ContactSnippet />
     </main>

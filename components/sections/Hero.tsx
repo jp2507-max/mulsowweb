@@ -1,12 +1,21 @@
 import React from 'react';
 import { Button } from '../ui/Button';
 import { siteConfig } from '@/app/config/site';
-// HeroReadyClient intentionally omitted - decorative readiness handled elsewhere
+import HeroReadyClient from '@/components/utility/HeroReadyClient';
+import { Image } from '@/components/ui/Image';
 
 export default function Hero() {
   return (
-    <section className="hero-section pitch-bg" aria-label="Willkommen beim Mulsower SV 61">
+  <section className="hero-section" aria-label="Willkommen beim Mulsower SV 61">
+  {/* Ensure hero animations unlock and content becomes visible once ready */}
+  <HeroReadyClient />
+      {/* noscript fallback: ensures the hero content is visible when JS is disabled */}
+      <noscript>
+        <style>{`.hero-title, .hero-subtitle, .hero-ctas { opacity: 1 !important; transform: none !important; }`}</style>
+      </noscript>
       <div className="hero-bg" aria-hidden="true">
+  {/* Subtle stadium photo background (almost invisible) */}
+  <div className="hero-photo-bg" />
         <div className="hero-gradient-1" />
         <div className="hero-gradient-2" />
         <div className="hero-shape-1" />
@@ -15,14 +24,25 @@ export default function Hero() {
 
       <div className="hero-overlay" aria-hidden="true" />
 
-      {/* Decorative background image/svg - intentionally hidden from assistive tech */}
-      <img id="hero-img" src="/og-msv61-redwhite-1200x630.png" alt="" aria-hidden="true" className="hero-decorative" />
+  {/* Decorative background handled via CSS (.hero-photo-bg). Keeping no inline <img> avoids LCP impact. */}
 
       <div className="hero-content" id="main-content">
         <div className="hero-text">
           <p className="eyebrow mb-3">Der Fußballverein aus Mulsow</p>
-          <h1 className="hero-title">
-            <span className="hero-title-main">Mulsower SV 61</span>
+          <h1 className="hero-title vt-hero-title">
+            <span className="hero-title-row">
+              {/* Crest next to headline for instant brand recognition */}
+              <Image
+                src="/logo.svg"
+                alt=""
+                decorative
+                width={80}
+                height={80}
+                className="hero-badge vt-logo"
+                priority
+              />
+              <span className="hero-title-main">Mulsower SV 61</span>
+            </span>
             <span className="hero-title-subtitle">Tradition seit 1961</span>
           </h1>
 

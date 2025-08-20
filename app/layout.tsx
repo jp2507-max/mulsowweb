@@ -14,6 +14,7 @@ import { generatePageMetadata } from "./config/site";
 import { SiteBackground } from "@/components/ui/SiteBackground";
 import InteractiveSpotlight from "@/components/ui/InteractiveSpotlight";
 import ViewTransitionRouter from "@/components/utility/ViewTransitionRouter";
+import { ScrollProvider } from "@/components/ScrollProvider";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -68,6 +69,8 @@ export default function RootLayout({
   <meta name="view-transition" content="same-origin" />
       </head>
       <body className={`${inter.className} antialiased`}>
+  {/* Lightweight, CSS-driven reading progress bar */}
+  <div className="reading-progress" aria-hidden="true" />
   <a href="#main" className="skip-link sr-only focusable">Zum Inhalt springen</a>
   <DeviceMotion />
         {/* Global decorative background (non-interactive, behind all content) */}
@@ -86,12 +89,14 @@ export default function RootLayout({
     <SmoothScrollInit />
   {/* Enable SPA view transitions where supported to complement cross-document meta */}
   <ViewTransitionRouter />
-        <Header />
-        <main id="main" tabIndex={-1}>
-          {children}
-        </main>
-        <Footer />
-        <PerformanceMonitorWrapper />
+        <ScrollProvider>
+          <Header />
+          <main id="main" tabIndex={-1}>
+            {children}
+          </main>
+          <Footer />
+          <PerformanceMonitorWrapper />
+        </ScrollProvider>
       </body>
     </html>
   );

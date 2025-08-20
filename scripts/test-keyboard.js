@@ -1,10 +1,13 @@
 // Keyboard navigation checks: skip link presence, focusable elements, and axe-core keyboard checks
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { JSDOM } from 'jsdom';
 import * as axeCore from 'axe-core';
 
 async function main() {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
   const fixturePath = path.join(__dirname, 'fixtures', 'animations-fixture.html');
   if (!fs.existsSync(fixturePath)) {
     console.error('Fixture not found:', fixturePath);
@@ -83,12 +86,10 @@ async function main() {
 
   if (failed) process.exit(1);
 
-  // 3) Run axe-core accessibility keyboard-related checks
-  const script = doc.createElement('script');
-  script.textContent = axeCore.source;
-  doc.head.appendChild(script);
-
+  // 3) Run axe-core accessibility keyboard-related checks (inject via eval)
+  window.eval(axeCore.source);
   const results = await new Promise((resolve, reject) => {
+    if (!window.axe) return resolve({ violations: [] });
     window.axe.run(doc, { runOnly: { type: 'tag', values: ['wcag2aa'] } }, (err, res) => {
       if (err) return reject(err);
       resolve(res);

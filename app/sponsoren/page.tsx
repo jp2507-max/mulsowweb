@@ -114,8 +114,9 @@ export default function SponsorsPage() {
                 Kontaktieren Sie uns für weitere Informationen über Sponsoring-Möglichkeiten.
               </p>
               <a
-                href="/mitgliedschaft/"
+                href={`mailto:info@mulsower-sv.de`}
                 className="btn btn-lg btn-primary hover:scale-105 active:scale-95"
+                aria-label="Kontakt aufnehmen per E-Mail"
               >
                 Kontakt aufnehmen
               </a>

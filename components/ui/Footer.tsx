@@ -13,84 +13,33 @@ export function Footer() {
     "Garvensdorfer Weg 8",
     "18233 Carinerland",
   ];
-  const email = "info@mulsower-sv61.de";
+  const email = "info@mulsower-sv.de";
 
   return (
-    <footer 
+    <footer
       role="contentinfo"
       aria-label="Website-Fußzeile mit Kontaktinformationen"
-      style={{
-        borderTop: '1px solid #E2E8F0',
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
-        backdropFilter: 'blur(8px)'
-      }}
+  className="site-footer site-footer--brand site-footer--force-white text-white"
     >
-      <div 
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: 'clamp(2.5rem, 8vw, 3.5rem) 1.5rem'
-        }}
-      >
-        <div 
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: 'clamp(2rem, 6vw, 2.5rem)'
-          }}
-        >
+      <div className="mx-auto max-w-7xl px-3 py-2 md:py-1">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 items-start">
           <div>
-            <h2 
-              style={{ 
-                fontSize: 'clamp(1.125rem, 3vw, 1.25rem)',
-                fontWeight: '600',
-                fontFamily: 'var(--font-heading)',
-                color: '#0F172A',
-                marginBottom: '0.5rem'
-              }}
-            >
+      <h2 className="text-xs md:text-sm font-semibold mb-0.5 font-heading">
               {clubName}
             </h2>
-            <address 
-              style={{ 
-                fontStyle: 'normal',
-                fontSize: 'clamp(0.875rem, 2.5vw, 1rem)',
-                color: '#475569',
-                lineHeight: '1.5'
-              }}
-              aria-label="Vereinsadresse"
-            >
+            <address className="not-italic text-xs md:text-sm leading-relaxed" aria-label="Vereinsadresse">
               {addressLines.map((line, i) => (
                 <div key={i}>{line}</div>
               ))}
             </address>
           </div>
-          <div 
-            style={{
-              textAlign: 'left'
-            }}
-            className="md:text-right"
-          >
-            <div 
-              style={{
-                fontSize: 'clamp(0.875rem, 2.5vw, 1rem)',
-                color: '#475569'
-              }}
-            >
-              <span style={{ fontWeight: '500' }}>E-Mail:</span>{" "}
+
+      <div className="text-left md:text-right">
+    <div className="text-xs md:text-sm">
+              <span className="font-medium">E-Mail:</span>{" "}
               <a
                 href={`mailto:${email}`}
-                style={{
-                  textDecoration: 'underline',
-                  color: '#475569',
-                  borderRadius: '4px'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#0F172A';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#475569';
-                }}
+        className="underline"
                 aria-label={`E-Mail senden an ${email}`}
               >
                 {email}
@@ -98,27 +47,14 @@ export function Footer() {
             </div>
           </div>
         </div>
-
-        <div 
-          style={{
-            marginTop: '2rem',
-            paddingTop: '1.5rem',
-            borderTop: '1px solid #E2E8F0',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            gap: '0.75rem',
-            fontSize: '0.875rem',
-            color: '#94A3B8'
-          }}
-          className="md:flex-row md:items-center"
-        >
+  <div className="site-footer__meta mt-2 pt-1 flex flex-col md:flex-row md:items-center justify-between gap-1 text-xs md:text-sm">
           <div>
             © {year} {clubName}
           </div>
           <div>
-            {/* Add any subtle legal links here later if needed */}
+  <a href="/impressum/" className="underline" aria-label="Impressum öffnen">
+              Impressum
+            </a>
           </div>
         </div>
       </div>

@@ -4,6 +4,9 @@ import { getHomepageSponsors } from '../../app/data/sponsors';
 import { Card } from '../ui/Card';
 import { ExternalLink } from '../ui/ExternalLink';
 import { LazyOnScroll } from '../utility/BundleOptimizer';
+import { useEffect, useMemo, useState } from 'react';
+import { motion } from 'motion/react';
+import { prefersReducedMotion as prefersReducedMotionUtil } from '@/lib/utils/deviceCapabilities';
 
 interface SponsorTeaserProps {
   maxItems?: number;
@@ -12,6 +15,22 @@ interface SponsorTeaserProps {
 
 export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorTeaserProps) {
   const displaySponsors = getHomepageSponsors().slice(0, maxItems);
+
+  // Respect reduced motion at runtime
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    setReduced(prefersReducedMotionUtil());
+  }, []);
+
+  const containerVariants = useMemo(() => ({
+    hidden: { opacity: 0 },
+    show: { opacity: 1 },
+  }), []);
+
+  const itemVariants = useMemo(() => ({
+    hidden: { opacity: 0, y: 12 },
+    show: { opacity: 1, y: 0 },
+  }), []);
 
   return (
     <section data-heavy className={`relative py-16 md:py-20 ${className}`} aria-labelledby="sponsors-heading">
@@ -43,9 +62,9 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
           </div>
         </div>
 
-        {/* Sponsor Grid - Responsive 2-3-6 columns with lazy loading */}
+        {/* Sponsor Grid - Responsive 2-3-6 columns with lazy loading and Motion reveal */}
         <LazyOnScroll
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 mb-12"
+          className="mb-12"
           fallback={
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 mb-12">
               {Array.from({ length: 6 }).map((_, i) => (
@@ -56,28 +75,33 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
             </div>
           }
         >
-          <div
+          <motion.ul
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8"
             role="list"
             aria-label="Sponsoren des Mulsower SV 61"
+            variants={containerVariants}
+            initial={reduced ? false : 'hidden'}
+            whileInView={reduced ? undefined : 'show'}
+            viewport={reduced ? undefined : { once: true, margin: '0px 0px -10% 0px' }}
           >
-            {displaySponsors.map((sponsor, index) => {
-              const delay = Math.min(index * 60, 400); // 60ms stagger, cap at 400ms
-              return (
-                <div
-                  key={sponsor.id}
-                  className="animate-fadeInUp"
-                  style={{
-                    animationDelay: `${delay}ms`,
-                    animationFillMode: 'both'
-                  }}
-                  role="listitem"
+            {displaySponsors.map((sponsor, i) => (
+              <motion.li
+                key={sponsor.id}
+                role="listitem"
+                variants={itemVariants}
+                transition={{ delay: i * 0.08, duration: 0.28 }}
+              >
+                <motion.div
+                  whileHover={reduced ? undefined : { scale: 1.04 }}
+                  whileFocus={reduced ? undefined : { scale: 1.02 }}
+                  transition={{ type: 'spring', stiffness: 420, damping: 32 }}
                 >
                   <ExternalLink
                     href={sponsor.url}
                     className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded-2xl touch-feedback"
                     aria-label={`${sponsor.name} - Sponsor-Website besuchen`}
                   >
-                    <Card className="sponsor-card h-full bg-white border border-neutral-200 hover:border-brand-light hover:scale-105 transition-motion p-6 md:p-8 text-center">
+                    <Card className="sponsor-card h-full bg-white border border-neutral-200 hover:border-brand-light transition-motion p-6 md:p-8 text-center">
                       {/* Placeholder for logo - will be replaced with actual logos later */}
                       <div
                         className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-lg flex items-center justify-center"
@@ -99,10 +123,10 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
                       )}
                     </Card>
                   </ExternalLink>
-                </div>
-              );
-            })}
-          </div>
+                </motion.div>
+              </motion.li>
+            ))}
+          </motion.ul>
         </LazyOnScroll>
 
         {/* CTA to full sponsors page */}

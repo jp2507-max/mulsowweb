@@ -39,17 +39,17 @@ export default function ImpressumPage() {
                 </div>
                 <div>
                   <strong className="text-ink-primary">Anschrift:</strong><br />
-                  Dorfstraße 12<br />
-                  19067 Mulsow<br />
+                  Garvensdorfer Weg 8<br />
+                  18233 Carinerland<br />
                   Deutschland
                 </div>
                 <div>
                   <strong className="text-ink-primary">E-Mail:</strong><br />
                   <a 
-                    href="mailto:info@mulsower-sv61.de" 
+                    href="mailto:info@mulsower-sv.de" 
                     className="text-brand-primary hover:text-brand-secondary transition-colors duration-200 underline"
                   >
-                    info@mulsower-sv61.de
+                    info@mulsower-sv.de
                   </a>
                 </div>
               </div>
@@ -192,17 +192,17 @@ export default function ImpressumPage() {
                 <div>
                   <strong className="text-ink-primary">E-Mail:</strong>{" "}
                   <a 
-                    href="mailto:info@mulsower-sv61.de" 
+                    href="mailto:info@mulsower-sv.de" 
                     className="text-brand-primary hover:text-brand-secondary transition-colors duration-200 underline"
                   >
-                    info@mulsower-sv61.de
+                    info@mulsower-sv.de
                   </a>
                 </div>
                 <div>
                   <strong className="text-ink-primary">Postanschrift:</strong><br />
                   Mulsower SV 61 e.V.<br />
-                  Dorfstraße 12<br />
-                  19067 Mulsow
+                  Garvensdorfer Weg 8<br />
+                  18233 Carinerland
                 </div>
               </div>
             </div>

@@ -173,8 +173,8 @@ export default function MembershipPage() {
             </div>
             <address className="not-italic text-ink-secondary leading-relaxed">
               <div className="font-semibold text-ink-primary mb-2">Mulsower SV 61 e.V.</div>
-              <div>Dorfstraße 12</div>
-              <div>19067 Mulsow</div>
+              <div>Garvensdorfer Weg 8</div>
+              <div>18233 Carinerland</div>
               <div className="mt-2">Deutschland</div>
             </address>
             <div className="mt-4 text-sm text-ink-tertiary">
@@ -205,10 +205,10 @@ export default function MembershipPage() {
                 Für Fragen zur Mitgliedschaft:
               </div>
               <a 
-                href="mailto:info@mulsower-sv61.de"
+                href="mailto:info@mulsower-sv.de"
                 className="inline-flex items-center text-brand-primary hover:text-brand-secondary font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded"
               >
-                info@mulsower-sv61.de
+                info@mulsower-sv.de
                 <svg 
                   className="ml-2 w-4 h-4" 
                   fill="none" 

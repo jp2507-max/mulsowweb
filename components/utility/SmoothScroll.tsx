@@ -40,8 +40,26 @@ export function SmoothScrollInit({ selector = 'a[href^="#"]', offset = 0 }: Opti
       // Prevent default navigation and perform smooth scroll
       e.preventDefault();
 
-      // Use scrollIntoView for smooth behavior, then adjust offset if provided
-      (el as Element).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // If Lenis is available, delegate to it for smooth scroll with header offset.
+      // Otherwise, fall back to native scrollIntoView (offset handled via CSS scroll-margin-top).
+      const root = document.documentElement;
+      const cssOffset = parseInt(getComputedStyle(root).getPropertyValue('--scroll-offset')) || 0;
+      const headerOffset = Number.isFinite(offset) && offset !== 0 ? offset : cssOffset;
+
+  const maybeLenis: unknown = (window as unknown as { __lenis?: unknown }).__lenis;
+  const lenis = maybeLenis as { scrollTo?: (target: Element | string | number, options?: Record<string, unknown>) => void } | undefined;
+      if (lenis && typeof lenis.scrollTo === 'function') {
+        const targetEl = el as HTMLElement;
+        const y = Math.round(targetEl.getBoundingClientRect().top + window.scrollY - headerOffset);
+        try {
+          lenis.scrollTo(y);
+        } catch {
+          // Fallback to native on failure
+          (el as Element).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      } else {
+        (el as Element).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
 
       // Update the URL hash without jumping; we rely on CSS `scroll-margin-top`
       // to offset the target for sticky headers. history.pushState keeps the

@@ -6,7 +6,7 @@ interface ContactSnippetProps {
 
 export default function ContactSnippet({ className = '' }: ContactSnippetProps) {
   return (
-  <section className={`py-16 md:py-20 bg-white ${className}`} aria-labelledby="contact-heading">
+  <section className={`py-16 md:py-20 ${className}`} aria-labelledby="contact-heading">
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
         {/* Section Header */}
     <div className="text-center mb-12 md:mb-16 reveal-candidate reveal--fade">
@@ -47,8 +47,8 @@ export default function ContactSnippet({ className = '' }: ContactSnippetProps) 
               </div>
               <address className="not-italic text-ink-secondary leading-relaxed">
                 <div className="font-semibold text-ink-primary mb-2">Mulsower SV 61 e.V.</div>
-                <div>Dorfstraße 12</div>
-                <div>19067 Mulsow</div>
+                <div>Garvensdorfer Weg 8</div>
+                <div>18233 Carinerland</div>
                 <div className="mt-2">Deutschland</div>
               </address>
             </div>
@@ -81,11 +81,11 @@ export default function ContactSnippet({ className = '' }: ContactSnippetProps) 
                   Für allgemeine Anfragen:
                 </div>
                 <a 
-                  href="mailto:info@mulsower-sv61.de"
+                  href="mailto:info@mulsower-sv.de"
                   className="inline-flex items-center text-brand-primary hover:text-brand-secondary font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded"
-                  aria-label="E-Mail senden an info@mulsower-sv61.de"
+                  aria-label="E-Mail senden an info@mulsower-sv.de"
                 >
-                  info@mulsower-sv61.de
+                  info@mulsower-sv.de
                   <svg 
                     className="ml-2 w-4 h-4" 
                     fill="none" 
@@ -102,25 +102,7 @@ export default function ContactSnippet({ className = '' }: ContactSnippetProps) 
             </div>
           </div>
 
-          {/* Additional Contact Information */}
-          <div className="mt-12 text-center reveal-candidate reveal--fade">
-            <div className="inline-flex items-center px-6 py-3 bg-neutral-100 rounded-xl text-ink-secondary" role="note">
-              <svg 
-                className="w-5 h-5 mr-3 text-brand-primary" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-                role="img"
-                aria-label="Information"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span className="text-sm md:text-base">
-                Wir antworten in der Regel innerhalb von 24 Stunden
-              </span>
-            </div>
-          </div>
+          {/* Additional Contact Information removed per request */}
         </div>
       </div>
     </section>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
+import FussballDeWidget from "@/components/utility/FussballDeWidget";
 import { generatePageMetadata } from "../config/site";
 
 export const dynamic = "error";
@@ -66,6 +67,19 @@ export default function SchedulePage() {
             </Button>
           </div>
         </div>
+
+        {/* Fußball.de Widget (embedded table) */}
+        <section aria-labelledby="spielplan-widget-heading" className="mb-16">
+          <h2 id="spielplan-widget-heading" className="sr-only">Spielplan Widget</h2>
+          <div className="card max-w-4xl mx-auto p-4" role="region" aria-label="Fussball.de Spielplan und Tabelle">
+            <FussballDeWidget
+              id="b5168366-f6fd-48f2-8458-fd8c1f77a7ea"
+              type="table"
+              className="w-full"
+              title="Spielplan & Tabelle – FUSSBALL.DE"
+            />
+          </div>
+        </section>
 
         {/* Additional Information */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
