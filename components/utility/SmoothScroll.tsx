@@ -47,6 +47,45 @@ export function SmoothScrollInit({ selector = 'a[href^="#"]', offset = 0 }: Opti
       // Prevent default navigation and perform smooth scroll
       e.preventDefault();
 
+      // Helper: focus element without causing the browser to scroll.
+      // If the element isn't focusable, add a temporary tabindex="-1",
+      // call focus({ preventScroll: true }), then remove/restore the tabindex.
+      function focusWithoutScroll(targetEl: Element | null) {
+        if (!targetEl) return;
+        const element = targetEl as HTMLElement;
+        if (!element || typeof element.focus !== 'function') return;
+
+        const hadTabIndex = element.hasAttribute('tabindex');
+        const prevTabIndex = hadTabIndex ? element.getAttribute('tabindex') : null;
+        let addedTabIndex = false;
+
+        try {
+          if (element.tabIndex < 0) {
+            // make focusable
+            element.setAttribute('tabindex', '-1');
+            addedTabIndex = true;
+          }
+
+          // focus without scrolling
+          // Some older browsers may not support preventScroll option, so guard it
+          try {
+            (element as HTMLElement).focus({ preventScroll: true } as FocusOptions);
+          } catch {
+            // Fallback: call focus() — this may scroll, but it's a last resort
+            (element as HTMLElement).focus();
+          }
+        } finally {
+          // restore previous tabindex state
+          if (addedTabIndex) {
+            if (prevTabIndex === null) {
+              element.removeAttribute('tabindex');
+            } else {
+              element.setAttribute('tabindex', prevTabIndex);
+            }
+          }
+        }
+      }
+
       // If Lenis is available, delegate to it for smooth scroll with header offset.
       // Otherwise, fall back to native scrollIntoView (offset handled via CSS scroll-margin-top).
       const root = document.documentElement;
@@ -60,12 +99,18 @@ export function SmoothScrollInit({ selector = 'a[href^="#"]', offset = 0 }: Opti
         const y = Math.round(targetEl.getBoundingClientRect().top + window.scrollY - headerOffset);
         try {
           lenis.scrollTo(y);
+          // Move keyboard/screenreader focus to the target element without changing
+          // the user's scroll position. This ensures hash navigation works for
+          // assistive tech even though we prevented the default navigation.
+          focusWithoutScroll(targetEl);
         } catch {
           // Fallback to native on failure
           (el as Element).scrollIntoView({ behavior: 'smooth', block: 'start' });
+          focusWithoutScroll(el as Element);
         }
       } else {
         (el as Element).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        focusWithoutScroll(el as Element);
       }
 
       // Update the URL hash without jumping; we rely on CSS `scroll-margin-top`

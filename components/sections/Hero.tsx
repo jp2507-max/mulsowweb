@@ -13,14 +13,13 @@ export default function Hero() {
       <noscript>
         <style>{`.hero-title, .hero-subtitle, .hero-ctas { opacity: 1 !important; transform: none !important; }`}</style>
       </noscript>
-      <div className="hero-bg" aria-hidden="true">
-  {/* Subtle stadium photo background (almost invisible) */}
-  <div className="hero-photo-bg" />
-        <div className="hero-gradient-1" />
-        <div className="hero-gradient-2" />
-        <div className="hero-shape-1" />
-        <div className="hero-shape-2" />
-      </div>
+  <div className="hero-bg" aria-hidden="true">
+  {/* Decorative hero layers: gradients and shapes. Photo removed for experimentation. */}
+    <div className="hero-gradient-1" />
+    <div className="hero-gradient-2" />
+    <div className="hero-shape-1" />
+    <div className="hero-shape-2" />
+  </div>
 
       <div className="hero-overlay" aria-hidden="true" />
 

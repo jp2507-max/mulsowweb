@@ -437,7 +437,15 @@ h6 {
   /* Optional shapes/variants (opt-in) */
   .btn-pill {
     @apply rounded-full;
-    /* slightly wider horizontal padding works well for pills */
+    /* Moderate horizontal padding for pills */
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  /* Override pill padding specifically for header fanshop button */
+  .header-fanshop-btn.btn-pill {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
   }
 
   .btn-soft {
@@ -582,16 +590,117 @@ h6 {
 
   /* Special Fanshop button styling to stand out */
   .header-fanshop-btn {
-    background: linear-gradient(135deg, #ffd1d1, #ffffff);
-  color: #ffffff;
-    border: 2px solid rgba(255,255,255,0.75);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.12), inset 0 -2px 0 rgba(193,18,31,0.08);
+    /* Make the Fanshop button a prominent pill with strong contrast */
+    background: linear-gradient(135deg, #ff6b6b 0%, #c1121f 60%);
+    color: #ffffff;
+   /* Very compact padding - aggressively override all other button classes */
+   padding: 0.2rem 0.5rem !important;
+   font-size: 0.8rem !important;
+   line-height: 1.2 !important;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 10px 36px rgba(193,18,31,0.22), 0 4px 10px rgba(0,0,0,0.14);
+    transform: translateZ(0);
+    position: relative;
+    overflow: visible;
   }
   .header-fanshop-btn:hover {
-    background: linear-gradient(135deg, #ffffff, #ffe5e5);
-    box-shadow: 0 10px 22px rgba(0,0,0,0.16);
+    background: linear-gradient(135deg, #ff7b7b 0%, #c1121f 60%);
+    box-shadow: 0 12px 30px rgba(193,18,31,0.22), 0 4px 10px rgba(0,0,0,0.16);
+    /* Avoid large scaling on hover; keep to a small lift */
+    transform: translateY(-1px) scale(1.02);
   }
-  .header-fanshop-btn:focus-visible { outline-color: #fff; }
+  .header-fanshop-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 6px rgba(193,18,31,0.18), 0 6px 22px rgba(193,18,31,0.18);
+    transform: translateY(-1px);
+  }
+
+  /* subtle pulsing halo to attract attention but respectful of reduced-motion */
+  .header-fanshop-btn::after {
+    content: '';
+    position: absolute;
+    left: -6px;
+    right: -6px;
+    top: -6px;
+    bottom: -6px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 50% 50%, rgba(193,18,31,0.12), rgba(193,18,31,0) 40%);
+    z-index: -1;
+    opacity: 0.9;
+    transform: scale(1);
+    transition: opacity 320ms var(--motion-ease), transform 320ms var(--motion-ease);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .header-fanshop-btn.pulse::after,
+    .header-fanshop-btn:hover::after {
+      animation: fanshop-pulse 2.4s ease-in-out infinite;
+    }
+  }
+
+  @keyframes fanshop-pulse {
+    0% { transform: scale(0.98); opacity: 0.9; }
+    50% { transform: scale(1.06); opacity: 0.6; }
+    100% { transform: scale(0.98); opacity: 0.9; }
+  }
+
+  /* Icon sizing inside the button */
+  .fanshop-icon {
+    display: inline-block;
+    vertical-align: middle;
+    color: rgba(255,255,255,0.95);
+  }
+
+  /* Icon wrapper: circular light background to improve contrast against brand header */
+  .fanshop-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* Very compact icon wrapper */
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+    margin-right: 0.25rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(193,18,31,0.12) inset;
+  }
+
+  /* Header Fanshop white variant: allow placing a white button on brand header */
+  .header-fanshop-btn.white {
+    background: #ffffff;
+    color: var(--color-brand-primary);
+    border: 1px solid rgba(15,17,26,0.06);
+    box-shadow: 0 6px 18px rgba(2,6,23,0.08);
+  }
+
+  .header-fanshop-btn.white .fanshop-icon {
+    color: var(--color-brand-primary);
+  }
+
+  .header-fanshop-btn.white .fanshop-label {
+    color: var(--color-brand-primary);
+  }
+
+  .fanshop-label {
+    font-weight: 700;
+    color: #ffffff;
+    /* Very compact font-size */
+    font-size: 0.8rem !important;
+    line-height: 1.2 !important;
+    vertical-align: middle;
+  }
+
+  /* Make the whole CTA slightly larger on larger viewports for visibility */
+  @media (min-width: 768px) {
+   /* Very compact sizes on larger viewports */
+   .header-fanshop-btn { 
+     padding: 0.25rem 0.55rem !important; 
+     font-size: 0.8rem !important;
+   }
+   .fanshop-icon-wrap { width: 18px; height: 18px; margin-right: 0.3rem; }
+   .fanshop-label { font-size: 0.8rem !important; }
+  }
 
   /* Eyebrow text utility: small, uppercased label above headlines */
   .eyebrow {
@@ -636,17 +745,21 @@ h6 {
     z-index: -1; /* stays below gradient layers */
   }
 
-  /* Subtle CSS-only gradients - 2024 organic trend */
+  /* Subtle CSS-only gradients - removed opacity to reveal site watermark behind hero */
   .hero-gradient-1 {
     @apply absolute top-0 left-0 w-full h-full;
     background: linear-gradient(135deg, var(--color-brand-light) 0%, transparent 40%);
-    opacity: 0.3;
+    /* Disabled to show underlying site background/watermark */
+    opacity: 0;
+    pointer-events: none;
   }
 
   .hero-gradient-2 {
     @apply absolute bottom-0 right-0 w-4/5 h-4/5;
     background: linear-gradient(45deg, var(--color-neutral-100) 0%, transparent 70%);
-    opacity: 0.5;
+    /* Disabled to show underlying site background/watermark */
+    opacity: 0;
+    pointer-events: none;
   }
 
   /* Modern organic shapes - performance-friendly CSS */
@@ -670,7 +783,7 @@ h6 {
   }
 
   /* Hero-only contrast overlay (sits above hero-bg, below content) */
-  .hero-overlay { @apply absolute inset-0 z-0; pointer-events: none; background: none; }
+  .hero-overlay { @apply absolute inset-0 z-0; pointer-events: none; background: transparent; }
 
   .hero-content {
     @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8 relative z-10 text-center flex flex-col justify-center;
@@ -1521,7 +1634,6 @@ h6 {
   opacity: 1 !important;
   background-blend-mode: normal !important;
   /* Ensure the watermark or decorative background does not show through */
-  background-image: none !important;
   isolation: isolate; /* keep footer visually independent */
   }
 

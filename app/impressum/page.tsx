@@ -6,7 +6,7 @@ export const dynamic = "error";
 export const metadata: Metadata = generatePageMetadata({
   title: "Impressum & Rechtliche Angaben",
   description: "Rechtliche Angaben und Impressum des Mulsower SV 61 e.V. gemäß §5 DDG. Kontaktdaten, Vertretung und Haftungsausschluss.",
-  path: "/impressum"
+  path: "/impressum/"
 });
 
 export default function ImpressumPage() {

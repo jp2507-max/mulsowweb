@@ -75,7 +75,11 @@ export function generatePageMetadata({
 }) {
   const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
   const pageDescription = description || siteConfig.defaultMetadata.description;
-  const canonicalUrl = `${siteConfig.baseUrl}${path}`;
+  const canonicalPath =
+    !path || path === '/'
+      ? '/'
+      : (path.endsWith('/') ? path : `${path}/`);
+  const canonicalUrl = `${siteConfig.baseUrl}${canonicalPath}`;
   
   return {
     title: pageTitle,

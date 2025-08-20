@@ -4,8 +4,9 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { cx } from "@/lib/utils/cx";
 import { Image } from "./Image";
+import { Button } from './Button';
 import { siteConfig } from '@/app/config/site';
-import { secureRel } from '@/lib/utils/secure-rel';
+// secureRel not needed in Header since Button handles external rel generation
 
 const navItems = [
   { label: "Spielplan", href: "/spielplan/" },
@@ -99,17 +100,25 @@ export function Header() {
               </ul>
             </nav>
 
-            {/* Right-side Fanshop CTA (external) */}
+            {/* Right-side Fanshop CTA (external) - reuse hero CTA styles for consistency */}
             <div className="header-cta">
-              <a
+              <Button
                 href={siteConfig.externalLinks.fanshop}
                 target="_blank"
-                rel={secureRel(undefined, '_blank')}
-                className="btn btn-sm btn-pill header-fanshop-btn touch-feedback"
+                variant="ghost"
+                size="sm"
+                className="btn-pill header-fanshop-btn hero-cta white"
                 aria-label="Fanshop - Öffnet externe Website"
               >
-                Fanshop
-              </a>
+                {/* Use hero CTA icon structure so the Fanshop CTA matches other CTAs */}
+                <span className="hero-cta-icon fanshop-icon-wrap" aria-hidden="true">
+                  <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="fanshop-icon">
+                    <path d="M6 7V6a6 6 0 0112 0v1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M20 7h-16l1.2 12.4A2 2 0 007.2 21h9.6a2 2 0 001.999-1.6L20 7z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </span>
+                <span className="fanshop-label hero-cta-label">Fanshop</span>
+              </Button>
             </div>
           </div>
         </div>
