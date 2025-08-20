@@ -18,4 +18,4 @@ export function SiteBackground() {
   );
 }
 
-export default SiteBackground;
+// Intentionally only a named export. Consumers should import with { SiteBackground }.

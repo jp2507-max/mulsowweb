@@ -225,19 +225,23 @@ h6 {
 /* Core utilities for buttons and cards */
 @layer utilities {
   /* Cross-Page View Transitions: subtle fade that respects reduced motion */
+  /* stylelint-disable selector-type-no-unknown -- Allow spec pseudo-elements ::view-transition-*(root) */
   ::view-transition-old(root),
   ::view-transition-new(root) {
     animation-duration: 0.32s;
   }
   ::view-transition-old(root) { animation-name: vt-fade-out; }
   ::view-transition-new(root) { animation-name: vt-fade-in; }
+  /* stylelint-enable selector-type-no-unknown */
 
   @keyframes vt-fade-out { to { opacity: 0; filter: saturate(0.98) blur(0.5px); } }
   @keyframes vt-fade-in { from { opacity: 0; filter: saturate(0.98) blur(0.5px); } }
 
   @media (prefers-reduced-motion: reduce) {
-    ::view-transition-old(root),
-    ::view-transition-new(root) { animation: none !important; }
+  /* stylelint-disable selector-type-no-unknown -- allow view-transition pseudo-elements inside media query */
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none !important; }
+  /* stylelint-enable selector-type-no-unknown */
   }
 
   /* Hero word rotator: calm vertical word switcher (CSS-only) */

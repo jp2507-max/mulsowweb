@@ -23,7 +23,7 @@ export function Header() {
   return (
     <>
       {/* Skip link for keyboard navigation */}
-      <a href="#main-content" className="skip-link">
+      <a href="#main" className="skip-link">
         Zum Hauptinhalt springen
       </a>
       

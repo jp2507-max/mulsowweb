@@ -11,7 +11,7 @@ import { PerformanceOptimizer, PerformanceMonitorWrapper } from "@/components/ut
 import DeviceMotion from "@/components/utility/DeviceMotion";
 import FocusReveal from "@/components/utility/FocusReveal";
 import { generatePageMetadata } from "./config/site";
-import SiteBackground from "@/components/ui/SiteBackground";
+import { SiteBackground } from "@/components/ui/SiteBackground";
 import InteractiveSpotlight from "@/components/ui/InteractiveSpotlight";
 import ViewTransitionRouter from "@/components/utility/ViewTransitionRouter";
 
