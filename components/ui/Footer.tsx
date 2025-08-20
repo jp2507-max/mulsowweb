@@ -10,7 +10,7 @@ export function Footer() {
 
   const clubName = "Mulsower SV 61";
   const addressLines = [
-    "Garvensdorfer Weg 8",
+  "Garvensdorfer Weg 10",
     "18233 Carinerland",
   ];
   const email = "info@mulsower-sv.de";
@@ -21,7 +21,7 @@ export function Footer() {
       aria-label="Website-Fußzeile mit Kontaktinformationen"
   className="site-footer site-footer--brand site-footer--force-white text-white"
     >
-      <div className="mx-auto max-w-7xl px-3 py-2 md:py-1">
+      <div className="mx-auto max-w-7xl px-3 py-1 md:py-1">
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 items-start">
           <div>
       <h2 className="text-xs md:text-sm font-semibold mb-0.5 font-heading">
@@ -47,7 +47,7 @@ export function Footer() {
             </div>
           </div>
         </div>
-  <div className="site-footer__meta mt-2 pt-1 flex flex-col md:flex-row md:items-center justify-between gap-1 text-xs md:text-sm">
+  <div className="site-footer__meta mt-1 pt-0 flex flex-col md:flex-row md:items-center justify-between gap-1 text-xs md:text-sm">
           <div>
             © {year} {clubName}
           </div>

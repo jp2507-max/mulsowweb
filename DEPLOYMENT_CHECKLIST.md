@@ -78,7 +78,7 @@
 ## Post-Deployment Testing 🧪
 
 ### Step 1: Basic Functionality Tests
-- [ ] **Home page loads**: Visit `https://mulsower-sv61.de/`
+- [ ] **Home page loads**: Visit `https://mulsower-sv.de/`
 - [ ] **All pages accessible**:
   - [ ] `/spielplan/` - Schedule page
   - [ ] `/sponsoren/` - Sponsors page  
@@ -123,11 +123,11 @@ Use browser dev tools (F12 → Network tab) to verify:
 ### Option 1: Subdirectory Testing
 1. Create subdirectory in IONOS: `htdocs/staging/`
 2. Upload all `/out` contents to `staging/` directory
-3. Test via `https://mulsower-sv61.de/staging/`
+3. Test via `https://mulsower-sv.de/staging/`
 4. Verify all functionality before moving to production
 
 ### Option 2: Subdomain Testing
-1. Create subdomain in IONOS (e.g., `staging.mulsower-sv61.de`)
+1. Create subdomain in IONOS (e.g., `staging.mulsower-sv.de`)
 2. Upload all `/out` contents to subdomain's document root
 3. Test all functionality on staging subdomain
 4. Move to production domain after verification

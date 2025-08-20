@@ -173,7 +173,7 @@ export default function MembershipPage() {
             </div>
             <address className="not-italic text-ink-secondary leading-relaxed">
               <div className="font-semibold text-ink-primary mb-2">Mulsower SV 61 e.V.</div>
-              <div>Garvensdorfer Weg 8</div>
+               <div>Garvensdorfer Weg 10</div>
               <div>18233 Carinerland</div>
               <div className="mt-2">Deutschland</div>
             </address>

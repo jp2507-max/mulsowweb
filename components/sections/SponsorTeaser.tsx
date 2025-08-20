@@ -5,6 +5,10 @@ import { Card } from '../ui/Card';
 import { ExternalLink } from '../ui/ExternalLink';
 import { LazyOnScroll } from '../utility/BundleOptimizer';
 import { useEffect, useMemo, useState } from 'react';
+// NOTE: this project uses Motion One (import from 'motion/react') for small,
+// performant animation primitives. A previous PR referenced "Framer Motion"
+// in the summary — keep PR summaries in sync with this choice. If you intend
+// to switch to Framer Motion, update package.json and all imports accordingly.
 import { motion } from 'motion/react';
 import { prefersReducedMotion as prefersReducedMotionUtil } from '@/lib/utils/deviceCapabilities';
 

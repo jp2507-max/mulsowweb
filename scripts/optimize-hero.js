@@ -7,10 +7,9 @@
     npm run optimize:hero
 */
 
- 
-import fs from 'node:fs/promises';
-import path from 'node:path';
-import sharp from 'sharp';
+const fs = require('fs').promises;
+const path = require('path');
+const sharp = require('sharp');
 
 const ROOT = process.cwd();
 const PUBLIC_DIR = path.join(ROOT, 'public');

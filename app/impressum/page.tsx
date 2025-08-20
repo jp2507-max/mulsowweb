@@ -11,11 +11,11 @@ export const metadata: Metadata = generatePageMetadata({
 
 export default function ImpressumPage() {
   return (
-    <main className="py-16 md:py-20" role="main" id="main-content">
+    <section className="py-16 md:py-20" id="main-content" aria-labelledby="impressum-title">
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
         {/* Page Header */}
         <div className="mb-12 md:mb-16">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-ink-primary mb-6">
+          <h1 id="impressum-title" className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-ink-primary mb-6">
             Impressum
           </h1>
           <p className="text-lg md:text-xl text-ink-secondary leading-relaxed">
@@ -39,7 +39,7 @@ export default function ImpressumPage() {
                 </div>
                 <div>
                   <strong className="text-ink-primary">Anschrift:</strong><br />
-                  Garvensdorfer Weg 8<br />
+                  Garvensdorfer Weg 10<br />
                   18233 Carinerland<br />
                   Deutschland
                 </div>
@@ -201,7 +201,7 @@ export default function ImpressumPage() {
                 <div>
                   <strong className="text-ink-primary">Postanschrift:</strong><br />
                   Mulsower SV 61 e.V.<br />
-                  Garvensdorfer Weg 8<br />
+                  Garvensdorfer Weg 10<br />
                   18233 Carinerland
                 </div>
               </div>
@@ -221,6 +221,6 @@ export default function ImpressumPage() {
 
         </div>
       </div>
-    </main>
+  </section>
   );
 }

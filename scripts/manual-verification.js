@@ -100,11 +100,11 @@ console.log('\n8. ✅ Sitemap Completeness:');
 const sitemapPath = path.join(process.cwd(), 'out', 'sitemap.xml');
 const sitemapContent = fs.readFileSync(sitemapPath, 'utf8');
 const expectedUrls = [
-  'https://mulsower-sv61.de/',
-  'https://mulsower-sv61.de/spielplan/',
-  'https://mulsower-sv61.de/sponsoren/',
-  'https://mulsower-sv61.de/mitgliedschaft/',
-  'https://mulsower-sv61.de/impressum/'
+  'https://mulsower-sv.de/',
+  'https://mulsower-sv.de/spielplan/',
+  'https://mulsower-sv.de/sponsoren/',
+  'https://mulsower-sv.de/mitgliedschaft/',
+  'https://mulsower-sv.de/impressum/'
 ];
 
 expectedUrls.forEach(url => {

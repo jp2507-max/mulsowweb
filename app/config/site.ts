@@ -5,7 +5,7 @@
 
 export const siteConfig = {
   // Base URL for the website (used for canonical URLs, sitemap, etc.)
-  baseUrl: 'https://mulsower-sv61.de',
+  baseUrl: 'https://mulsower-sv.de',
   
   // Site metadata
   name: 'Mulsower SV 61',
@@ -20,10 +20,10 @@ export const siteConfig = {
   
   // Contact information
   contact: {
-  email: 'info@mulsower-sv.de',
+    email: 'info@mulsower-sv.de',
     address: {
-  street: 'Garvensdorfer Weg 8',
-  city: '18233 Carinerland',
+      street: 'Garvensdorfer Weg 10',
+      city: '18233 Carinerland',
       country: 'Deutschland'
     }
   },

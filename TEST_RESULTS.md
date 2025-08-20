@@ -94,11 +94,13 @@
 - **Status:** PASSED
 - **Details:** Sitemap and robots.txt properly generated
 - **Sitemap URLs:**
-  - `https://mulsower-sv61.de/`
-  - `https://mulsower-sv61.de/spielplan/`
-  - `https://mulsower-sv61.de/sponsoren/`
-  - `https://mulsower-sv61.de/mitgliedschaft/`
-  - `https://mulsower-sv61.de/impressum/`
+ - **Details:** Sitemap and robots.txt properly generated
+ - **Sitemap URLs:**
+  - `https://mulsower-sv.de/`
+  - `https://mulsower-sv.de/spielplan/`
+  - `https://mulsower-sv.de/sponsoren/`
+  - `https://mulsower-sv.de/mitgliedschaft/`
+  - `https://mulsower-sv.de/impressum/`
 
 ## Performance Verification
 

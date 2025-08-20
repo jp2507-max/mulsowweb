@@ -1,6 +1,6 @@
 "use client";
 
-import FussballDeWidget from "@/components/utility/FussballDeWidget";
+import { FussballDeWidget } from "@/components/utility/FussballDeWidget";
 
 export default function NextMatchWidget() {
   return (

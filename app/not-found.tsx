@@ -124,7 +124,7 @@ export default function NotFoundPage() {
                 <div className="text-ink-secondary">
                   <strong className="text-ink-primary">Adresse:</strong><br />
                   Mulsower SV 61 e.V.<br />
-                  Garvensdorfer Weg 8<br />
+                  Garvensdorfer Weg 10<br />
                   18233 Carinerland
                 </div>
               </div>

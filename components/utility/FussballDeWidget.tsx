@@ -76,15 +76,40 @@ export function FussballDeWidget({ id, type = "table", className, title }: Fussb
       );
     };
 
-    const onMessage = (event: MessageEvent) => {
+    function onMessage(e: MessageEvent) {
+      // Use the local type guard to validate message shape
+      if (!isResizeMessage(e.data)) return;
+
+      // Ensure the message targets this iframe instance
+      if (e.data.iframeName !== iframeName) return;
+
+      const targetIframe = iframeRef.current ?? (document.querySelector(
+        `iframe[name="${iframeName}"]`
+      ) as HTMLIFrameElement | null);
+      if (!targetIframe) return;
+
+      // Validate origin against iframe.src origin safely
       try {
-        if (!isResizeMessage(event.data)) return;
-        if (event.data.iframeName !== iframeName) return;
-        iframe.style.height = `${Math.max(0, event.data.height)}px`;
+        const src = targetIframe.src || "";
+        let parsedOrigin: string;
+        try {
+          parsedOrigin = new URL(src, window.location.href).origin;
+        } catch {
+          // If parsing fails, be conservative and don't apply the height
+          return;
+        }
+
+        if (!parsedOrigin || e.origin !== parsedOrigin) return;
+
+        try {
+          targetIframe.style.height = `${Math.max(0, e.data.height)}px`;
+        } catch {
+          // ignore any errors while setting height
+        }
       } catch {
-        // ignore parsing errors
+        // ignore unexpected errors
       }
-    };
+    }
 
     window.addEventListener("message", onMessage);
 

@@ -30,6 +30,13 @@ export function SmoothScrollInit({ selector = 'a[href^="#"]', offset = 0 }: Opti
       const anchor = target.closest ? (target.closest(selector) as HTMLAnchorElement | null) : null;
       if (!anchor) return;
       if (!isSamePageLink(anchor)) return;
+      if (e.defaultPrevented) return;
+  // Only left-click
+  if (typeof e.button === 'number' && e.button !== 0) return;
+      // Respect modifier keys and explicit targets/downloads
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      if (anchor.target && anchor.target !== '_self') return;
+      if (anchor.hasAttribute('download')) return;
 
       const hash = anchor.hash;
       if (!hash) return;

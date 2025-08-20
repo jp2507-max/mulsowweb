@@ -201,7 +201,7 @@ export const sponsors: Sponsor[] = [
 ```typescript
 // app/config/site.ts - Centralized configuration
 export const siteConfig = {
-  baseUrl: 'https://mulsower-sv61.de', // Single source for all URLs
+  baseUrl: 'https://mulsower-sv.de', // Single source for all URLs
   name: 'Mulsower SV 61',
   description: 'Offizieller Internetauftritt des Mulsower SV 61 - Amateurfußballverein',
   locale: 'de',

@@ -39,24 +39,32 @@ export function ScrollProvider({ children }: Props) {
 
   useEffect(() => {
     if (!enabled) return;
-    const id = setTimeout(() => {
-      const inst = lenisRef.current?.lenis ?? null;
+    // Store references in outer scope so the cleanup can access them
+    let id: ReturnType<typeof setTimeout> | null = null;
+  type LenisLike = { on?: (event: string, handler: unknown) => void; off?: (event: string, handler: unknown) => void };
+  let inst: LenisLike | null = null;
+    let onScroll: ((e: unknown) => void) | null = null;
+
+    id = setTimeout(() => {
+  inst = (lenisRef.current?.lenis ?? null) as unknown as LenisLike;
       if (inst) {
         window.__lenis = inst;
-        const onScroll = (e: unknown) => {
+        onScroll = (e: unknown) => {
           try {
             window.dispatchEvent(new CustomEvent("lenis:scroll", { detail: e }));
           } catch {}
         };
         inst.on?.("scroll", onScroll as never);
-        return () => {
-          inst.off?.("scroll", onScroll as never);
-          if (window.__lenis === inst) window.__lenis = null;
-        };
       }
-      return () => {};
     }, 0);
-    return () => clearTimeout(id);
+
+    return () => {
+      if (id) clearTimeout(id);
+      if (inst && onScroll) {
+        inst.off?.("scroll", onScroll as never);
+      }
+      if (inst && window.__lenis === inst) window.__lenis = null;
+    };
   }, [enabled]);
 
   if (!enabled) return <>{children}</>;

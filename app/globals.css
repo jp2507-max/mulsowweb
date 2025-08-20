@@ -1496,7 +1496,9 @@ h6 {
     background: linear-gradient(to top, rgba(255,255,255,0.06), rgba(255,255,255,0));
     border-top: none !important;
     backdrop-filter: none; /* avoid double blur with site background */
-    padding-bottom: clamp(2rem, 6vw, 3rem);
+    /* Make the default footer more compact vertically to match header density */
+    padding-top: clamp(0.5rem, 1.5vw, 1rem);
+    padding-bottom: clamp(0.5rem, 1.5vw, 1rem);
     /* Allow the site background to remain visible behind the footer content */
     background-color: transparent;
   }
@@ -1506,11 +1508,21 @@ h6 {
      brand bar. Kept separate so default .site-footer can remain translucent
      on other designs. */
   .site-footer--brand {
-    background: var(--color-brand-primary) !important;
-    background-image: none !important;
-    background-color: var(--color-brand-primary) !important;
-    border-top: none !important;
-    box-shadow: none !important;
+  /* Use the exact brand primary token so the footer color matches the header */
+  background: var(--color-brand-primary) !important;
+  background-image: none !important;
+  background-color: var(--color-brand-primary) !important;
+  border-top: none !important;
+  box-shadow: none !important;
+  /* Make the brand footer compact to visually align with the header */
+  padding-top: clamp(0.5rem, 1.5vw, 1rem) !important;
+  padding-bottom: clamp(0.5rem, 1.5vw, 1rem) !important;
+  /* Force fully opaque and remove decorative overlays behind the footer */
+  opacity: 1 !important;
+  background-blend-mode: normal !important;
+  /* Ensure the watermark or decorative background does not show through */
+  background-image: none !important;
+  isolation: isolate; /* keep footer visually independent */
   }
 
   /* Utility: force fully white text inside a footer when placed over brand color */
@@ -1535,6 +1547,33 @@ h6 {
     stroke: #ffffff !important;
     background: transparent !important;
     border: none !important;
+  }
+
+  /* Also ensure plain text inside a brand footer is white for readability */
+  .site-footer--brand,
+  .site-footer--brand * {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+    stroke: #ffffff !important;
+  }
+
+  /* Strong guarantee: render an absolutely-positioned pseudo element to
+     ensure the footer shows a fully opaque brand color regardless of
+     decorative background layers or blending modes. The pseudo-element
+     sits behind content but inside the footer's stacking context. */
+  .site-footer--brand {
+    position: relative !important;
+    isolation: isolate !important;
+  }
+
+  .site-footer--brand::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--color-brand-primary) !important;
+    z-index: -1;
+    opacity: 1 !important;
+    pointer-events: none;
   }
 
   /* Footer meta row: keep spacing but remove the visual dividing rule */

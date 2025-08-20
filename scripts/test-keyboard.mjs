@@ -1,10 +1,13 @@
 // Keyboard navigation checks: skip link presence, focusable elements, and axe-core keyboard checks
-const fs = require('fs');
-const path = require('path');
-const { JSDOM } = require('jsdom');
-const axeCore = require('axe-core');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { JSDOM } from 'jsdom';
+import * as axeCore from 'axe-core';
 
 async function main() {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = path.dirname(__filename);
   const fixturePath = path.join(__dirname, 'fixtures', 'animations-fixture.html');
   if (!fs.existsSync(fixturePath)) {
     console.error('Fixture not found:', fixturePath);
@@ -35,11 +38,6 @@ async function main() {
   console.log('OK: Skip link targets', href);
 
   // 2) Check that interactive elements are keyboard-focusable
-  // Iterate all matches for .btn and .sponsor-card and apply tabbability rules:
-  // - native controls (BUTTON, INPUT, SELECT, TEXTAREA) are tabbable
-  // - anchors (A) are tabbable only if they have an href attribute
-  // - tabindex="0" is tabbable
-  // - tabindex="-1" or absence of tabindex on non-native, non-href anchors is not tabbable
   const selectors = [
     { selector: '.btn', name: '.btn' },
     { selector: '.sponsor-card', name: '.sponsor-card' }
@@ -63,7 +61,6 @@ async function main() {
       if (nativeControls.includes(tag)) {
         tabbable = true;
       } else if (tag === 'A') {
-        // Anchors only tabbable if they have an href attribute with a value
         tabbable = el.hasAttribute('href') && (el.getAttribute('href') || '').trim() !== '';
       } else if (tabindexAttr !== null && tabindexAttr === '0') {
         tabbable = true;
