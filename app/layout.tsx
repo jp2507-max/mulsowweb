@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Oswald } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/ui/Header";
@@ -54,6 +54,13 @@ export const metadata: Metadata = {
   },
   // Web app manifest (for PWA features)
   manifest: '/manifest.json'
+};
+
+// Viewport configuration for proper mobile rendering
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover'
 };
 
 export default function RootLayout({

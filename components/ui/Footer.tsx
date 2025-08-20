@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import Link from "next/link";
 
 export interface FooterProps {
   className?: string;
@@ -58,9 +59,9 @@ export function Footer() {
               </a>
             </div>
             <div className="text-xs md:text-sm">
-              <a href="/impressum/" className="underline hover:text-white/90" aria-label="Impressum öffnen">
+              <Link href="/impressum/" className="underline hover:text-white/90" aria-label="Impressum öffnen">
                 Impressum
-              </a>
+              </Link>
             </div>
           </div>
         </div>
