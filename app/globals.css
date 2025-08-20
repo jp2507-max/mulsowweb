@@ -1,0 +1,1302 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand colors (modern sports palette) */
+  --color-brand-primary: #C1121F;
+  --color-brand-secondary: #8B0000;
+  --color-brand-accent: #FF4444;
+  --color-brand-light: #FFE5E5;
+
+  /* Ink / text colors */
+  --color-ink-primary: #0F172A;
+  --color-ink-secondary: #475569;
+  --color-ink-tertiary: #94A3B8;
+
+  /* Neutral scale (subset) */
+  --color-neutral-50: #F8FAFC;
+  --color-neutral-100: #F1F5F9;
+  --color-neutral-200: #E2E8F0;
+  --color-neutral-800: #1E293B;
+  --color-neutral-900: #0F172A;
+
+  /* Success/Warning */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+
+  /* Breakpoints */
+  --breakpoint-sm: 40rem;
+  /* 640px */
+  --breakpoint-md: 48rem;
+  /* 768px */
+  --breakpoint-lg: 64rem;
+  /* 1024px */
+  --breakpoint-xl: 80rem;
+  /* 1280px */
+
+  /* Motion tokens - central source of truth for animation timing and easing */
+  --motion-ease-quick: cubic-bezier(0.2, 0, 0.2, 1);
+  --motion-ease: cubic-bezier(0.2, 0, 0, 1);
+  --motion-ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --motion-duration-xxs: 80ms;
+  --motion-duration-xs: 120ms;
+  --motion-duration-sm: 150ms;
+  --motion-duration-md: 200ms;
+  --motion-duration-lg: 300ms;
+  --motion-duration-xl: 420ms;
+  /* Touch-optimized durations: 20% longer for better touch feedback per Requirement 5.3 */
+  --motion-duration-touch-xxs: 96ms; /* 80ms * 1.2 */
+  --motion-duration-touch-xs: 144ms; /* 120ms * 1.2 */
+  --motion-duration-touch-sm: 180ms; /* 150ms * 1.2 */
+  --motion-duration-touch-md: 240ms; /* 200ms * 1.2 */
+  --motion-duration-touch-lg: 360ms; /* 300ms * 1.2 */
+}
+
+/* Global typography wiring to next/font variables set in app/layout.tsx */
+:root {
+  --font-body: var(--font-inter, ui-sans-serif, system-ui, sans-serif);
+  --font-heading: var(--font-oswald, ui-sans-serif, system-ui, sans-serif);
+  /* Decorative background intensity controls */
+  --bg-blob-opacity: 0.12;
+  --bg-noise-opacity: 0.035;
+  /* Spotlight defaults (center-top-ish) */
+  --spot-x: 50%;
+  --spot-y: 40%;
+}
+
+/* Tuning presets – switch by setting data-bg="subtle|brand|bold" on <html> */
+html[data-bg="subtle"] {
+  --bg-blob-opacity: 0.08;
+  --bg-noise-opacity: 0.02;
+}
+html[data-bg="brand"] {
+  --bg-blob-opacity: 0.12;
+  --bg-noise-opacity: 0.035;
+}
+html[data-bg="bold"] {
+  --bg-blob-opacity: 0.18;
+  --bg-noise-opacity: 0.05;
+}
+
+/* Critical CSS for above-the-fold content */
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink-primary);
+  background-color: var(--color-neutral-50);
+  /* Prevent layout shift during font loading */
+  font-display: swap;
+  /* Optimize text rendering */
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Site-wide decorative background: lightweight, brand-aligned, and accessible */
+.site-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -10; /* Behind everything */
+  pointer-events: none;
+  contain: strict;
+}
+
+/* Base red/white gradient wash using brand tokens */
+.site-bg__wash {
+  position: absolute;
+  inset: 0;
+  background:
+    /* Interactive stadium-light spotlight (very soft) */
+    radial-gradient(800px 400px at var(--spot-x) var(--spot-y), rgba(255,255,255,0.9), rgba(255,255,255,0.55) 40%, rgba(255,255,255,0.0) 75%),
+    /* Neutral cool tint base (dramatically less red) */
+    radial-gradient(1200px 600px at 85% 10%, rgba(193, 18, 31, 0.06), transparent 70%),
+    radial-gradient(900px 500px at 10% 85%, rgba(255, 85, 85, 0.05), transparent 65%),
+    linear-gradient(180deg, #ffffff 0%, var(--color-neutral-50) 60%, #ffffff 100%);
+}
+
+/* Soft animated blobs: transform-only animation, extremely slow for elegance */
+.site-bg__blob {
+  position: absolute;
+  filter: blur(40px);
+  opacity: var(--bg-blob-opacity);
+  transform: translateZ(0);
+  will-change: transform;
+  background: radial-gradient(circle at 30% 30%, var(--color-brand-primary), var(--color-brand-accent));
+}
+
+.site-bg__blob--a {
+  width: clamp(320px, 40vw, 560px);
+  height: clamp(320px, 40vw, 560px);
+  left: -8%;
+  top: 12%;
+  border-radius: 50% 40% 60% 50% / 60% 50% 40% 50%;
+  animation: bg-float-a 36s var(--motion-ease-smooth) infinite alternate;
+}
+
+.site-bg__blob--b {
+  width: clamp(260px, 35vw, 500px);
+  height: clamp(260px, 35vw, 500px);
+  right: -6%;
+  bottom: 8%;
+  border-radius: 40% 60% 50% 60% / 50% 60% 50% 40%;
+  animation: bg-float-b 42s var(--motion-ease-smooth) infinite alternate;
+}
+
+@keyframes bg-float-a {
+  from { transform: translate3d(0, 0, 0) rotate(0.001deg); }
+  to   { transform: translate3d(20px, -16px, 0) rotate(0.001deg); }
+}
+
+@keyframes bg-float-b {
+  from { transform: translate3d(0, 0, 0) rotate(0.001deg); }
+  to   { transform: translate3d(-14px, 18px, 0) rotate(0.001deg); }
+}
+
+/* Very subtle noise to break banding; pure CSS mask via data URI */
+.site-bg__noise {
+  position: absolute;
+  inset: -20%;
+  opacity: var(--bg-noise-opacity); /* keep extremely light */
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.5"/></svg>');
+  background-size: 160px 160px;
+}
+
+/* Subtle vertical pinstripes like a jersey pattern */
+.site-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(15, 23, 42, 0.02) 0px,
+    rgba(15, 23, 42, 0.02) 2px,
+    rgba(255, 255, 255, 0.0) 2px,
+    rgba(255, 255, 255, 0.0) 18px
+  );
+  mix-blend-mode: multiply;
+}
+
+/* Giant crest watermark (uses existing /public/logo.svg) */
+.site-bg__vignette::after {
+  content: "";
+  position: absolute;
+  right: -120px;
+  bottom: -80px;
+  width: min(38vw, 560px);
+  height: min(38vw, 560px);
+  background: url('/logo.svg') no-repeat center / contain;
+  opacity: 0.035;
+  filter: saturate(0) contrast(1.05);
+}
+
+/* Gentle vignette to keep edges calm, improving perceived depth */
+.site-bg__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(1200px 600px at 50% 0%, rgba(0,0,0,0.04), transparent 70%),
+              radial-gradient(1200px 600px at 50% 100%, rgba(0,0,0,0.04), transparent 70%);
+  mix-blend-mode: multiply;
+}
+
+/* Respect reduced motion: freeze blobs */
+@media (prefers-reduced-motion: reduce) {
+  .site-bg__blob { animation: none !important; }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  /* Prevent layout shift for headings */
+  font-display: swap;
+}
+
+/* Critical styles for LCP optimization */
+.hero-section {
+  /* Ensure hero is rendered immediately */
+  will-change: auto;
+  /* Optimize compositing */
+  transform: translateZ(0);
+}
+
+/* Core utilities for buttons and cards */
+@layer utilities {
+  /* Cross-Page View Transitions: subtle fade that respects reduced motion */
+  /* stylelint-disable selector-type-no-unknown -- Allow spec pseudo-elements ::view-transition-*(root) */
+  /* biome-ignore next-line */
+  ::view-transition-old(root),
+  /* biome-ignore next-line */
+  ::view-transition-new(root) {
+    /* biome-ignore next-line */
+    animation-duration: 0.32s;
+  }
+  /* biome-ignore next-line */
+  ::view-transition-old(root) { animation-name: vt-fade-out; }
+  /* biome-ignore next-line */
+  ::view-transition-new(root) { animation-name: vt-fade-in; }
+  /* stylelint-enable selector-type-no-unknown */
+
+  @keyframes vt-fade-out { to { opacity: 0; filter: saturate(0.98) blur(0.5px); } }
+  @keyframes vt-fade-in { from { opacity: 0; filter: saturate(0.98) blur(0.5px); } }
+
+  @media (prefers-reduced-motion: reduce) {
+  /* stylelint-disable selector-type-no-unknown -- allow view-transition pseudo-elements inside media query */
+  /* biome-ignore next-line */
+  ::view-transition-old(root),
+  /* biome-ignore next-line */
+  ::view-transition-new(root) { animation: none !important; }
+  /* stylelint-enable selector-type-no-unknown */
+  }
+
+  /* Hero word rotator: calm vertical word switcher (CSS-only) */
+  .hero-rotator {
+    --size: clamp(1.1rem, 2.2vw, 1.5rem);
+    --line: calc(var(--size) * 1.2); /* single line box height tied to font-size */
+    display: block; /* ensure it sits on its own line below subtitle */
+    height: var(--line);
+    line-height: var(--line);
+    overflow: hidden;
+    color: var(--color-ink-secondary); /* softer than title */
+    opacity: 0.95;
+    font-size: var(--size);
+    font-weight: 600;
+  margin: 1.5rem auto 1.5rem; /* extra spacing from subtitle and CTAs */
+    max-width: 40ch; /* keep a tidy line length */
+    text-align: center;
+  position: relative;
+  isolation: isolate;
+  contain: paint; /* ensure children cannot paint outside this box */
+  }
+  .hero-rotator-inner > span {
+    display: block;
+    height: var(--line);
+    line-height: var(--line);
+    padding: 0 0.2em;
+  }
+  .hero-rotator {
+    /* count of items and total duration */
+    --n: 4;
+    --t: 12s;
+  }
+  .hero-rotator-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: calc(var(--line) * var(--n));
+  display: block;
+    will-change: transform;
+    transform: translateZ(0);
+    animation: rotY var(--t) steps(var(--n), end) infinite;
+  }
+  @keyframes rotY {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(calc(var(--line) * -1 * (var(--n) - 1))); }
+  }
+  @media (prefers-reduced-motion: reduce) { .hero-rotator-inner { animation: none; } }
+
+  /* Subtle football pitch chalk background + film grain */
+  .pitch-bg { position: relative; isolation: isolate; background: #ffffff; }
+  .pitch-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+  z-index: -11; /* ensure below hero-bg (-z-10) */
+    opacity: 0.045;
+    background:
+      radial-gradient(80vmax 80vmax at 20% 0%, transparent 80%, var(--color-neutral-900) 80.5%) no-repeat,
+      repeating-linear-gradient(0deg, var(--color-neutral-900), var(--color-neutral-900) 2px, transparent 2px, transparent 24px),
+      repeating-linear-gradient(90deg, var(--color-neutral-900), var(--color-neutral-900) 2px, transparent 2px, transparent 24px);
+    mask: radial-gradient(closest-side, #000 70%, transparent 100%);
+  }
+  .pitch-bg::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  z-index: -11; /* keep grain beneath hero-bg as well */
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='.25'/></svg>");
+    background-size: 120px 120px;
+  }
+
+  /* Motion-specific transition utility: restricts transitions to transform and opacity only */
+  .transition-motion {
+    transition-property: transform, opacity;
+    transition-timing-function: var(--motion-ease);
+    transition-duration: var(--motion-duration-md);
+  }
+
+
+  /* Button base and sizes */
+  .btn {
+  @apply inline-flex items-center justify-center font-semibold rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  /* Only animate transform and opacity to avoid layout/paint jank */
+  transition-property: transform, opacity;
+  transition-duration: var(--motion-duration-md);
+  transition-timing-function: var(--motion-ease);
+  }
+
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+
+  .btn-md {
+    @apply px-5 py-3 text-base;
+  }
+
+  .btn-lg {
+    @apply px-6 py-4 text-lg;
+  }
+
+  /* Optional shapes/variants (opt-in) */
+  .btn-pill {
+    @apply rounded-full;
+    /* slightly wider horizontal padding works well for pills */
+  }
+
+  .btn-soft {
+    @apply bg-neutral-100 text-ink-primary border border-neutral-200 shadow-sm hover:bg-white hover:shadow-md;
+  }
+
+  /* Button variants */
+  .btn-primary {
+    @apply bg-brand-primary text-white hover:bg-brand-secondary active:scale-95 focus-visible:ring-brand-primary shadow-lg hover:shadow-xl;
+  }
+
+  .btn-outline {
+    @apply border-2 border-brand-primary text-brand-primary bg-transparent hover:bg-brand-primary hover:text-white active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply text-ink-primary hover:bg-neutral-100;
+  }
+
+  /* Card */
+  .card {
+    @apply bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200;
+  }
+
+  .card-hover {
+  @apply hover:scale-[1.02] hover:border-brand-light;
+  /* Hover: animate transform/opacity only */
+  transition-property: transform, opacity;
+  transition-duration: var(--motion-duration-lg);
+  transition-timing-function: var(--motion-ease);
+  }
+
+  /* Page container */
+  .container-site {
+    @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8;
+  }
+
+  /* Header styles */
+  .header {
+    @apply border-b border-neutral-200 bg-white/80 backdrop-blur-sm;
+  }
+
+  .header-container {
+    @apply mx-auto max-w-7xl px-4 md:px-6;
+  }
+
+  .header-content {
+    @apply flex items-center justify-between gap-6 py-4;
+  }
+
+  .header-logo {
+    @apply inline-flex items-center gap-3 rounded-md p-1 transition-colors hover:bg-neutral-50;
+  }
+
+  .header-logo-image {
+    @apply flex-shrink-0;
+    width: clamp(2rem, 5vw, 2.5rem);
+    height: clamp(2rem, 5vw, 2.5rem);
+  }
+
+  .header-logo-text {
+    @apply font-bold text-ink-primary;
+    font-size: clamp(1.25rem, 4vw, 1.5rem);
+    font-family: var(--font-heading);
+  }
+
+  .header-nav {
+    @apply flex flex-wrap items-center list-none m-0 p-0;
+    gap: clamp(0.75rem, 2vw, 1.25rem);
+  }
+
+  .header-nav-link {
+    @apply px-3 py-2 rounded-md text-ink-secondary transition-colors font-medium;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+  }
+
+  .header-nav-link:hover {
+    @apply text-ink-primary;
+  }
+
+  .header-nav-link:focus-visible {
+    @apply outline-2 outline-brand-primary outline-offset-2;
+  }
+
+  .header-nav-link-active {
+    @apply text-brand-primary border-b-2 border-brand-primary font-semibold;
+  }
+
+  /* Eyebrow text utility: small, uppercased label above headlines */
+  .eyebrow {
+    @apply text-xs tracking-wider uppercase text-ink-tertiary font-medium;
+    letter-spacing: 0.12em;
+  }
+
+  /* Hero Section - Performance Optimized for LCP */
+  .hero-section {
+    @apply relative overflow-hidden;
+    /* Optimized padding - not forcing full viewport for better LCP positioning */
+    padding: clamp(3rem, 8vw, 6rem) 0;
+    /* Reasonable min-height that doesn't push content below fold - optimized for LCP */
+    min-height: clamp(400px, 60vh, 600px);
+    /* Ensure content is above the fold on most devices */
+    max-height: 80vh;
+  }
+
+  .hero-bg {
+    @apply absolute inset-0 -z-10;
+  }
+
+  /* Subtle CSS-only gradients - 2024 organic trend */
+  .hero-gradient-1 {
+    @apply absolute top-0 left-0 w-full h-full;
+    background: linear-gradient(135deg, var(--color-brand-light) 0%, transparent 40%);
+    opacity: 0.3;
+  }
+
+  .hero-gradient-2 {
+    @apply absolute bottom-0 right-0 w-4/5 h-4/5;
+    background: linear-gradient(45deg, var(--color-neutral-100) 0%, transparent 70%);
+    opacity: 0.5;
+  }
+
+  /* Modern organic shapes - performance-friendly CSS */
+  .hero-shape-1 {
+    @apply absolute -top-32 -right-32;
+    width: clamp(300px, 40vw, 500px);
+    height: clamp(300px, 40vw, 500px);
+    background: linear-gradient(135deg, var(--color-brand-accent), var(--color-brand-primary));
+    opacity: 0.05;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: rotate(15deg);
+  }
+
+  .hero-shape-2 {
+    @apply absolute -bottom-20 -left-20;
+    width: clamp(200px, 25vw, 320px);
+    height: clamp(200px, 25vw, 320px);
+    background: linear-gradient(45deg, var(--color-brand-light), var(--color-neutral-200));
+    opacity: 0.08;
+    border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+  }
+
+  /* Hero-only contrast overlay (sits above hero-bg, below content) */
+  .hero-overlay {
+    @apply absolute inset-0 z-0; /* behind hero-content (z-10), above hero-bg (-z-10) */
+    pointer-events: none;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.66) 45%, rgba(255,255,255,0.42) 100%);
+  }
+
+  .hero-content {
+    @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8 relative z-10 text-center flex flex-col justify-center;
+    min-height: clamp(350px, 40vh, 450px);
+    /* Prevent layout shift by reserving space */
+    contain: layout style;
+  }
+
+  /* Decorative hero image: ensure it doesn't contribute to layout shift */
+  .hero-decorative {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.02; /* nearly invisible decorative image */
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Hero ready state: animate hero text only after hero image has decoded.
+     This prevents LCP jank by ensuring the hero image is ready before text
+     animates into view. Animation uses only transform/opacity. */
+  .hero-title,
+  .hero-subtitle,
+  .hero-ctas {
+    opacity: 0;
+    transform: translateY(12px);
+    transition-property: opacity, transform;
+    transition-duration: var(--motion-duration-md);
+    transition-timing-function: var(--motion-ease);
+    will-change: opacity, transform;
+  }
+
+  /* When the documentElement has .hero-ready, animate content in */
+  .hero-ready .hero-title,
+  .hero-ready .hero-subtitle,
+  .hero-ready .hero-ctas {
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero-text {
+    @apply mb-10 md:mb-14 lg:mb-16;
+  }
+
+  /* Bold, athletic typography - 2024 sports design trend */
+  .hero-title {
+    @apply font-black leading-none mb-6;
+    /* Responsive typography using clamp for better performance and CLS prevention */
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    letter-spacing: -0.03em;
+    font-family: var(--font-heading);
+    /* Prevent layout shift during font loading */
+    font-display: swap;
+    /* Reserve space to prevent CLS */
+    min-height: clamp(5rem, 14vw, 10rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero-title-main {
+    @apply block mb-2;
+    /* Modern gradient text effect - 2024 trend */
+    background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-accent) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Subtle text shadow for depth */
+    filter: drop-shadow(0 2px 4px rgba(193, 18, 31, 0.1));
+  }
+
+  .hero-title-subtitle {
+    @apply block text-ink-primary font-semibold;
+    font-size: clamp(1.25rem, 3.5vw, 2rem);
+    font-family: var(--font-heading);
+    letter-spacing: -0.01em;
+    /* Prevent layout shift */
+    min-height: clamp(2rem, 7vw, 4rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-subtitle {
+    @apply text-ink-secondary max-w-4xl mx-auto leading-relaxed;
+    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+    font-weight: 400;
+    font-family: var(--font-body);
+  }
+
+  /* Three CTA grid - modern sports organization pattern */
+  .hero-ctas {
+    @apply grid gap-4 md:gap-6 max-w-5xl mx-auto;
+    /* Responsive grid: stacked on mobile, 3 columns on desktop */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  @media (min-width: 768px) {
+    .hero-ctas {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .hero-cta {
+  @apply w-full transform;
+  transition-property: transform, opacity;
+  transition-duration: var(--motion-duration-md);
+  transition-timing-function: var(--motion-ease);
+  }
+
+  .hero-cta-primary {
+    @apply hover:scale-105 hover:shadow-2xl;
+  }
+
+  .hero-cta-secondary {
+    @apply hover:scale-105 hover:shadow-lg;
+  }
+
+  .hero-cta-tertiary {
+    @apply hover:scale-105 hover:shadow-md;
+  }
+
+  .hero-cta-icon {
+    @apply w-5 h-5 mr-3 flex-shrink-0;
+  }
+
+  /* Comprehensive reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    /* Disable all transforms and animations */
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* Specific component overrides */
+    .hero-cta {
+      @apply hover:scale-100;
+    }
+
+    .card-hover {
+      @apply hover:scale-100;
+    }
+
+    .btn-primary {
+      @apply active:scale-100;
+    }
+
+    .btn-outline {
+      @apply active:scale-100;
+    }
+
+    /* Disable fade animations */
+    .animate-fadeInUp {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    /* Disable page transitions */
+    body.fade-init,
+    body.fade-in {
+      opacity: 1 !important;
+      transition: none !important;
+    }
+
+    /* Disable hover effects that use transforms */
+    .hover-lift,
+    .hover-scale {
+      transform: none !important;
+    }
+  }
+
+  /* Enhanced focus states for accessibility - comprehensive implementation */
+  .hero-cta:focus-visible {
+    @apply ring-4 ring-brand-primary ring-offset-4;
+  }
+
+  /* Global focus styles for all interactive elements */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible,
+  [role="button"]:focus-visible,
+  [role="link"]:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Ensure focus is visible even with custom styles */
+  .btn:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(193, 18, 31, 0.2);
+  }
+
+  .card:focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+  }
+
+  /* Skip link for keyboard navigation */
+  .skip-link {
+  @apply absolute -top-10 left-4 z-50 bg-brand-primary text-white px-4 py-2 rounded-md font-medium;
+  @apply focus:top-4;
+  /* Focus reveal should be quick and only affect transform/opacity */
+  transition-property: transform, opacity, top;
+  transition-duration: var(--motion-duration-sm);
+  transition-timing-function: var(--motion-ease-quick);
+  }
+
+  /* Navigation underline animation - uses transform/opacity only */
+  .nav-link-underline {
+    position: relative;
+    display: inline-block;
+  }
+
+  .nav-link-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left center;
+    opacity: 0;
+    transition-property: transform, opacity;
+    transition-duration: var(--motion-duration-sm);
+    transition-timing-function: var(--motion-ease);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .header-nav-link:hover .nav-link-underline::after,
+    .header-nav-link-active .nav-link-underline::after {
+      transform: scaleX(1);
+      opacity: 1;
+    }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .header-nav-link:active .nav-link-underline::after {
+      transform: scaleX(1);
+      opacity: 1;
+      transition-duration: var(--motion-duration-xxs);
+    }
+  }
+
+  /* Logo micro-interaction: subtle scale and tiny rotation (<=3deg), transform-only */
+  .header-logo-interactive {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition-property: transform;
+    transition-duration: var(--motion-duration-sm);
+    transition-timing-function: var(--motion-ease);
+    will-change: transform;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .header-logo-interactive:hover {
+      transform: translateY(-2px) scale(1.03) rotate(-1.5deg);
+    }
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .header-logo-interactive:active {
+      transform: scale(0.98);
+      transition-duration: var(--motion-duration-xxs);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-link-underline::after,
+    .header-logo-interactive {
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+      will-change: auto !important;
+    }
+  }
+
+  /* Screen reader only text */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Make sr-only elements visible when they receive keyboard focus
+     so skip-links and other keyboard traps can be used by keyboard users */
+  .sr-only.focusable:focus,
+  .sr-only.focusable:focus-visible {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    clip: auto;
+    overflow: visible;
+    white-space: normal;
+    transform: translateY(0);
+    z-index: 9999;
+  }
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    .btn-primary {
+      border: 2px solid currentColor;
+    }
+    
+    .btn-outline {
+      border-width: 3px;
+    }
+    
+    .card {
+      border-width: 2px;
+    }
+  }
+
+  /* Smooth animations for sponsor teaser */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Sponsor card hover effect using pseudo-element shadow animation
+     - Animates transform and pseudo-element opacity only (no box-shadow transitions)
+     - Uses media queries to separate hover vs touch behavior
+     - Respects prefers-reduced-motion */
+  .sponsor-card {
+    position: relative;
+    transition-property: transform, opacity;
+    transition-duration: var(--motion-duration-sm);
+    transition-timing-function: var(--motion-ease);
+    will-change: transform;
+  }
+
+  .sponsor-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    /* static shadow; we only animate opacity of the pseudo-element to avoid paint jank */
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transition: opacity var(--motion-duration-sm) var(--motion-ease);
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .sponsor-card:hover {
+      transform: translateY(-6px) scale(1.02);
+    }
+
+    .sponsor-card:hover::before {
+      opacity: 1;
+    }
+  }
+
+  /* Touch devices: use :active for immediate feedback and shorter duration */
+  @media (hover: none) and (pointer: coarse) {
+    .sponsor-card:active {
+      transform: scale(0.98);
+      transition-duration: var(--motion-duration-xxs);
+    }
+    .sponsor-card:active::before {
+      opacity: 1;
+      transition-duration: var(--motion-duration-xxs);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sponsor-card,
+    .sponsor-card::before {
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+      will-change: auto !important;
+    }
+  }
+
+  .animate-fadeInUp {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  /* Line clamp utility for sponsor descriptions */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Page fade transitions (CSP-safe, no inline styles) */
+  @media (prefers-reduced-motion: no-preference) {
+    body.fade-init {
+      opacity: 0;
+    }
+
+    body.fade-in {
+      opacity: 1;
+      transition: opacity 180ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    /* Enable CSS smooth scrolling when user has not requested reduced motion.
+       This keeps scroll-based navigation feeling polished while respecting
+       accessibility preferences per Requirement 3.1. */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Utility class to opt-in smooth scrolling on specific containers or
+       for programmatic usage (e.g. internal nav wrappers) */
+    .smooth-scroll {
+      scroll-behavior: smooth;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+
+    body.fade-init,
+    body.fade-in {
+      opacity: 1 !important;
+      transition: none !important;
+    }
+  }
+
+  /* Honor explicit data-motion override on <html> to force-disable scrolling
+     animations even when prefers-reduced-motion is not present. This supports
+     Requirement 6.2 (data-motion="reduced" override). */
+  html[data-motion="reduced"] {
+    scroll-behavior: auto !important;
+  }
+
+  /* CSS variable used by client code to offset in-page anchors for sticky headers.
+     Default fallback keeps a reasonable value; JS may update this to match header height. */
+  :root {
+    --scroll-offset: 80px;
+  }
+  /* Ensure the root scroller applies scroll-padding to respect sticky header
+     offsets for native hash navigation and programmatic scrolling. */
+  html {
+    scroll-padding-top: var(--scroll-offset);
+  }
+
+  /* Apply scroll-margin-top to all elements with an id so native hash navigation
+     and scrollIntoView honor the header offset. This is a CSS-first approach and
+     avoids extra scroll corrections in JS. */
+  [id] {
+    scroll-margin-top: var(--scroll-offset);
+  }
+
+  /* Performance optimizations for interactions (INP) */
+  a,
+  button,
+  [role="button"] {
+    /* Optimize for fast interactions */
+    touch-action: manipulation;
+    /* Prevent 300ms tap delay on mobile */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Optimize hover states for better INP */
+  @media (hover: hover) {
+
+    a:hover,
+    button:hover {
+      transition: all 0.15s ease-out;
+    }
+  }
+
+  /* Focus optimization for keyboard navigation */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+    transition: outline 0.1s ease-out;
+  }
+
+  /* Optimize button interactions */
+  .btn:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease-out;
+  }
+
+  /* Touch feedback utility: short scale + subtle opacity change for touch devices
+     Uses slightly increased durations on touch devices to improve perceived feedback
+     per Requirement 5.1 and 5.3 */
+  .touch-feedback {
+    /* noop for non-touch environments; touch rules applied in media query below */
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .touch-feedback {
+      /* Ensure a sensible default transition for touch interactions */
+      transition-property: transform, opacity;
+      transition-duration: var(--motion-duration-touch-sm);
+      transition-timing-function: var(--motion-ease);
+      will-change: transform, opacity;
+    }
+
+    .touch-feedback:active {
+      transform: scale(0.985);
+      opacity: 0.95;
+      /* Active state should be snappy */
+      transition-duration: var(--motion-duration-touch-xxs);
+      transition-timing-function: var(--motion-ease);
+      will-change: transform, opacity;
+    }
+
+    .touch-feedback:focus-visible {
+      outline: 2px solid var(--color-brand-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  /* Prevent layout thrashing during animations */
+  .hero-cta,
+  .card-hover {
+    will-change: transform;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .hero-cta,
+    .card-hover {
+      will-change: auto;
+    }
+  }
+
+  /* Performance: mark large/expensive sections as heavy so the browser can skip rendering until visible
+     Implements requirement 2.3: prefer content-visibility and provide a safe fallback for older browsers */
+  @supports (content-visibility: auto) {
+    section[data-heavy] {
+      content-visibility: auto;
+      contain-intrinsic-size: 1px 800px;
+    }
+  }
+
+  @supports not (content-visibility: auto) {
+    section[data-heavy] {
+      /* Conservative fallback to reduce reflow impact on browsers without content-visibility */
+      min-height: 400px;
+    }
+  }
+
+  /* Utility to indicate a component should only animate a single transform at a time.
+     This is a developer guidance utility - it sets will-change and documents intent.
+     Use on components that must avoid concurrent transform animations (e.g. nested
+     elements that both animate on the same frame). This cannot be enforced by CSS
+     but helps signal intended usage to authors and tools. */
+  .single-transform-only {
+    will-change: transform;
+    /* keep hints minimal; remove will-change after animation completes in JS if used */
+  }
+
+  /* Stagger group helper: apply .stagger-group to a container and each direct child
+     will receive a progressive transition-delay. Delays stagger by 60ms and are
+     capped so total group delay does not exceed 400ms (as per requirement 2.2 / 6.3).
+     This class is intentionally conservative and uses transition-delay for CSS
+     reveals; JS-based reveal systems can also apply these classes to coordinate
+     staggered animations. */
+  .stagger-group.reveal > * {
+    opacity: 0;
+    transform: translateY(12px);
+    transition-property: opacity, transform;
+    transition-duration: var(--motion-duration-md);
+    transition-timing-function: var(--motion-ease);
+  }
+
+  .stagger-group.reveal.animate > *:nth-child(1) { transition-delay: 0ms; }
+  .stagger-group.reveal.animate > *:nth-child(2) { transition-delay: 60ms; }
+  .stagger-group.reveal.animate > *:nth-child(3) { transition-delay: 120ms; }
+  .stagger-group.reveal.animate > *:nth-child(4) { transition-delay: 180ms; }
+  .stagger-group.reveal.animate > *:nth-child(5) { transition-delay: 240ms; }
+  .stagger-group.reveal.animate > *:nth-child(6) { transition-delay: 300ms; }
+  /* Cap at 400ms for any items after 7+ (safeguard) */
+  .stagger-group.reveal.animate > *:nth-child(n+7) { transition-delay: 360ms; }
+
+
+  /* Scroll reveal utilities - base reveal candidate + variants
+     - Content is visible by default; .reveal is only added by JS to enhance
+     - Animate only transform and opacity for performance
+     - Variants: fade, slide-up, scale-in
+  */
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px) scale(1);
+    transition-property: opacity, transform;
+    transition-duration: var(--motion-duration-md);
+    transition-timing-function: var(--motion-ease);
+    will-change: opacity, transform;
+  }
+
+  /* Variant: fade only (no translate) */
+  .reveal--fade.reveal {
+    transform: none;
+  }
+
+  /* Variant: slide up (stronger Y offset) */
+  .reveal--slide-up.reveal {
+    transform: translateY(20px) scale(1);
+  }
+
+  /* Variant: scale-in (slightly smaller to begin) */
+  .reveal--scale-in.reveal {
+    transform: translateY(6px) scale(0.98);
+  }
+
+  /* When revealed, make visible and reset transforms */
+  .reveal.in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Simple marquee (sponsors) */
+  .marquee {
+    display: inline-block;
+    min-width: 200%;
+    animation: marquee-scroll 24s linear infinite;
+    will-change: transform;
+  }
+
+  @keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee { animation: none !important; transform: none !important; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal.in,
+    .reveal--fade,
+    .reveal--slide-up,
+    .reveal--scale-in {
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+      will-change: auto !important;
+    }
+
+    /* Ensure hero animations are disabled for reduced motion */
+    .hero-title,
+    .hero-subtitle,
+    .hero-ctas {
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+      will-change: auto !important;
+    }
+  }
+
+  /* Image performance optimizations */
+  img {
+    /* Prevent layout shift */
+    height: auto;
+    max-width: 100%;
+    
+    /* Optimize rendering */
+    image-rendering: auto;
+    
+    /* Prevent dragging for better UX */
+    -webkit-user-drag: none; /* keep WebKit support */
+    -webkit-user-select: none; /* older WebKit */
+    user-select: none; /* broad support */
+  }
+
+  /* Lazy loading placeholder styles */
+  img[loading="lazy"] {
+    /* Smooth transition when image loads */
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  /* Optimize image containers */
+  .image-container {
+    /* Prevent layout shift */
+    position: relative;
+    overflow: hidden;
+  }
+
+  .image-container::before {
+    /* Aspect ratio placeholder */
+    content: '';
+    display: block;
+    width: 100%;
+    padding-bottom: var(--aspect-ratio, 56.25%); /* Default 16:9 */
+  }
+
+  .image-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Accessible overlay/backdrop for modals and drawers
+     - Uses backdrop-filter where supported with a solid rgba fallback
+     - Keeps overlay implementation light and purely CSS-first
+     - Does not animate blur; only opacity/transform of content is allowed
+     - Respects prefers-reduced-motion and data-motion="reduced" overrides */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* default solid fallback so content remains readable if backdrop-filter unavailable */
+    background: rgba(255, 255, 255, 0.75);
+    z-index: 60;
+    padding: 1.25rem;
+  }
+
+  /* Use backdrop-filter when supported; do not depend on it for readability */
+  @supports ((backdrop-filter: blur(6px)) or (-webkit-backdrop-filter: blur(6px))) {
+    .overlay {
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      /* Slightly more transparent when blur is available */
+      background: rgba(255, 255, 255, 0.42);
+    }
+  }
+
+  /* Overlay content container */
+  .overlay-panel {
+    background: rgba(255, 255, 255, 1);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.12);
+    max-width: 96vw;
+    width: min(720px, 100%);
+    max-height: 90vh;
+    overflow: auto;
+    padding: 1.25rem;
+    outline: none;
+    transition-property: transform, opacity;
+    transition-duration: var(--motion-duration-md);
+    transition-timing-function: var(--motion-ease);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .overlay-panel {
+      transition: none !important;
+    }
+  }
+
+  html[data-motion="reduced"] .overlay-panel {
+    transition: none !important;
+  }
+
+  /* When an overlay is open we set [data-overlay-open] on the <body>.
+     Apply inert-like hiding for non-overlay content for screen readers and
+     disable pointer events to prevent accidental interaction. This is a
+     progressive enhancement; Overlay.tsx will set/unset the attribute. */
+  body[data-overlay-open="true"] > :not(.overlay) {
+    pointer-events: none;
+    user-select: none;
+  }
+
+  body[data-overlay-open="true"] main,
+  body[data-overlay-open="true"] header,
+  body[data-overlay-open="true"] footer {
+    /* Visual fallback for overlay open state: reduce pointer interactions and visual emphasis
+       (screen-reader hiding must still be applied via JS using aria-hidden attributes). */
+    pointer-events: none;
+    opacity: 0.6;
+    filter: blur(0.2px);
+  }
+}

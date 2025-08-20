@@ -1,0 +1,40 @@
+{
+  "name": "mulsowweb",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+  "test:axe": "node scripts/axe-animations.js",
+  "test:reduced-motion": "node scripts/test-reduced-motion.js",
+  "test:contrast": "node scripts/test-contrast.js",
+  "test:keyboard": "node scripts/test-keyboard.js",
+  "test:axe:all": "npm run test:axe && npm run test:reduced-motion && npm run test:contrast && npm run test:keyboard",
+    "lint": "next lint",
+    "analyze": "node scripts/analyze-bundle.js",
+    "build:analyze": "npm run build && npm run analyze",
+    "verify:performance": "node scripts/verify-performance.js",
+    "audit:final": "node scripts/final-audit.js",
+    "audit:full": "npm run build && npm run audit:final"
+  },
+  "dependencies": {
+    "next": "15.4.6",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "web-vitals": "^5.1.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "axe-core": "^4.10.3",
+    "eslint": "^9",
+    "eslint-config-next": "15.4.6",
+    "jsdom": "^26.1.0",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
