@@ -226,11 +226,16 @@ h6 {
 @layer utilities {
   /* Cross-Page View Transitions: subtle fade that respects reduced motion */
   /* stylelint-disable selector-type-no-unknown -- Allow spec pseudo-elements ::view-transition-*(root) */
+  /* biome-ignore next-line */
   ::view-transition-old(root),
+  /* biome-ignore next-line */
   ::view-transition-new(root) {
+    /* biome-ignore next-line */
     animation-duration: 0.32s;
   }
+  /* biome-ignore next-line */
   ::view-transition-old(root) { animation-name: vt-fade-out; }
+  /* biome-ignore next-line */
   ::view-transition-new(root) { animation-name: vt-fade-in; }
   /* stylelint-enable selector-type-no-unknown */
 
@@ -239,7 +244,9 @@ h6 {
 
   @media (prefers-reduced-motion: reduce) {
   /* stylelint-disable selector-type-no-unknown -- allow view-transition pseudo-elements inside media query */
+  /* biome-ignore next-line */
   ::view-transition-old(root),
+  /* biome-ignore next-line */
   ::view-transition-new(root) { animation: none !important; }
   /* stylelint-enable selector-type-no-unknown */
   }
