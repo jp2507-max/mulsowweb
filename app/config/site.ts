@@ -33,6 +33,18 @@ export const siteConfig = {
     fussballDe: 'https://www.fussball.de/verein/mulsower-sv-61-mecklenburg-vorpommern/-/id/00ES8GNBNG000024VV0AG08LVUPGND5I#!/',
     fanshop: 'https://msv61.fan12.de/'
   },
+
+  // Social media profiles
+  social: {
+    instagramMain: {
+      label: 'Instagram – Mulsower SV 61',
+      href: 'https://www.instagram.com/mulsower_sv?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=='
+    },
+    instagramYouth: {
+      label: 'Instagram – Nachwuchs',
+      href: 'https://www.instagram.com/mulsower_sv.nachwuchs?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=='
+    }
+  },
   
   // Navigation structure
   navigation: [

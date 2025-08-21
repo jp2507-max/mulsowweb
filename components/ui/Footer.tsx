@@ -1,6 +1,8 @@
 "use client";
 import * as React from "react";
 import Link from "next/link";
+import { siteConfig } from "../../app/config/site";
+import { ExternalLink } from "./ExternalLink";
 
 export interface FooterProps {
   className?: string;
@@ -57,6 +59,46 @@ export function Footer() {
                 </svg>
                 <span className="text-sm">{email}</span>
               </a>
+            </div>
+            <div className="text-xs md:text-sm flex flex-wrap items-center gap-2 md:justify-end">
+              <span className="sr-only">Soziale Medien</span>
+              <ExternalLink
+                href={siteConfig.social.instagramMain.href}
+                aria-label={siteConfig.social.instagramMain.label}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white"
+              >
+                {/* Instagram Icon */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  className="opacity-90"
+                >
+                  <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm6-2.25a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+                <span className="font-medium">Instagram</span>
+              </ExternalLink>
+              <ExternalLink
+                href={siteConfig.social.instagramYouth.href}
+                aria-label={siteConfig.social.instagramYouth.label}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  className="opacity-90"
+                >
+                  <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm6-2.25a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+                <span className="font-medium">Nachwuchs</span>
+              </ExternalLink>
             </div>
             <div className="text-xs md:text-sm">
               <Link href="/impressum/" className="underline hover:text-white/90" aria-label="Impressum öffnen">

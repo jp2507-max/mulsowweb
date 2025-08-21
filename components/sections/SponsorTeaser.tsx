@@ -42,13 +42,17 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
           </h2>
           <p className="text-lg md:text-xl text-ink-secondary max-w-2xl mx-auto">
             Wir danken unseren Sponsoren für die Unterstützung des Mulsower SV 61
+            <svg
+              aria-hidden="true"
+              className="inline-block ml-2 h-6 w-6 text-white/90"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            />
           </p>
         </div>
 
-        {/* Optional Sponsor marquee — shown above grid, pauses on hover/reduced motion */}
-        <div 
-          className="mb-10 overflow-hidden rounded-xl border border-neutral-200 bg-white/60 backdrop-blur-[1px] group" 
-          aria-hidden="true"
+        <div aria-hidden="true" className="mb-10 overflow-hidden rounded-xl border border-neutral-200 bg-white/60 backdrop-blur-[1px] group"
           onMouseEnter={(e) => {
             const marquee = e.currentTarget.querySelector('.marquee') as HTMLElement;
             if (marquee) marquee.style.animationPlayState = 'paused';
@@ -59,9 +63,9 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
           }}
         >
           <div
-              className="marquee whitespace-nowrap"
-              style={reduced ? { animation: 'none' } : undefined}
-            >
+            className="marquee whitespace-nowrap"
+            style={reduced ? { animation: 'none' } : undefined}
+          >
             {displaySponsors.concat(displaySponsors).map((s, i) => (
               <span key={`mq-${s.id}-${i}`} className="inline-flex items-center px-6 py-3 text-ink-secondary text-sm">
                 {s.name}
@@ -108,7 +112,7 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
 
                     <div className="mt-4 pt-4 border-t border-neutral-100 flex items-center justify-center text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
                       <span className="text-sm font-medium mr-2">Website besuchen</span>
-                      <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" role="img" aria-label="Externer Link">
+                      <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300 motion-reduce:transform-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
                     </div>

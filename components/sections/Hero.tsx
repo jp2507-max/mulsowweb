@@ -3,6 +3,7 @@ import { Button } from '../ui/Button';
 import { siteConfig } from '@/app/config/site';
 import HeroReadyClient from '@/components/utility/HeroReadyClient';
 import { Image } from '@/components/ui/Image';
+import { ExternalLink } from '@/components/ui/ExternalLink';
 
 export default function Hero() {
   return (
@@ -153,6 +154,50 @@ export default function Hero() {
             </svg>
             Fanshop
           </Button>
+        </div>
+
+        {/* Instagram CTA under hero buttons */}
+        <div className="mt-4 md:mt-6 text-center">
+          <div className="inline-flex flex-wrap items-center justify-center gap-3 bg-ink-primary/5 border border-ink-primary/10 rounded-full px-4 py-2">
+            <span className="text-sm md:text-base font-medium text-ink-primary">Folge uns auf Instagram:</span>
+            <ExternalLink
+              href={siteConfig.social.instagramMain.href}
+              aria-label={siteConfig.social.instagramMain.label}
+              className="inline-flex items-center gap-1.5 text-brand-primary hover:text-brand-secondary font-semibold"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                fill="currentColor"
+                aria-hidden="true"
+                className="opacity-90"
+              >
+                <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm6-2.25a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+              </svg>
+              <span>@mulsower_sv</span>
+            </ExternalLink>
+            <span aria-hidden="true" className="text-ink-secondary">•</span>
+            <ExternalLink
+              href={siteConfig.social.instagramYouth.href}
+              aria-label={siteConfig.social.instagramYouth.label}
+              className="inline-flex items-center gap-1.5 text-brand-primary hover:text-brand-secondary font-semibold"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                width="16"
+                height="16"
+                fill="currentColor"
+                aria-hidden="true"
+                className="opacity-90"
+              >
+                <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm6-2.25a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+              </svg>
+              <span>@mulsower_sv.nachwuchs</span>
+            </ExternalLink>
+          </div>
         </div>
 
         <p className="hero-rotator" aria-hidden="true">
