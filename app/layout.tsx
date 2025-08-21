@@ -38,18 +38,23 @@ export const metadata: Metadata = {
   ...generatePageMetadata({}),
   // Favicon and app icons
   icons: {
+    // Prefer the club logo assets so the browser tab shows the club emblem.
     icon: [
-      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon.ico' },
-      { url: '/favicon.svg', type: 'image/svg+xml' }
+      { url: '/logo-128.png', sizes: '128x128', type: 'image/png' },
+      { url: '/logo-256.png', sizes: '256x256', type: 'image/png' },
+      { url: '/logo-512.png', sizes: '512x512', type: 'image/png' },
+      // favicon.ico kept for legacy support
+      { url: '/favicon.ico' }
     ],
     apple: [
+      // keep the existing apple touch icon (180x180)
       { url: '/apple-touch-icon-180.png', sizes: '180x180', type: 'image/png' }
     ],
     other: [
-      { url: '/logo-256.png', sizes: '192x192', type: 'image/png' },
-      { url: '/logo-512.png', sizes: '512x512', type: 'image/png' }
+      // small PNG fallbacks and the SVG logo (scales crisply in supporting browsers)
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/logo.svg', type: 'image/svg+xml' }
     ]
   },
   // Web app manifest (for PWA features)

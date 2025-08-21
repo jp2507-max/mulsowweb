@@ -47,8 +47,17 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
 
     if (href) {
       const anchorRel = secureRel(rel, target);
-      const isExternal = target === "_blank" || href.startsWith("http");
-      
+
+      // Treat as external when:
+      // - target is _blank
+      // - href starts with a scheme (e.g. mailto:, tel:, data:, etc.)
+      // - href starts with protocol-relative '//' or explicit http(s) schemes
+      const schemeRegex = /^[a-z][a-z0-9+.-]*:/i;
+      const isProtocolRelative = href.startsWith("//");
+      const isHttp = href.startsWith("http://") || href.startsWith("https://");
+      const isScheme = schemeRegex.test(href);
+      const isExternal = target === "_blank" || isProtocolRelative || isHttp || isScheme;
+
       // Use Next.js Link for internal navigation, anchor for external links
       if (isExternal) {
         return (
@@ -59,16 +68,14 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
             rel={anchorRel}
             download={download}
             className={classes}
-            role="button"
-            {...(!rest["aria-label"] && {
-              "aria-label": `${typeof children === "string" ? children : "Link"} - Öffnet in neuem Tab`
-            })}
+            // Intentionally do NOT compute or append an aria-label here —
+            // keep the visible / screen-reader text below to announce
+            // "öffnet in neuem Tab" and allow any aria-* attributes passed
+            // by callers to be forwarded via the rest props cast.
             {...(rest as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
           >
             {children}
-            <span className="sr-only">
-              (öffnet in neuem Tab)
-            </span>
+            <span className="sr-only">(öffnet in neuem Tab)</span>
           </a>
         );
       } else {
@@ -78,7 +85,7 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
             ref={ref as React.Ref<HTMLAnchorElement>}
             href={href}
             className={classes}
-            role="button"
+            // Keep aria-labels passed via rest instead of computing one here.
             {...(download && { download })}
             {...(rest as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
           >

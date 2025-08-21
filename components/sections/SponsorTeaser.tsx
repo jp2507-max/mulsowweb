@@ -2,6 +2,7 @@
 
 import { getHomepageSponsors } from '../../app/data/sponsors';
 import { Card } from '../ui/Card';
+import { Button } from '../ui/Button';
 import { ExternalLink } from '../ui/ExternalLink';
 import { LazyOnScroll } from '../utility/BundleOptimizer';
 import { useEffect, useMemo, useState } from 'react';
@@ -135,9 +136,11 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
 
         {/* CTA to full sponsors page */}
   <div className="text-center reveal-candidate reveal--slide-up">
-          <a
+          <Button
             href="/sponsoren/"
-            className="inline-flex items-center px-8 py-4 bg-brand-primary text-white font-semibold rounded-xl hover:bg-brand-secondary hover:scale-105 active:scale-95 transition-motion shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 touch-feedback"
+            variant="primary"
+            size="md"
+            className="inline-flex items-center px-8 py-4 rounded-xl hover:scale-105 active:scale-95 transition-motion shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 touch-feedback"
             aria-label="Alle Sponsoren ansehen - Zur vollständigen Sponsoren-Übersicht"
           >
             Alle Sponsoren ansehen
@@ -150,7 +153,7 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
-          </a>
+          </Button>
         </div>
       </div>
     </section>

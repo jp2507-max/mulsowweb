@@ -20,6 +20,9 @@
     "audit:final": "node scripts/final-audit.js",
     "audit:full": "npm run build && npm run audit:final"
   },
+  "engines": {
+    "node": ">=18.17.0"
+  },
   "dependencies": {
     "lenis": "^1.1.19",
     "motion": "^12.23.12",
@@ -38,8 +41,11 @@
     "eslint": "^9",
     "eslint-config-next": "15.4.6",
     "jsdom": "^26.1.0",
-  "sharp": "^0.33.4",
   "tailwindcss": "^4",
     "typescript": "^5"
+  }
+  ,
+  "optionalDependencies": {
+    "sharp": "^0.33.4"
   }
 }

@@ -72,7 +72,7 @@ export function Header() {
               </span>
             </Link>
 
-            {/* Center-aligned navigation */}
+            {/* Center-aligned navigation with improved mobile layout */}
             <nav aria-label="Hauptnavigation" role="navigation" className="header-nav-wrap">
               <ul className="header-nav" role="list">
                 {navItems.map((item) => {
@@ -100,24 +100,24 @@ export function Header() {
               </ul>
             </nav>
 
-            {/* Right-side Fanshop CTA (external) - reuse hero CTA styles for consistency */}
+            {/* Right-side Fanshop CTA (external) - mobile optimized */}
             <div className="header-cta">
               <Button
                 href={siteConfig.externalLinks.fanshop}
                 target="_blank"
                 variant="ghost"
                 size="sm"
-                className="btn-pill header-fanshop-btn hero-cta white"
+                className="btn-pill header-fanshop-btn white"
                 aria-label="Fanshop - Öffnet externe Website"
               >
-                {/* Use hero CTA icon structure so the Fanshop CTA matches other CTAs */}
-                <span className="hero-cta-icon fanshop-icon-wrap" aria-hidden="true">
+                {/* Compact icon wrapper (no hero-cta layout classes in header) */}
+                <span className="fanshop-icon-wrap" aria-hidden="true">
                   <svg aria-hidden="true" focusable="false" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="fanshop-icon">
                     <path d="M6 7V6a6 6 0 0112 0v1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                     <path d="M20 7h-16l1.2 12.4A2 2 0 007.2 21h9.6a2 2 0 001.999-1.6L20 7z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </span>
-                <span className="fanshop-label hero-cta-label">Fanshop</span>
+                <span className="fanshop-label">Fanshop</span>
               </Button>
             </div>
           </div>
