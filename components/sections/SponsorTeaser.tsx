@@ -5,7 +5,7 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { ExternalLink } from '../ui/ExternalLink';
 import { LazyOnScroll } from '../utility/BundleOptimizer';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 // NOTE: this project uses Motion One (import from 'motion/react') for small,
 // performant animation primitives. A previous PR referenced "Framer Motion"
 // in the summary — keep PR summaries in sync with this choice. If you intend
@@ -27,15 +27,10 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
     setReduced(prefersReducedMotionUtil());
   }, []);
 
-  const containerVariants = useMemo(() => ({
-    hidden: { opacity: 0 },
-    show: { opacity: 1 },
-  }), []);
-
-  const itemVariants = useMemo(() => ({
-    hidden: { opacity: 0, y: 12 },
-    show: { opacity: 1, y: 0 },
-  }), []);
+  // We use Motion One (motion/react). Rather than Framer-style variants and
+  // viewport-based whileInView, we gate mount with LazyOnScroll and animate
+  // items on mount using initial/animate + per-item delays. Reduced motion is
+  // respected by disabling animations at runtime.
 
   return (
     <section data-heavy className={`relative py-16 md:py-20 ${className}`} aria-labelledby="sponsors-heading">
@@ -56,7 +51,18 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
         </div>
 
         {/* Optional Sponsor marquee — shown above grid, pauses on hover/reduced motion */}
-        <div className="mb-10 overflow-hidden rounded-xl border border-neutral-200 bg-white/60 backdrop-blur-[1px]" aria-hidden="true">
+        <div 
+          className="mb-10 overflow-hidden rounded-xl border border-neutral-200 bg-white/60 backdrop-blur-[1px] group" 
+          aria-hidden="true"
+          onMouseEnter={(e) => {
+            const marquee = e.currentTarget.querySelector('.marquee') as HTMLElement;
+            if (marquee) marquee.style.animationPlayState = 'paused';
+          }}
+          onMouseLeave={(e) => {
+            const marquee = e.currentTarget.querySelector('.marquee') as HTMLElement;
+            if (marquee) marquee.style.animationPlayState = 'running';
+          }}
+        >
           <div className="marquee whitespace-nowrap">
             {displaySponsors.concat(displaySponsors).map((s, i) => (
               <span key={`mq-${s.id}-${i}`} className="inline-flex items-center px-6 py-3 text-ink-secondary text-sm">
@@ -73,40 +79,29 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
           fallback={
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 mb-12">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="bg-neutral-200 rounded-2xl h-32 md:h-40"></div>
+                <div key={i} className="bg-neutral-100 rounded-2xl h-32 md:h-40 border border-neutral-200">
+                  <div className="w-full h-full bg-gradient-to-br from-neutral-200 to-neutral-100 rounded-2xl"></div>
                 </div>
               ))}
             </div>
           }
         >
-          <motion.ul
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8"
-            role="list"
-            aria-label="Sponsoren des Mulsower SV 61"
-            variants={containerVariants}
-            initial={reduced ? false : 'hidden'}
-            whileInView={reduced ? undefined : 'show'}
-            viewport={reduced ? undefined : { once: true, margin: '0px 0px -10% 0px' }}
-          >
+          <motion.ul className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8" role="list" aria-label="Sponsoren des Mulsower SV 61">
             {displaySponsors.map((sponsor, i) => (
               <motion.li
                 key={sponsor.id}
                 role="listitem"
-                variants={itemVariants}
-                transition={{ delay: i * 0.08, duration: 0.28 }}
+                initial={reduced ? undefined : { opacity: 0, y: 12 }}
+                animate={reduced ? undefined : { opacity: 1, y: 0 }}
+                transition={reduced ? undefined : { delay: i * 0.06, duration: 0.24 }}
               >
-                <motion.div
-                  whileHover={reduced ? undefined : { scale: 1.04 }}
-                  whileFocus={reduced ? undefined : { scale: 1.02 }}
-                  transition={{ type: 'spring', stiffness: 420, damping: 32 }}
-                >
+                <div>
                   <ExternalLink
                     href={sponsor.url}
                     className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded-2xl touch-feedback"
                     aria-label={`${sponsor.name} - Sponsor-Website besuchen`}
                   >
-                    <Card className="sponsor-card h-full bg-white border border-neutral-200 hover:border-brand-light transition-motion p-6 md:p-8 text-center">
+                    <Card className="sponsor-card h-full bg-white border border-neutral-200 hover:border-brand-light transition-motion p-6 md:p-8 text-center transform-gpu will-change-transform hover:scale-[1.02] focus-visible:scale-[1.01]">
                       {/* Placeholder for logo - will be replaced with actual logos later */}
                       <div
                         className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-lg flex items-center justify-center"
@@ -128,7 +123,7 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
                       )}
                     </Card>
                   </ExternalLink>
-                </motion.div>
+                </div>
               </motion.li>
             ))}
           </motion.ul>

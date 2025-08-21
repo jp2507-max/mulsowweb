@@ -22,6 +22,7 @@ type Props = { children: React.ReactNode };
 export function ScrollProvider({ children }: Props) {
   const lenisRef = useRef<LenisRef>(null);
   const [enabled, setEnabled] = useState(false);
+  const [opts, setOpts] = useState<Record<string, unknown> | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -29,7 +30,21 @@ export function ScrollProvider({ children }: Props) {
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
       document.documentElement.getAttribute("data-motion") === "reduced" ||
       shouldReduceAnimations();
-    setEnabled(!reduced);
+    // Detect Windows platforms where virtual scroll can feel stuttery
+    const ua = navigator.userAgent || "";
+    const plat = (navigator as unknown as { userAgentData?: { platform?: string } }).userAgentData?.platform || navigator.platform || "";
+    const isWindows = /Win/i.test(plat) || /Windows/i.test(ua);
+
+    // Enable Lenis only when not reduced motion and not Windows
+    const useLenis = !reduced && !isWindows;
+    setEnabled(useLenis);
+
+    // Prepare options: keep defaults on non-Windows, turn off smoothing if we ever enable on Windows (future-proof)
+    setOpts(
+      useLenis
+        ? { autoRaf: true }
+        : { autoRaf: true, smoothWheel: false, smoothTouch: false }
+    );
     if (reduced) {
       // Ensure native scroll behavior
       document.documentElement.style.scrollBehavior = "auto";
@@ -70,7 +85,7 @@ export function ScrollProvider({ children }: Props) {
   if (!enabled) return <>{children}</>;
 
   return (
-    <ReactLenis root options={{ autoRaf: true }} ref={lenisRef}>
+    <ReactLenis root options={opts ?? { autoRaf: true }} ref={lenisRef}>
       {children}
     </ReactLenis>
   );

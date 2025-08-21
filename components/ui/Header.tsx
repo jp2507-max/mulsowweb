@@ -19,22 +19,45 @@ export function Header() {
   const normalize = (p: string) => (p !== "/" && p.endsWith("/") ? p.slice(0, -1) : p);
   const headerRef = React.useRef<HTMLElement | null>(null);
 
-  // Toggle a scrolled state for stronger bg/shadow once the page is scrolled a bit
+  // Toggle a scrolled state using IntersectionObserver to avoid per-scroll work.
+  // We observe a sentinel element rendered just after the Header in the layout.
   React.useEffect(() => {
     const el = headerRef.current;
-    if (!el) return;
+    if (!el || typeof window === 'undefined') return;
 
+    const apply = (scrolled: boolean) => {
+      el.toggleAttribute('data-scrolled', scrolled);
+    };
+
+    // Initial state (in case sentinel isn't available yet)
+    try {
+      const hh = Math.max(0, Math.round(el.getBoundingClientRect().height));
+      apply(window.scrollY > hh - 1);
+    } catch {
+      apply((typeof window !== 'undefined' ? window.scrollY : 0) > 4);
+    }
+
+    const sentinel = document.getElementById('header-sentinel');
+    if (sentinel && 'IntersectionObserver' in window) {
+      const obs = new IntersectionObserver((entries) => {
+        const e = entries[0];
+        // When the sentinel leaves the viewport (scroll down), mark as scrolled
+        apply(!e.isIntersecting);
+      }, { threshold: 0 });
+      try { obs.observe(sentinel); } catch {}
+
+      return () => {
+        try { obs.disconnect(); } catch {}
+      };
+    }
+
+    // Fallback for very old browsers: throttle via rAF
     let raf = 0;
     const update = () => {
       raf = 0;
-      const scrolled = (typeof window !== 'undefined' ? window.scrollY : 0) > 4;
-      el.toggleAttribute('data-scrolled', scrolled);
+      apply((typeof window !== 'undefined' ? window.scrollY : 0) > 4);
     };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    // initial
-    update();
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('load', update, { once: true });
     return () => {
@@ -52,6 +75,8 @@ export function Header() {
       </a>
       
   <header className="header text-white" role="banner" ref={headerRef}>
+        {/* GPU-friendly background overlay that fades in/out via opacity */}
+        <div className="header-bg" aria-hidden="true" />
         <div className="header-container">
           <div className="header-content">
             <Link 

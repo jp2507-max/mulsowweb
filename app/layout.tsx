@@ -103,6 +103,8 @@ export default function RootLayout({
   <ViewTransitionRouter />
         <ScrollProvider>
           <Header />
+          {/* Sentinel used by the Header's IntersectionObserver to toggle scrolled state */}
+          <div id="header-sentinel" aria-hidden="true" style={{ blockSize: '1px', inlineSize: '1px' }} />
           <main id="main" tabIndex={-1}>
             {children}
           </main>

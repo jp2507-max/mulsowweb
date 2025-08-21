@@ -55,8 +55,8 @@ export function useIntersectionObserver(
         setIsIntersecting(entry.isIntersecting);
       },
       {
-        threshold: 0.1,
-        rootMargin: '50px',
+        threshold: 0.05, // Reduced threshold for earlier loading
+        rootMargin: '100px', // Increased margin for smoother loading
         ...options,
       }
     );
@@ -71,6 +71,7 @@ export function useIntersectionObserver(
 
 /**
  * Lazy loading component that only renders when in viewport
+ * Optimized to prevent re-mounting once loaded
  */
 export function LazyOnScroll({ 
   children, 
@@ -83,10 +84,17 @@ export function LazyOnScroll({
 }) {
   const ref = React.useRef<HTMLDivElement>(null);
   const isVisible = useIntersectionObserver(ref);
+  const [hasLoaded, setHasLoaded] = React.useState(false);
+  
+  React.useEffect(() => {
+    if (isVisible && !hasLoaded) {
+      setHasLoaded(true);
+    }
+  }, [isVisible, hasLoaded]);
   
   return (
     <div ref={ref} className={className}>
-      {isVisible ? children : fallback}
+      {hasLoaded ? children : fallback}
     </div>
   );
 }
