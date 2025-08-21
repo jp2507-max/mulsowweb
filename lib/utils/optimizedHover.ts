@@ -25,6 +25,10 @@ const DEFAULT_CONFIG: HoverConfig = {
 class OptimizedHoverManager {
   private activeHovers = new Set<Element>();
   private hoverConfigs = new Map<Element, HoverConfig>();
+  // Track scheduled cleanup timeouts per element to avoid races when
+  // users rapidly hover/unhover. Value is the timer id returned from
+  // window.setTimeout (number in browsers).
+  private cleanupTimeouts = new Map<Element, number>();
 
   /**
    * Initialize hover effects for an element
@@ -93,6 +97,13 @@ class OptimizedHoverManager {
    * Handle hover start
    */
   private handleHoverStart(element: Element, config: HoverConfig): void {
+    // If a cleanup was previously scheduled for this element, cancel it.
+    const pending = this.cleanupTimeouts.get(element);
+    if (pending) {
+      clearTimeout(pending);
+      this.cleanupTimeouts.delete(element);
+    }
+
     if (this.activeHovers.has(element)) return;
 
     this.activeHovers.add(element);
@@ -122,19 +133,44 @@ class OptimizedHoverManager {
     // Remove hover class
     element.classList.remove('is-hovering');
 
-    // Schedule will-change cleanup after transition
+    // Schedule will-change cleanup after transition. Clear any previously
+    // scheduled timeout for this element first to avoid multiple outstanding
+    // timers racing to run cleanup.
     const config = this.hoverConfigs.get(element);
     const delay = config ? config.duration + 50 : 250; // 50ms buffer
 
-    setTimeout(() => {
+    const existing = this.cleanupTimeouts.get(element);
+    if (existing) {
+      clearTimeout(existing);
+    }
+
+    const timerId = window.setTimeout(() => {
+      // Defensive clear: if the timeout is still registered, clear it and
+      // remove the entry so no stale timers remain.
+      const registered = this.cleanupTimeouts.get(element);
+      if (registered) {
+        clearTimeout(registered);
+        this.cleanupTimeouts.delete(element);
+      }
+
       cleanupWillChange(element);
     }, delay);
+
+    // Track this timer so it can be cancelled if a new hover starts quickly.
+    this.cleanupTimeouts.set(element, timerId as unknown as number);
   }
 
   /**
    * Clean up an element
    */
   private cleanup(element: Element): void {
+    // Cancel any pending cleanup timeout for this element.
+    const pending = this.cleanupTimeouts.get(element);
+    if (pending) {
+      clearTimeout(pending);
+      this.cleanupTimeouts.delete(element);
+    }
+
     this.activeHovers.delete(element);
     this.hoverConfigs.delete(element);
     cleanupWillChange(element);
@@ -145,7 +181,14 @@ class OptimizedHoverManager {
    * Clean up all elements
    */
   cleanupAll(): void {
-    for (const element of this.activeHovers) {
+    // Ensure we clean up all elements that either have active hovers or
+    // scheduled cleanup timeouts.
+    const elementsToCleanup = new Set<Element>(this.activeHovers);
+    for (const el of Array.from(this.cleanupTimeouts.keys())) {
+      elementsToCleanup.add(el);
+    }
+
+    for (const element of elementsToCleanup) {
       this.cleanup(element);
     }
   }

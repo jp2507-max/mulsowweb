@@ -44,9 +44,13 @@ const nextConfig = {
 
     // Only apply webpack optimizations when not using Turbopack (production builds)
     if (!dev && !isServer) {
-      // Enhanced tree shaking optimization for animation bundle
-      config.optimization.usedExports = true;
-      config.optimization.sideEffects = false; // Enable aggressive tree shaking
+  // Enhanced tree shaking optimization for animation bundle
+  // Keep usedExports to enable tree-shaking while leaving `sideEffects`
+  // at the Webpack/Next default to avoid breaking CSS and other
+  // side-effectful modules. If you require more aggressive removal,
+  // prefer per-package `package.json` "sideEffects": false or add
+  // webpack rules that set `module.sideEffects` for safe bundles.
+  config.optimization.usedExports = true;
 
       // Bundle splitting optimized for animation code
       config.optimization.splitChunks = {
@@ -71,25 +75,31 @@ const nextConfig = {
       // Minimize animation bundle size
       config.optimization.minimize = true;
 
-      // Remove unused code more aggressively
-      if (config.optimization.minimizer) {
-        config.optimization.minimizer.forEach(minimizer => {
-          if (minimizer.constructor.name === 'TerserPlugin') {
-            minimizer.options = {
-              ...minimizer.options,
-              terserOptions: {
-                ...minimizer.options?.terserOptions,
-                compress: {
-                  ...minimizer.options?.terserOptions?.compress,
-                  drop_console: true, // Remove console.log in production
-                  drop_debugger: true,
-                  pure_funcs: ['console.log', 'console.info', 'console.debug'],
-                  unused: true, // Remove unused code
+      // Remove unused code more aggressively — only adjust if a TerserPlugin minimizer is present.
+      if (config.optimization.minimizer && Array.isArray(config.optimization.minimizer)) {
+        const hasTerser = config.optimization.minimizer.some(
+          minimizer => minimizer && minimizer.constructor && minimizer.constructor.name === 'TerserPlugin'
+        );
+
+        if (hasTerser) {
+          config.optimization.minimizer.forEach(minimizer => {
+            if (minimizer?.constructor?.name === 'TerserPlugin') {
+              minimizer.options = {
+                ...minimizer.options,
+                terserOptions: {
+                  ...minimizer.options?.terserOptions,
+                  compress: {
+                    ...minimizer.options?.terserOptions?.compress,
+                    drop_console: true, // Remove console.log in production
+                    drop_debugger: true,
+                    pure_funcs: ['console.log', 'console.info', 'console.debug'],
+                    unused: true, // Remove unused code
+                  },
                 },
-              },
-            };
-          }
-        });
+              };
+            }
+          });
+        }
       }
     }
 

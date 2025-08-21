@@ -58,7 +58,10 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
             if (marquee) marquee.style.animationPlayState = 'running';
           }}
         >
-          <div className="marquee whitespace-nowrap">
+          <div
+              className="marquee whitespace-nowrap"
+              style={reduced ? { animation: 'none' } : undefined}
+            >
             {displaySponsors.concat(displaySponsors).map((s, i) => (
               <span key={`mq-${s.id}-${i}`} className="inline-flex items-center px-6 py-3 text-ink-secondary text-sm">
                 {s.name}

@@ -997,7 +997,10 @@ h6 {
     background-repeat: no-repeat;
     opacity: var(--hero-photo-opacity);
   filter: saturate(0.9) contrast(1.05) blur(0.5px);
-    will-change: opacity;
+   /* Avoid permanently pinning a composited layer — use 'auto' here and
+     enable will-change only while an animation is active via
+     the `.animate-opacity-active` helper class. */
+   will-change: auto;
     pointer-events: none;
     z-index: -1; /* stays below gradient layers */
   }
@@ -1719,6 +1722,18 @@ h6 {
   .single-transform-only {
     will-change: transform;
     /* keep hints minimal; remove will-change after animation completes in JS if used */
+  }
+
+  /* Helper: enable will-change for opacity only while an animation/transition
+     affecting opacity is active. Add this class via JS when starting an
+     animation and remove it when finished to avoid pinned composited layers. */
+  .animate-opacity-active {
+    will-change: opacity;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Respect reduced-motion by preventing will-change hints for opacity */
+    .animate-opacity-active { will-change: auto !important; }
   }
 
   /* Stagger group helper: apply .stagger-group to a container and each direct child

@@ -61,8 +61,8 @@ class WillChangeManager {
 
     const htmlElement = element as HTMLElement;
     
-    // Remove will-change
-    htmlElement.style.willChange = 'auto';
+  // Remove inline will-change so stylesheet/class rules can resume
+  htmlElement.style.removeProperty('will-change');
 
     // Clear stored data
     this.activeAnimations.delete(element);

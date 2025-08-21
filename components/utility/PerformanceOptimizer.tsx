@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+
+import React, { useEffect } from 'react';
 
 /**
  * Performance optimization component for Core Web Vitals
@@ -42,9 +44,14 @@ const CRITICAL_CSS = `
           }
           /* Font loading optimization */
           .font-loading {
-            font-display: swap;
             font-synthesis: none;
           }
+@font-face {
+  font-family: 'Inter';
+  /* Use stable public URL so preloads don't 404 when Next build hashes change. */
+  src: url('/fonts/inter-latin.woff2') format('woff2');
+  font-display: swap; /* Added font-display here */
+}
         `;
 
 export function PerformanceOptimizer({ nonce }: { nonce?: string } = {}) {
@@ -63,8 +70,11 @@ export function PerformanceOptimizer({ nonce }: { nonce?: string } = {}) {
       <link rel="preload" as="image" href="/logo-256.png" />
       
       {/* Font preloading for better CLS - Task 9.2: Enhanced font loading */}
-      <link rel="preload" href="/_next/static/media/inter-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-      <link rel="preload" href="/_next/static/media/oswald-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+    {/* Preload fonts from stable /fonts paths in public/ to avoid build-hash 404s.
+      Place the .woff2 files at public/fonts/inter-latin.woff2 and
+      public/fonts/oswald-latin.woff2. */}
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+    <link rel="preload" href="/fonts/oswald-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
       
       {/* Task 9.2: Performance budget monitoring meta tag */}
       <meta name="performance-budget" content="js:200kb,css:50kb,animation-js:5kb" />
@@ -82,52 +92,51 @@ export function PerformanceOptimizer({ nonce }: { nonce?: string } = {}) {
  * Lightweight performance monitoring component (no external dependencies)
  */
 function PerformanceMonitor() {
-  if (typeof window === 'undefined') return null;
-  
-  // Monitor Core Web Vitals in development using native APIs
-  if (process.env.NODE_ENV === 'development') {
-    // Use native PerformanceObserver instead of web-vitals library
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (process.env.NODE_ENV !== 'development') return;
+    if (typeof PerformanceObserver === 'undefined') return;
+
+    let lcpObserver: PerformanceObserver | null = null;
+    let clsObserver: PerformanceObserver | null = null;
+    let longTaskObserver: PerformanceObserver | null = null;
+
     try {
-      if (typeof PerformanceObserver !== 'undefined') {
-        // Monitor LCP
-        const lcpObserver = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            const lcp = entry as PerformanceEntry & { startTime: number };
-            console.log('LCP:', Math.round(lcp.startTime), lcp.startTime < 2500 ? '✅ Good' : '❌ Needs improvement');
-          }
-        });
-        lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
+      lcpObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          const lcp = entry as PerformanceEntry & { startTime: number };
+          console.log('LCP:', Math.round(lcp.startTime), lcp.startTime < 2500 ? '✅ Good' : '❌ Needs improvement');
+        }
+      });
+      lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
 
-        // Monitor CLS
-        const clsObserver = new PerformanceObserver((list) => {
-          let clsValue = 0;
-          for (const entry of list.getEntries()) {
-            const cls = entry as PerformanceEntry & { value: number; hadRecentInput: boolean };
-            if (!cls.hadRecentInput) {
-              clsValue += cls.value;
-            }
-          }
-          if (clsValue > 0) {
-            console.log('CLS:', clsValue.toFixed(4), clsValue < 0.1 ? '✅ Good' : '❌ Needs improvement');
-          }
-        });
-        clsObserver.observe({ type: 'layout-shift', buffered: true });
+      clsObserver = new PerformanceObserver((list) => {
+        let clsValue = 0;
+        for (const entry of list.getEntries()) {
+          const cls = entry as PerformanceEntry & { value: number; hadRecentInput: boolean };
+          if (!cls.hadRecentInput) clsValue += cls.value;
+        }
+        if (clsValue > 0) console.log('CLS:', clsValue.toFixed(4), clsValue < 0.1 ? '✅ Good' : '❌ Needs improvement');
+      });
+      clsObserver.observe({ type: 'layout-shift', buffered: true });
 
-        // Monitor long tasks
-        const longTaskObserver = new PerformanceObserver((list) => {
-          for (const entry of list.getEntries()) {
-            const dur = entry.duration;
-            if (dur > 50) {
-              console.warn('Dev Performance: long task', Math.round(dur));
-            }
-          }
-        });
-        longTaskObserver.observe({ type: 'longtask', buffered: true });
-      }
+      longTaskObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          const dur = entry.duration;
+          if (dur > 50) console.warn('Dev Performance: long task', Math.round(dur));
+        }
+      });
+      longTaskObserver.observe({ type: 'longtask', buffered: true });
     } catch {
       // ignore - best-effort dev monitoring
     }
-  }
+
+    return () => {
+      lcpObserver?.disconnect();
+      clsObserver?.disconnect();
+      longTaskObserver?.disconnect();
+    };
+  }, []);
   
   return null;
 }
