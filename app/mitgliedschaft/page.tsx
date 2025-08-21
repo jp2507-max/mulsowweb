@@ -28,7 +28,7 @@ export default function MembershipPage() {
         {/* Membership Information */}
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 mb-12 md:mb-16">
           {/* Why Join Section */}
-          <div className="card">
+          <div className="card card-hover">
             <div className="mb-6">
               <div className="w-16 h-16 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center">
                 <svg 
@@ -70,7 +70,7 @@ export default function MembershipPage() {
           </div>
 
           {/* Membership Types Section */}
-          <div className="card">
+          <div className="card card-hover">
             <div className="mb-6">
               <div className="w-16 h-16 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center">
                 <svg 
@@ -105,7 +105,7 @@ export default function MembershipPage() {
         </div>
 
         {/* Application Section */}
-        <div className="card text-center mb-12 md:mb-16">
+        <div className="card card-hover text-center mb-12 md:mb-16">
           <div className="mb-8">
             <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-2xl flex items-center justify-center">
               <svg 
@@ -132,7 +132,7 @@ export default function MembershipPage() {
             size="lg"
             href="/05_2025_Aufnahmeantrag.pdf"
             download="Aufnahmeantrag_Mulsower_SV_61.pdf"
-            className="w-full sm:w-auto text-lg px-8 py-4 hover:scale-105 transition-transform duration-200"
+            className="w-full sm:w-auto text-lg px-8 py-4 hover:scale-105 transition-motion touch-feedback"
             aria-label="Aufnahmeantrag als PDF-Datei herunterladen"
           >
             <svg 
@@ -153,7 +153,7 @@ export default function MembershipPage() {
         {/* Contact Information */}
         <div className="grid md:grid-cols-2 gap-8 md:gap-12">
           {/* Address Card */}
-          <div className="card text-center md:text-left">
+          <div className="card card-hover text-center md:text-left">
             <div className="mb-6">
               <div className="w-16 h-16 mx-auto md:mx-0 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center">
                 <svg 
@@ -183,7 +183,7 @@ export default function MembershipPage() {
           </div>
 
           {/* Email Card */}
-          <div className="card text-center md:text-left">
+          <div className="card card-hover text-center md:text-left">
             <div className="mb-6">
               <div className="w-16 h-16 mx-auto md:mx-0 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center">
                 <svg 

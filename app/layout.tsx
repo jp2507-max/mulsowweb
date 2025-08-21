@@ -5,6 +5,8 @@ import { Header } from "@/components/ui/Header";
 import { Footer } from "@/components/ui/Footer";
 import { PageFadeController } from "@/components/utility/PageFadeController";
 import { ScrollRevealController } from "@/components/utility/ScrollRevealController";
+import { OptimizedHoverController } from "@/components/utility/OptimizedHoverController";
+import { OptimizedBlobController } from "@/components/utility/OptimizedBlobController";
 import { SmoothScrollInit } from "@/components/utility/SmoothScroll";
 import HeaderOffsetSync from "@/components/utility/HeaderOffsetSync";
 import { PerformanceOptimizer, PerformanceMonitorWrapper } from "@/components/utility/PerformanceOptimizer";
@@ -91,6 +93,8 @@ export default function RootLayout({
   <InteractiveSpotlight />
         <PageFadeController />
   <ScrollRevealController />
+  <OptimizedHoverController />
+  <OptimizedBlobController />
     <FocusReveal />
     {/* Initialize header offset sync so native hash navigation and
       scrollIntoView targets get automatically offset for a sticky header. */}

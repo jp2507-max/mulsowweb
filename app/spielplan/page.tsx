@@ -28,7 +28,7 @@ export default function SchedulePage() {
 
         {/* CTA Section */}
         <div className="mb-16">
-          <div className="card max-w-2xl mx-auto text-center">
+          <div className="card card-hover max-w-2xl mx-auto text-center">
             <div className="mb-6">
               <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-4">
                 Offizieller Spielplan
@@ -44,7 +44,7 @@ export default function SchedulePage() {
               size="lg"
               href="https://www.fussball.de/verein/mulsower-sv-61-mecklenburg-vorpommern/-/id/00ES8GNBNG000024VV0AG08LVUPGND5I#!/"
               target="_blank"
-              className="w-full sm:w-auto text-lg px-8 py-4 hover:scale-105 transition-transform duration-200"
+              className="w-full sm:w-auto text-lg px-8 py-4 hover:scale-105 transition-motion touch-feedback"
               aria-label="Spielplan auf FUSSBALL.DE öffnen - Öffnet externe Website in neuem Tab"
             >
               <svg 
@@ -83,7 +83,7 @@ export default function SchedulePage() {
 
         {/* Additional Information */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <div className="card text-left">
+          <div className="card card-hover text-left">
             <h3 className="text-xl font-semibold font-heading text-ink-primary mb-3">
               Was findest du dort?
             </h3>
@@ -107,7 +107,7 @@ export default function SchedulePage() {
             </ul>
           </div>
 
-          <div className="card text-left">
+          <div className="card card-hover text-left">
             <h3 className="text-xl font-semibold font-heading text-ink-primary mb-3">
               Immer aktuell
             </h3>

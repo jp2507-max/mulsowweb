@@ -39,6 +39,7 @@ export default function Hero() {
                 height={80}
                 className="hero-badge vt-logo"
                 priority
+                id="hero-img"
               />
               <span className="hero-title-main">Mulsower SV 61</span>
             </span>

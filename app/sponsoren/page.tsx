@@ -56,7 +56,7 @@ export default function SponsorsPage() {
                   aria-label={`${sponsor.name} - Sponsor-Website besuchen`}
                 >
                   {/* Detailed sponsor card with modern hover effects */}
-                  <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200 h-full flex flex-col transition-motion hover:scale-105 hover:border-brand-light group-hover:scale-105 group-hover:border-brand-light">
+                  <div className="sponsor-card bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200 h-full flex flex-col transition-motion hover:scale-105 hover:border-brand-light group-hover:scale-105 group-hover:border-brand-light">
                     {/* Logo placeholder with sponsor initial */}
                     <div 
                       className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300"
@@ -105,7 +105,7 @@ export default function SponsorsPage() {
 
           {/* Call to action for potential sponsors */}
           <div className="mt-16 md:mt-20 text-center">
-            <div className="bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-neutral-200 max-w-4xl mx-auto">
+            <div className="card card-hover bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-neutral-200 max-w-4xl mx-auto">
               <h2 className="text-2xl md:text-3xl font-bold font-heading text-ink-primary mb-4">
                 Werden Sie unser Partner
               </h2>
@@ -115,7 +115,7 @@ export default function SponsorsPage() {
               </p>
               <a
                 href={`mailto:info@mulsower-sv.de`}
-                className="btn btn-lg btn-primary hover:scale-105 active:scale-95"
+                className="btn btn-lg btn-primary hover:scale-105 active:scale-95 touch-feedback"
                 aria-label="Kontakt aufnehmen per E-Mail"
               >
                 Kontakt aufnehmen

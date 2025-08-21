@@ -11,11 +11,9 @@ interface Options {
 // included in the client bundle if imported.
 export function SmoothScrollInit({ selector = 'a[href^="#"]', offset = 0 }: Options) {
   useEffect(() => {
-  // If a Lenis instance is already present (provided by ScrollProvider),
-  // don't install this click handler — let Lenis handle anchor scrolling.
-  // This prevents double-handling of clicks and scroll stutter.
-  const maybeLenisPresent: unknown = (window as unknown as { __lenis?: unknown }).__lenis;
-  if (maybeLenisPresent) return;
+  // Always install our click handler. If a Lenis instance exists at click
+  // time we will delegate to it from inside the handler. This avoids
+  // early-bailing and ensures runtime detection of Lenis.
 
   // Respect reduced motion via media query, explicit HTML override, or device capability hints
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.getAttribute('data-motion') === 'reduced' || shouldReduceAnimations();

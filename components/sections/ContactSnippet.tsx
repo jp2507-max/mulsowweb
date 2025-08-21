@@ -6,10 +6,10 @@ interface ContactSnippetProps {
 
 export default function ContactSnippet({ className = '' }: ContactSnippetProps) {
   return (
-  <section className={`py-16 md:py-20 ${className}`} aria-labelledby="contact-heading">
+    <section className={`py-16 md:py-20 ${className}`} aria-labelledby="contact-heading">
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
         {/* Section Header */}
-    <div className="text-center mb-12 md:mb-16 reveal-candidate reveal--fade">
+        <div className="text-center mb-12 md:mb-16">
           <h2 id="contact-heading" className="text-3xl md:text-4xl lg:text-5xl font-bold font-heading text-ink-primary mb-4">
             Kontakt
           </h2>
@@ -22,16 +22,16 @@ export default function ContactSnippet({ className = '' }: ContactSnippetProps) 
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
             {/* Address Card */}
-      <div className="card card-hover text-center md:text-left reveal-candidate reveal--slide-up">
+            <div className="card card-hover text-center md:text-left">
               <div className="mb-6">
-                <div 
-          className="w-16 h-16 mx-auto md:mx-0 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center reveal-candidate reveal--scale-in"
+                <div
+                  className="w-16 h-16 mx-auto md:mx-0 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center"
                   aria-hidden="true"
                 >
-                  <svg 
-                    className="w-8 h-8 text-white" 
-                    fill="none" 
-                    stroke="currentColor" 
+                  <svg
+                    className="w-8 h-8 text-white"
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
                     role="img"
@@ -54,16 +54,16 @@ export default function ContactSnippet({ className = '' }: ContactSnippetProps) 
             </div>
 
             {/* Email Card */}
-    <div className="card card-hover text-center md:text-left reveal-candidate reveal--slide-up">
+            <div className="card card-hover text-center md:text-left">
               <div className="mb-6">
-                <div 
-      className="w-16 h-16 mx-auto md:mx-0 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center reveal-candidate reveal--scale-in"
+                <div
+                  className="w-16 h-16 mx-auto md:mx-0 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center"
                   aria-hidden="true"
                 >
-                  <svg 
-                    className="w-8 h-8 text-white" 
-                    fill="none" 
-                    stroke="currentColor" 
+                  <svg
+                    className="w-8 h-8 text-white"
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
                     role="img"
@@ -80,16 +80,16 @@ export default function ContactSnippet({ className = '' }: ContactSnippetProps) 
                 <div className="mb-3">
                   Für allgemeine Anfragen:
                 </div>
-                <a 
+                <a
                   href="mailto:info@mulsower-sv.de"
                   className="inline-flex items-center text-brand-primary hover:text-brand-secondary font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded"
                   aria-label="E-Mail senden an info@mulsower-sv.de"
                 >
                   info@mulsower-sv.de
-                  <svg 
-                    className="ml-2 w-4 h-4" 
-                    fill="none" 
-                    stroke="currentColor" 
+                  <svg
+                    className="ml-2 w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
                     role="img"

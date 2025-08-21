@@ -124,7 +124,7 @@ body {
   filter: blur(40px);
   opacity: var(--bg-blob-opacity);
   transform: translateZ(0);
-  will-change: transform;
+  /* will-change removed - managed dynamically by WillChangeManager */
   background: radial-gradient(circle at 30% 30%, var(--color-brand-primary), var(--color-brand-accent));
 }
 
@@ -373,7 +373,7 @@ h6 {
   width: 100%;
   height: calc(var(--line) * var(--n));
   display: block;
-    will-change: transform;
+    /* will-change removed - managed dynamically by WillChangeManager */
     transform: translateZ(0);
     animation: rotY var(--t) steps(var(--n), end) infinite;
   }
@@ -413,6 +413,55 @@ h6 {
     transition-property: transform, opacity;
     transition-timing-function: var(--motion-ease);
     transition-duration: var(--motion-duration-md);
+  }
+
+  /* Respect user preference for reduced motion: make .transition-motion a no-op */
+  @media (prefers-reduced-motion: reduce) {
+    .transition-motion {
+      /* Remove transitions for users who prefer reduced motion. Use very small
+         duration instead of 'none' to avoid surprising layout changes in some
+         UA implementations; however '0ms' is acceptable and explicit here. */
+      transition-duration: 0ms !important;
+      transition-property: none !important;
+      transition-timing-function: linear !important;
+    }
+  }
+
+  /* Page fade transitions for navigation */
+  body.fade-init {
+    opacity: 0;
+    transition: opacity 180ms var(--motion-ease);
+  }
+
+  body.fade-in {
+    opacity: 1;
+  }
+
+  /* Hero ready state */
+  .hero-ready {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Scroll reveal optimization - simplified */
+  .reveal-optimized {
+    /* Base state - content visible by default */
+    opacity: 1;
+    transform: none;
+    transition: transform var(--motion-duration-md) var(--motion-ease),
+                opacity var(--motion-duration-md) var(--motion-ease);
+  }
+
+  .reveal-optimized:not(.in) {
+    /* Hidden state - only applied after JavaScript loads */
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  .reveal-optimized.in {
+    /* Revealed state */
+    opacity: 1;
+    transform: none;
   }
 
 
@@ -537,7 +586,7 @@ h6 {
     background-color: var(--color-brand-primary);
     background-image: linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0));
     opacity: 1; /* visible by default (top-of-page) */
-    will-change: opacity;
+    /* will-change removed - managed dynamically by WillChangeManager */
     transition: opacity 220ms var(--motion-ease);
     transform: translateZ(0);
   }
@@ -555,7 +604,7 @@ h6 {
 
   /* Light, low-jank compact effect when scrolled */
   .header .header-content {
-    will-change: transform, padding;
+    /* will-change removed - managed dynamically by WillChangeManager */
     transition: transform 200ms var(--motion-ease), padding 180ms var(--motion-ease);
     transform-origin: center center; /* Better vertical centering */
   }
@@ -936,11 +985,13 @@ h6 {
     inset: 0;
     /* Prefer modern formats when available */
     background-image: url('/images/hero-bg.jpg');
-    background-image: image-set(
+  /* biome-disable no-duplicate-properties */
+  background-image: image-set(
       url('/images/hero-bg.avif') type('image/avif') 1x,
       url('/images/hero-bg.webp') type('image/webp') 1x,
       url('/images/hero-bg.jpg') type('image/jpeg') 1x
     );
+  /* biome-enable no-duplicate-properties */
   background-position: center 35%;
     background-size: cover;
     background-repeat: no-repeat;

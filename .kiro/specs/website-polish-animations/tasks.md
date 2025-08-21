@@ -180,14 +180,23 @@ im not sure if all tasks before task 8 are implemented properly
   Next steps: verify touch-feedback on additional interactive elements (header logo, sponsor cards) on real devices and optionally add small tests for `deviceCapabilities`.
 
 - [ ] 9. Performance optimization and monitoring
-  - [ ] 9.1 Implement will-change optimization and layer management
+  - [x] 9.1 Implement will-change optimization and layer management
+
+
+
+
     - Add will-change property management: apply just before expensive animation and remove after (never leave permanently)
     - Implement GPU layer optimization for transform animations
     - Create animation performance utilities
     - Avoid permanent will-change as it can hurt performance by pinning layers
     - _Requirements: 6.3, 4.5_
 
-  - [ ] 9.2 Add performance budgets and monitoring
+  - [x] 9.2 Add performance budgets and monitoring
+
+
+
+
+
     - Implement Lighthouse performance score monitoring (Mobile ≥ 90 with Fast 3G + 4× CPU throttle)
     - Add CLS prevention: never lazy-load LCP image, preload if needed, set width/height or aspect-ratio for images
     - Use font-display: swap or optional to keep text visible during webfont load
@@ -195,7 +204,12 @@ im not sure if all tasks before task 8 are implemented properly
     - Write performance regression tests
     - _Requirements: 6.1, 6.3_
 
-  - [ ] 9.3 Optimize bundle size and static export compatibility
+  - [x] 9.3 Optimize bundle size and static export compatibility
+
+
+
+
+
     - Minimize animation JavaScript to ≤ 5KB gzipped
     - Ensure static export compatibility with no dynamic imports
     - Bundle all animation code to avoid CSP issues
@@ -227,7 +241,11 @@ im not sure if all tasks before task 8 are implemented properly
     - _Requirements: 6.2, 7.2_
 
 - [ ] 11. Integration and final polish
-  - [ ] 11.1 Integrate animations with existing website components
+  - [x] 11.1 Integrate animations with existing website components
+
+
+
+    - check whats already there ( most of these things are already in place)
     - Apply hover effects to existing buttons and navigation elements
     - Add scroll reveals to sponsor cards and content sections
     - Integrate page transitions with existing routing
@@ -236,6 +254,9 @@ im not sure if all tasks before task 8 are implemented properly
     - _Requirements: 1.1, 2.1, 3.2_
 
   - [ ] 11.2 Final performance optimization and cleanup
+
+
+
     - Optimize animation timing and easing for best user experience
     - Remove unused animation code and utilities
     - Remove dev-only performance monitors from production builds (keep behind NODE_ENV !== 'production')
