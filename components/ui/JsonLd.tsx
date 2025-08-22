@@ -5,11 +5,19 @@ type JsonLdProps = {
 };
 
 export function JsonLd({ data }: JsonLdProps) {
+  const json = JSON.stringify(data)
+    // Escape the opening bracket to avoid closing the <script> tag when
+    // the JSON contains '</script>' sequences.
+    .replace(/</g, "\\u003c")
+    // Escape line separator characters which are valid in JS strings but
+    // break inline script embedding in HTML.
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029")
+    // Optionally escape HTML comment closers to be extra-safe.
+    .replace(/-->/g, "--\\u003e");
+
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />
   );
 }
 

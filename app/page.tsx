@@ -8,7 +8,7 @@ import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
 import { siteConfig } from "@/app/config/site";
 
 export const metadata: Metadata = generatePageMetadata({
-  title: 'Amateurfußballverein aus Mecklenburg-Vorpommern',
+  title: 'Mulsower SV 61 - Amateurfußballverein aus Mecklenburg-Vorpommern',
   description: 'Offizieller Internetauftritt des Mulsower SV 61 - Amateurfußballverein aus Mecklenburg-Vorpommern. Spielplan, Sponsoren, Mitgliedschaft und mehr.',
   path: '/'
 });
