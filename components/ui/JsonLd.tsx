@@ -17,6 +17,7 @@ export function JsonLd({ data }: JsonLdProps) {
     .replace(/-->/g, "--\\u003e");
 
   return (
+    // biome-ignore lint/security/noDangerouslySetInnerHtml -- safe: JSON-LD is pre-serialized, escaped and controlled
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />
   );
 }

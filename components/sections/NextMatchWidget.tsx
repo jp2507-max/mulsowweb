@@ -14,7 +14,7 @@ export default function NextMatchWidget() {
             </h2>
           </header>
           <FussballDeWidget
-            id="c53ad333-5ed6-4cae-884c-efb3a100404f"
+            id="9c5ae118-657e-4663-891b-a5d86cb22c5c"
             type="club-matches"
             className="w-full"
             title="Nächste Spiele – FUSSBALL.DE"
