@@ -5,7 +5,7 @@
 
 export const siteConfig = {
   // Base URL for the website (used for canonical URLs, sitemap, etc.)
-  baseUrl: 'https://mulsower-sv61.de',
+  baseUrl: 'https://www.mulsower-sv.de',
   
   // Site metadata
   name: 'Mulsower SV 61',
@@ -20,10 +20,10 @@ export const siteConfig = {
   
   // Contact information
   contact: {
-    email: 'info@mulsower-sv61.de',
+    email: 'info@mulsower-sv.de',
     address: {
-      street: 'Dorfstraße 1',
-      city: '19067 Mulsow',
+      street: 'Garvensdorfer Weg 10',
+      city: '18233 Carinerland',
       country: 'Deutschland'
     }
   },
@@ -33,13 +33,24 @@ export const siteConfig = {
     fussballDe: 'https://www.fussball.de/verein/mulsower-sv-61-mecklenburg-vorpommern/-/id/00ES8GNBNG000024VV0AG08LVUPGND5I#!/',
     fanshop: 'https://msv61.fan12.de/'
   },
+
+  // Social media profiles
+  social: {
+    instagramMain: {
+      label: 'Instagram – Mulsower SV 61',
+      href: 'https://www.instagram.com/mulsower_sv?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=='
+    },
+    instagramYouth: {
+      label: 'Instagram – Nachwuchs',
+      href: 'https://www.instagram.com/mulsower_sv.nachwuchs?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=='
+    }
+  },
   
   // Navigation structure
   navigation: [
     { name: 'Spielplan', href: '/spielplan' },
     { name: 'Sponsoren', href: '/sponsoren' },
     { name: 'Mitgliedschaft', href: '/mitgliedschaft' },
-    { name: 'Impressum', href: '/impressum' },
     { name: 'Fanshop', href: '/fanshop', external: true }
   ],
   
@@ -50,6 +61,13 @@ export const siteConfig = {
     keywords: ['Mulsower SV 61', 'Fußball', 'Amateurfußball', 'Mecklenburg-Vorpommern', 'Verein'] as string[],
     author: 'Mulsower SV 61',
     robots: 'index, follow'
+  },
+
+  // Feature flags and UI options
+  features: {
+    // Animated logo feature removed — keep flags for future use but disabled.
+    animatedLogo: false,
+    riveLogoSrc: undefined,
   }
 } as const;
 
@@ -69,7 +87,11 @@ export function generatePageMetadata({
 }) {
   const pageTitle = title ? `${title} | ${siteConfig.name}` : siteConfig.name;
   const pageDescription = description || siteConfig.defaultMetadata.description;
-  const canonicalUrl = `${siteConfig.baseUrl}${path}`;
+  const canonicalPath =
+    !path || path === '/'
+      ? '/'
+      : (path.endsWith('/') ? path : `${path}/`);
+  const canonicalUrl = `${siteConfig.baseUrl}${canonicalPath}`;
   
   return {
     title: pageTitle,
@@ -107,6 +129,9 @@ export function generatePageMetadata({
     // Canonical URL
     alternates: {
       canonical: canonicalUrl,
+      languages: {
+        'x-default': canonicalUrl,
+      },
     },
     
     // Additional metadata
@@ -114,6 +139,11 @@ export function generatePageMetadata({
       'og:locale': siteConfig.locale,
     }
   };
+}
+
+export function absoluteUrl(path: string) {
+  const normalized = path ? (path.startsWith('/') ? path : `/${path}`) : '/';
+  return `${siteConfig.baseUrl}${normalized}`;
 }
 
 /**

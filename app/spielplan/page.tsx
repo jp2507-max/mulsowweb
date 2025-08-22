@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
+import FussballDeWidget from "@/components/utility/FussballDeWidget";
 import { generatePageMetadata } from "../config/site";
+import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
+import { siteConfig } from "@/app/config/site";
 
 export const dynamic = "error";
 
@@ -13,6 +16,12 @@ export const metadata: Metadata = generatePageMetadata({
 export default function SchedulePage() {
   return (
     <main data-heavy className="container-site py-16 md:py-24" role="main" id="main-content">
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Startseite', url: `${siteConfig.baseUrl}/` },
+          { name: 'Spielplan', url: `${siteConfig.baseUrl}/spielplan/` },
+        ]}
+      />
       <div className="max-w-4xl mx-auto text-center">
         {/* Header Section */}
         <div className="mb-12">
@@ -27,7 +36,7 @@ export default function SchedulePage() {
 
         {/* CTA Section */}
         <div className="mb-16">
-          <div className="card max-w-2xl mx-auto text-center">
+          <div className="card card-hover max-w-2xl mx-auto text-center">
             <div className="mb-6">
               <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-4">
                 Offizieller Spielplan
@@ -43,7 +52,7 @@ export default function SchedulePage() {
               size="lg"
               href="https://www.fussball.de/verein/mulsower-sv-61-mecklenburg-vorpommern/-/id/00ES8GNBNG000024VV0AG08LVUPGND5I#!/"
               target="_blank"
-              className="w-full sm:w-auto text-lg px-8 py-4 hover:scale-105 transition-transform duration-200"
+              className="w-full sm:w-auto text-lg px-8 py-4 hover:scale-105 transition-motion touch-feedback"
               aria-label="Spielplan auf FUSSBALL.DE öffnen - Öffnet externe Website in neuem Tab"
             >
               <svg 
@@ -67,9 +76,22 @@ export default function SchedulePage() {
           </div>
         </div>
 
+        {/* Fußball.de Widget (embedded table) */}
+        <section aria-labelledby="spielplan-widget-heading" className="mb-16">
+          <h2 id="spielplan-widget-heading" className="sr-only">Spielplan Widget</h2>
+          <div className="card max-w-4xl mx-auto p-4" role="region" aria-label="Fussball.de Spielplan und Tabelle">
+            <FussballDeWidget
+              id="b5168366-f6fd-48f2-8458-fd8c1f77a7ea"
+              type="table"
+              className="w-full"
+              title="Spielplan & Tabelle – FUSSBALL.DE"
+            />
+          </div>
+        </section>
+
         {/* Additional Information */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <div className="card text-left">
+          <div className="card card-hover text-left">
             <h3 className="text-xl font-semibold font-heading text-ink-primary mb-3">
               Was findest du dort?
             </h3>
@@ -93,7 +115,7 @@ export default function SchedulePage() {
             </ul>
           </div>
 
-          <div className="card text-left">
+          <div className="card card-hover text-left">
             <h3 className="text-xl font-semibold font-heading text-ink-primary mb-3">
               Immer aktuell
             </h3>

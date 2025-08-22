@@ -1,5 +1,8 @@
 "use client";
 import * as React from "react";
+import Link from "next/link";
+import { siteConfig } from "../../app/config/site";
+import { ExternalLink } from "./ExternalLink";
 
 export interface FooterProps {
   className?: string;
@@ -10,116 +13,104 @@ export function Footer() {
 
   const clubName = "Mulsower SV 61";
   const addressLines = [
-    "Garvensdorfer Weg 8",
+  "Garvensdorfer Weg 10",
     "18233 Carinerland",
   ];
-  const email = "info@mulsower-sv61.de";
+  const email = "info@mulsower-sv.de";
 
   return (
-    <footer 
+    <footer
       role="contentinfo"
       aria-label="Website-Fußzeile mit Kontaktinformationen"
-      style={{
-        borderTop: '1px solid #E2E8F0',
-        backgroundColor: 'rgba(255, 255, 255, 0.7)',
-        backdropFilter: 'blur(8px)'
-      }}
+  className="site-footer site-footer--brand site-footer--force-white text-white"
     >
-      <div 
-        style={{
-          maxWidth: '1280px',
-          margin: '0 auto',
-          padding: 'clamp(2.5rem, 8vw, 3.5rem) 1.5rem'
-        }}
-      >
-        <div 
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-            gap: 'clamp(2rem, 6vw, 2.5rem)'
-          }}
-        >
-          <div>
-            <h2 
-              style={{ 
-                fontSize: 'clamp(1.125rem, 3vw, 1.25rem)',
-                fontWeight: '600',
-                fontFamily: 'var(--font-heading)',
-                color: '#0F172A',
-                marginBottom: '0.5rem'
-              }}
-            >
+      <div className="mx-auto max-w-7xl px-4 py-3 md:py-4">
+        {/* Mobile-first: stack and center; desktop: two columns with right-aligned utilities */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 items-start text-center md:text-left">
+          <div className="md:text-left">
+            <h2 className="text-xs md:text-sm font-semibold mb-0.5 font-heading">
               {clubName}
             </h2>
-            <address 
-              style={{ 
-                fontStyle: 'normal',
-                fontSize: 'clamp(0.875rem, 2.5vw, 1rem)',
-                color: '#475569',
-                lineHeight: '1.5'
-              }}
-              aria-label="Vereinsadresse"
-            >
+            <address className="not-italic text-xs md:text-sm leading-relaxed" aria-label="Vereinsadresse">
               {addressLines.map((line, i) => (
                 <div key={i}>{line}</div>
               ))}
             </address>
           </div>
-          <div 
-            style={{
-              textAlign: 'left'
-            }}
-            className="md:text-right"
-          >
-            <div 
-              style={{
-                fontSize: 'clamp(0.875rem, 2.5vw, 1rem)',
-                color: '#475569'
-              }}
-            >
-              <span style={{ fontWeight: '500' }}>E-Mail:</span>{" "}
+
+          <div className="text-center md:text-right flex flex-col md:items-end gap-2">
+            <div className="text-xs md:text-sm flex justify-center md:justify-end">
+              <span className="sr-only">Kontakt</span>
               <a
                 href={`mailto:${email}`}
-                style={{
-                  textDecoration: 'underline',
-                  color: '#475569',
-                  borderRadius: '4px'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#0F172A';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#475569';
-                }}
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white text-brand-primary border border-neutral-200 shadow-sm hover:bg-neutral-50 font-medium"
                 aria-label={`E-Mail senden an ${email}`}
               >
-                {email}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="18"
+                  height="18"
+                  fill="none"
+                  aria-hidden="true"
+                  className="flex-shrink-0"
+                >
+                  <path d="M3 6.5l9 6 9-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M21 8.5v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+        <span className="text-sm">{email}</span>
               </a>
+            </div>
+      <div className="text-xs md:text-sm flex flex-wrap items-center justify-center gap-2 md:justify-end">
+              <span className="sr-only">Soziale Medien</span>
+              <ExternalLink
+                href={siteConfig.social.instagramMain.href}
+                aria-label={siteConfig.social.instagramMain.label}
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-brand-primary border border-neutral-200 shadow-sm hover:bg-neutral-50"
+              >
+                {/* Instagram Icon */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  className="opacity-90"
+                >
+                  <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm6-2.25a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+                <span className="font-medium">Instagram</span>
+              </ExternalLink>
+              <ExternalLink
+                href={siteConfig.social.instagramYouth.href}
+                aria-label={siteConfig.social.instagramYouth.label}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-brand-primary border border-neutral-200 shadow-sm hover:bg-neutral-50"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  className="opacity-90"
+                >
+                  <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11zm0 2a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zm6-2.25a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                </svg>
+                <span className="font-medium">Nachwuchs</span>
+              </ExternalLink>
+            </div>
+            <div className="text-xs md:text-sm mt-1 md:mt-0">
+              <Link href="/impressum/" className="underline hover:text-white/90" aria-label="Impressum öffnen">
+                Impressum
+              </Link>
             </div>
           </div>
         </div>
 
-        <div 
-          style={{
-            marginTop: '2rem',
-            paddingTop: '1.5rem',
-            borderTop: '1px solid #E2E8F0',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'flex-start',
-            justifyContent: 'space-between',
-            gap: '0.75rem',
-            fontSize: '0.875rem',
-            color: '#94A3B8'
-          }}
-          className="md:flex-row md:items-center"
-        >
-          <div>
-            © {year} {clubName}
-          </div>
-          <div>
-            {/* Add any subtle legal links here later if needed */}
-          </div>
+        <div className="site-footer__meta mt-2 pt-0 flex flex-col md:flex-row md:items-center justify-center md:justify-between gap-1 text-xs md:text-sm">
+          <div>© {year} {clubName}</div>
         </div>
       </div>
     </footer>

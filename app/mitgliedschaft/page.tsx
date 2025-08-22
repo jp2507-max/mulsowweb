@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
 import { generatePageMetadata } from "../config/site";
+import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
+import { siteConfig } from "@/app/config/site";
 
 export const dynamic = "error";
 
@@ -13,6 +15,12 @@ export const metadata: Metadata = generatePageMetadata({
 export default function MembershipPage() {
   return (
     <main className="container-site py-16 md:py-24" role="main" id="main-content">
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Startseite', url: `${siteConfig.baseUrl}/` },
+          { name: 'Mitgliedschaft', url: `${siteConfig.baseUrl}/mitgliedschaft/` },
+        ]}
+      />
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12 md:mb-16">
@@ -28,7 +36,7 @@ export default function MembershipPage() {
         {/* Membership Information */}
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 mb-12 md:mb-16">
           {/* Why Join Section */}
-          <div className="card">
+          <div className="card card-hover">
             <div className="mb-6">
               <div className="w-16 h-16 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center">
                 <svg 
@@ -70,7 +78,7 @@ export default function MembershipPage() {
           </div>
 
           {/* Membership Types Section */}
-          <div className="card">
+          <div className="card card-hover">
             <div className="mb-6">
               <div className="w-16 h-16 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center">
                 <svg 
@@ -105,7 +113,7 @@ export default function MembershipPage() {
         </div>
 
         {/* Application Section */}
-        <div className="card text-center mb-12 md:mb-16">
+        <div className="card card-hover text-center mb-12 md:mb-16">
           <div className="mb-8">
             <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-2xl flex items-center justify-center">
               <svg 
@@ -132,7 +140,7 @@ export default function MembershipPage() {
             size="lg"
             href="/05_2025_Aufnahmeantrag.pdf"
             download="Aufnahmeantrag_Mulsower_SV_61.pdf"
-            className="w-full sm:w-auto text-lg px-8 py-4 hover:scale-105 transition-transform duration-200"
+            className="w-full sm:w-auto text-lg px-8 py-4 hover:scale-105 transition-motion touch-feedback"
             aria-label="Aufnahmeantrag als PDF-Datei herunterladen"
           >
             <svg 
@@ -153,7 +161,7 @@ export default function MembershipPage() {
         {/* Contact Information */}
         <div className="grid md:grid-cols-2 gap-8 md:gap-12">
           {/* Address Card */}
-          <div className="card text-center md:text-left">
+          <div className="card card-hover text-center md:text-left">
             <div className="mb-6">
               <div className="w-16 h-16 mx-auto md:mx-0 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center">
                 <svg 
@@ -173,8 +181,8 @@ export default function MembershipPage() {
             </div>
             <address className="not-italic text-ink-secondary leading-relaxed">
               <div className="font-semibold text-ink-primary mb-2">Mulsower SV 61 e.V.</div>
-              <div>Dorfstraße 12</div>
-              <div>19067 Mulsow</div>
+               <div>Garvensdorfer Weg 10</div>
+              <div>18233 Carinerland</div>
               <div className="mt-2">Deutschland</div>
             </address>
             <div className="mt-4 text-sm text-ink-tertiary">
@@ -183,7 +191,7 @@ export default function MembershipPage() {
           </div>
 
           {/* Email Card */}
-          <div className="card text-center md:text-left">
+          <div className="card card-hover text-center md:text-left">
             <div className="mb-6">
               <div className="w-16 h-16 mx-auto md:mx-0 mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center">
                 <svg 
@@ -205,10 +213,10 @@ export default function MembershipPage() {
                 Für Fragen zur Mitgliedschaft:
               </div>
               <a 
-                href="mailto:info@mulsower-sv61.de"
+                href="mailto:info@mulsower-sv.de"
                 className="inline-flex items-center text-brand-primary hover:text-brand-secondary font-semibold transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded"
               >
-                info@mulsower-sv61.de
+                info@mulsower-sv.de
                 <svg 
                   className="ml-2 w-4 h-4" 
                   fill="none" 

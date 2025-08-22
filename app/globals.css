@@ -59,6 +59,11 @@
   /* Decorative background intensity controls */
   --bg-blob-opacity: 0.12;
   --bg-noise-opacity: 0.035;
+  /* Hero photo background strength: very subtle by default so the
+    decorative site background (watermark/patterns) remains visible.
+    Pages that include a hero will increase this value so the photo
+    reads stronger and masks the decorative background. */
+  --hero-photo-opacity: 0.05; /* very subtle default; raised to 0.12 on hero pages */
   /* Spotlight defaults (center-top-ish) */
   --spot-x: 50%;
   --spot-y: 40%;
@@ -119,7 +124,7 @@ body {
   filter: blur(40px);
   opacity: var(--bg-blob-opacity);
   transform: translateZ(0);
-  will-change: transform;
+  /* will-change removed - managed dynamically by WillChangeManager */
   background: radial-gradient(circle at 30% 30%, var(--color-brand-primary), var(--color-brand-accent));
 }
 
@@ -161,6 +166,7 @@ body {
 }
 
 /* Subtle vertical pinstripes like a jersey pattern */
+/* Global subtle vertical pinstripes like a jersey pattern */
 .site-bg::after {
   content: "";
   position: absolute;
@@ -177,6 +183,7 @@ body {
 }
 
 /* Giant crest watermark (uses existing /public/logo.svg) */
+/* Giant crest watermark (uses existing /public/logo.svg) */
 .site-bg__vignette::after {
   content: "";
   position: absolute;
@@ -187,6 +194,24 @@ body {
   background: url('/logo.svg') no-repeat center / contain;
   opacity: 0.035;
   filter: saturate(0) contrast(1.05);
+}
+
+/* Note: the site background (watermark + pinstripes) should be visible on the
+  start screen as well. The hero photo layer (`.hero-photo-bg`) sits above the
+  decorative background, so it naturally masks the area where the photo is
+  present. Previously we removed the watermark when `.hero-section` was
+  present; that made the start screen background look different. Keeping the
+  watermark/patterns visible here creates a consistent background across
+  pages while the hero photo still covers its region. */
+
+/* On pages that include a hero section, make the hero photo opaque so the
+   decorative background does not show through the photo area. This preserves
+   the consistent decorative background elsewhere on the page while excluding
+   the photo area, per the request. */
+html:has(.hero-section) {
+  /* Increase the hero photo opacity so the photo reads more strongly and
+    the decorative background does not show through the photo region. */
+  --hero-photo-opacity: 0.12; /* stronger hero photo when .hero-section is present */
 }
 
 /* Gentle vignette to keep edges calm, improving perceived depth */
@@ -251,6 +276,65 @@ h6 {
   /* stylelint-enable selector-type-no-unknown */
   }
 
+  /* Named shared-element transitions for logo and hero title */
+  .vt-logo { view-transition-name: site-logo; }
+  .vt-hero-title { view-transition-name: hero-title; }
+
+  /* stylelint-disable selector-type-no-unknown */
+  /* Subtle transform/opacity for shared elements */
+  ::view-transition-old(site-logo) { animation: vt-el-fade-out 160ms var(--motion-ease) both; }
+  ::view-transition-new(site-logo) { animation: vt-el-fade-in 200ms var(--motion-ease) both; }
+  ::view-transition-old(hero-title) { animation: vt-el-up-out 180ms var(--motion-ease) both; }
+  ::view-transition-new(hero-title) { animation: vt-el-up-in 220ms var(--motion-ease) both; }
+
+  @keyframes vt-el-fade-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: none; } }
+  @keyframes vt-el-fade-out { to { opacity: 0; transform: scale(0.98); } }
+  @keyframes vt-el-up-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes vt-el-up-out { to { opacity: 0; transform: translateY(-6px); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vt-logo, .vt-hero-title { view-transition-name: none; }
+    ::view-transition-old(site-logo),
+    ::view-transition-new(site-logo),
+    ::view-transition-old(hero-title),
+    ::view-transition-new(hero-title) { animation: none !important; }
+  }
+
+  /* Scroll-driven reading progress bar */
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--color-brand-primary), var(--color-brand-accent));
+    z-index: 60; /* above header border */
+    transform: translateZ(0);
+  pointer-events: none;
+  }
+
+  /* Use scroll-timeline when available */
+  @supports (scroll-timeline: auto) {
+    @media (prefers-reduced-motion: no-preference) {
+      body {
+        /* Define a root scroll timeline */
+        scroll-timeline-name: page-scroll;
+        scroll-timeline-axis: block;
+      }
+      .reading-progress {
+        animation: progress-grow linear both;
+        animation-timeline: page-scroll;
+        animation-range: 0% 100%;
+      }
+      @keyframes progress-grow { from { width: 0%; } to { width: 100%; } }
+    }
+  }
+
+  /* Fallback: no timeline support -> hide the bar to avoid JS */
+  @supports not (scroll-timeline: auto) {
+    .reading-progress { display: none; }
+  }
+
   /* Hero word rotator: calm vertical word switcher (CSS-only) */
   .hero-rotator {
     --size: clamp(1.1rem, 2.2vw, 1.5rem);
@@ -289,7 +373,7 @@ h6 {
   width: 100%;
   height: calc(var(--line) * var(--n));
   display: block;
-    will-change: transform;
+    /* will-change removed - managed dynamically by WillChangeManager */
     transform: translateZ(0);
     animation: rotY var(--t) steps(var(--n), end) infinite;
   }
@@ -331,6 +415,55 @@ h6 {
     transition-duration: var(--motion-duration-md);
   }
 
+  /* Respect user preference for reduced motion: make .transition-motion a no-op */
+  @media (prefers-reduced-motion: reduce) {
+    .transition-motion {
+      /* Remove transitions for users who prefer reduced motion. Use very small
+         duration instead of 'none' to avoid surprising layout changes in some
+         UA implementations; however '0ms' is acceptable and explicit here. */
+      transition-duration: 0ms !important;
+      transition-property: none !important;
+      transition-timing-function: linear !important;
+    }
+  }
+
+  /* Page fade transitions for navigation */
+  body.fade-init {
+    opacity: 0;
+    transition: opacity 180ms var(--motion-ease);
+  }
+
+  body.fade-in {
+    opacity: 1;
+  }
+
+  /* Hero ready state */
+  .hero-ready {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Scroll reveal optimization - simplified */
+  .reveal-optimized {
+    /* Base state - content visible by default */
+    opacity: 1;
+    transform: none;
+    transition: transform var(--motion-duration-md) var(--motion-ease),
+                opacity var(--motion-duration-md) var(--motion-ease);
+  }
+
+  .reveal-optimized:not(.in) {
+    /* Hidden state - only applied after JavaScript loads */
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  .reveal-optimized.in {
+    /* Revealed state */
+    opacity: 1;
+    transform: none;
+  }
+
 
   /* Button base and sizes */
   .btn {
@@ -351,12 +484,39 @@ h6 {
 
   .btn-lg {
     @apply px-6 py-4 text-lg;
+    /* Ensure proper touch target size on mobile */
+    min-height: 48px;
+  }
+
+  /* Mobile-specific button optimizations */
+  @media (max-width: 768px) {
+    .btn-lg {
+      padding: 0.875rem 1.5rem;
+      font-size: 1rem;
+      min-height: 48px;
+    }
+
+    .btn-md {
+      min-height: 44px;
+    }
+
+    .btn-sm {
+      min-height: 40px;
+    }
   }
 
   /* Optional shapes/variants (opt-in) */
   .btn-pill {
     @apply rounded-full;
-    /* slightly wider horizontal padding works well for pills */
+    /* Moderate horizontal padding for pills */
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  /* Override pill padding specifically for header fanshop button */
+  .header-fanshop-btn.btn-pill {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
   }
 
   .btn-soft {
@@ -389,60 +549,402 @@ h6 {
   transition-timing-function: var(--motion-ease);
   }
 
-  /* Page container */
+  /* Page container with mobile-first responsive padding */
   .container-site {
     @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8;
   }
 
+  /* Mobile-specific container optimizations */
+  @media (max-width: 768px) {
+    .container-site {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+
   /* Header styles */
   .header {
-    @apply border-b border-neutral-200 bg-white/80 backdrop-blur-sm;
+    @apply border-b border-transparent text-white;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    /* Establish stacking context for overlay */
+    overflow: hidden;
+    /* Base background = scrolled state (light/translucent) */
+    background-color: rgba(193, 18, 31, 0.35);
+    /* Keep header itself free of heavy transitions; we animate the overlay's opacity instead */
+    transition: border-color 200ms var(--motion-ease), box-shadow 200ms var(--motion-ease);
   }
+
+  /* GPU-friendly background overlay that fades in/out to full brand at top of page */
+  .header .header-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    /* Solid brand background + slight top highlight */
+    background-color: var(--color-brand-primary);
+    background-image: linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0));
+    opacity: 1; /* visible by default (top-of-page) */
+    /* will-change removed - managed dynamically by WillChangeManager */
+    transition: opacity 220ms var(--motion-ease);
+    transform: translateZ(0);
+  }
+
+  /* When scrolled, fade overlay out to reveal the translucent base */
+  .header[data-scrolled] .header-bg {
+    opacity: 0;
+  }
+
+  .header[data-scrolled] {
+    /* Keep subtle shadow/border only; backgrounds handled by overlay/base */
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.16);
+  }
+
+  /* Light, low-jank compact effect when scrolled */
+  .header .header-content {
+    /* will-change removed - managed dynamically by WillChangeManager */
+    transition: transform 200ms var(--motion-ease), padding 180ms var(--motion-ease);
+    transform-origin: center center; /* Better vertical centering */
+  }
+  
+  .header .header-logo-image,
+  .header .header-logo-text {
+    transition: transform 180ms var(--motion-ease), opacity 180ms var(--motion-ease);
+    transform-origin: left center;
+  }
+
+  /* Nav links need transitions for scaling */
+  .header .header-nav-link {
+    transition: transform 180ms var(--motion-ease), font-size 180ms var(--motion-ease);
+  }
+
+  .header[data-scrolled] .header-content {
+    padding-top: clamp(0.3rem, 0.6vw, 0.5rem);
+    padding-bottom: clamp(0.3rem, 0.6vw, 0.5rem);
+    /* Keep natural size on mobile to avoid crowding */
+    transform: none;
+  }
+
+  /* Desktop/tablet compact effects when scrolled */
+  @media (min-width: 769px) {
+    .header[data-scrolled] .header-content { transform: scale(0.8); }
+    .header[data-scrolled] .header-logo-image {
+      /* Compensate for container scale and add more breathing room */
+      transform: scale(1.3) translateX(0.15rem);
+    }
+    .header[data-scrolled] .header-logo-text {
+      /* Increase text size and add more spacing from logo */
+      transform: scale(1.15) translateX(1rem);
+    }
+    /* Make navigation links bigger and more prominent when scrolled */
+    .header[data-scrolled] .header-nav-link {
+      transform: scale(1.3);
+      font-weight: 600;
+    }
+    /* Make the Fanshop button more prominent when header is compact */
+    .header[data-scrolled] .header-fanshop-btn {
+      transform: scale(1.08);
+      transition: transform 200ms var(--motion-ease), box-shadow 200ms var(--motion-ease);
+      z-index: 2; /* keep above overlay */
+    }
+  }
+
+  /* Remove duplicate size changes while scrolled to prevent reflow */
+  /* (sizes unchanged in scrolled state) */
 
   .header-container {
     @apply mx-auto max-w-7xl px-4 md:px-6;
+    position: relative;
+    z-index: 1; /* above .header-bg */
   }
 
+  /* Compact header with responsive 3-column grid: logo | nav (center) | CTA */
   .header-content {
-    @apply flex items-center justify-between gap-6 py-4;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr; /* center auto nav; sides flex to edges */
+    align-items: center;
+    gap: clamp(0.5rem, 1.5vw, 0.875rem);
+    padding-top: clamp(0.375rem, 1vw, 0.6rem);
+    padding-bottom: clamp(0.375rem, 1vw, 0.6rem);
+  }
+
+  /* Enhanced mobile-first responsive header */
+  @media (max-width: 768px) {
+    /* Two-row layout on mobile: row1 = logo | spacer | CTA, row2 = nav full width */
+    .header-content {
+      grid-template-columns: auto 1fr auto; /* logo | spacer | cta */
+      grid-template-rows: auto auto;
+      gap: 0.5rem 0.75rem;
+      text-align: center;
+      padding-top: clamp(0.5rem, 1.8vw, 0.75rem);
+      padding-bottom: clamp(0.5rem, 1.8vw, 0.75rem);
+    }
+
+    /* Logo left on first row */
+    .header-logo {
+      grid-column: 1;
+      grid-row: 1;
+      justify-self: start;
+      min-height: 44px;
+      padding: 0.25rem 0.4rem;
+    }
+
+    /* CTA right on first row */
+    .header-cta {
+      grid-column: 3;
+      grid-row: 1;
+      justify-self: end;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Nav spans full width on second row */
+    .header-nav-wrap {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      justify-self: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    /* Ensure navigation items stay horizontal and compact */
+    .header-nav {
+      gap: clamp(0.375rem, 1.6vw, 0.625rem);
+      flex-wrap: wrap; /* allow wrapping to second line on very small screens */
+      justify-content: center;
+    }
+
+    .header-nav-link {
+      font-size: clamp(0.8rem, 3.2vw, 0.9rem);
+      padding: 0.375rem clamp(0.5rem, 3vw, 0.75rem);
+      white-space: nowrap;
+      /* Ensure proper touch targets */
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Optimize logo sizes for mobile */
+    .header-logo-image {
+      width: clamp(2rem, 8vw, 2.5rem);
+      height: clamp(2rem, 8vw, 2.75rem);
+    }
+    
+    .header-logo-text {
+      font-size: clamp(1rem, 4.2vw, 1.2rem);
+    }
+  }
+
+  /* Small mobile devices (under 480px) */
+  @media (max-width: 480px) {
+    .header-nav-link {
+      font-size: 0.75rem;
+      padding: 0.375rem 0.5rem;
+    }
+    
+    .header-logo-text {
+      font-size: 1rem;
+    }
+  }
+
+  /* Tablet adjustments */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .header-content {
+      gap: clamp(0.75rem, 1.8vw, 1rem);
+    }
+    
+    .header-nav {
+      gap: clamp(0.75rem, 1.5vw, 1rem);
+    }
+    
+    .header-nav-link {
+      font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+      padding: 0.5rem 0.75rem;
+    }
   }
 
   .header-logo {
-    @apply inline-flex items-center gap-3 rounded-md p-1 transition-colors hover:bg-neutral-50;
+  @apply inline-flex items-center rounded-md p-1 transition-colors hover:bg-white/10;
+  gap: clamp(0.5rem, 1.2vw, 0.75rem); /* More breathing room between logo and text */
   }
 
   .header-logo-image {
     @apply flex-shrink-0;
-    width: clamp(2rem, 5vw, 2.5rem);
-    height: clamp(2rem, 5vw, 2.5rem);
+    /* Slightly smaller for a tighter header */
+  width: clamp(2.25rem, 5vw, 3.25rem); /* 36px - ~52px */
+    height: clamp(2.5rem, 6vw, 3.75rem);
   }
 
   .header-logo-text {
-    @apply font-bold text-ink-primary;
-    font-size: clamp(1.25rem, 4vw, 1.5rem);
+    @apply font-extrabold text-white;
+  font-size: clamp(1.15rem, 3.5vw, 1.55rem);
+    letter-spacing: -0.02em;
     font-family: var(--font-heading);
   }
 
+  .header-nav-wrap { display: flex; justify-content: center; }
   .header-nav {
     @apply flex flex-wrap items-center list-none m-0 p-0;
-    gap: clamp(0.75rem, 2vw, 1.25rem);
+  gap: clamp(0.625rem, 1.7vw, 1.1rem);
   }
 
   .header-nav-link {
-    @apply px-3 py-2 rounded-md text-ink-secondary transition-colors font-medium;
+  @apply px-3 py-2 rounded-md text-white transition-colors font-medium;
     font-size: clamp(0.875rem, 2vw, 1rem);
   }
 
   .header-nav-link:hover {
-    @apply text-ink-primary;
+  @apply text-white;
   }
 
   .header-nav-link:focus-visible {
-    @apply outline-2 outline-brand-primary outline-offset-2;
+  @apply outline-2 outline-white outline-offset-2;
   }
 
   .header-nav-link-active {
-    @apply text-brand-primary border-b-2 border-brand-primary font-semibold;
+  @apply text-white border-b-2 border-white font-semibold;
+  }
+
+  /* Right-side container to push CTA to the far right */
+  .header-cta { display: flex; justify-content: flex-end; }
+
+  /* Special Fanshop button styling - mobile optimized */
+  .header-fanshop-btn {
+    /* Make the Fanshop button a prominent pill with strong contrast */
+    background: linear-gradient(135deg, #ff6b6b 0%, #c1121f 60%);
+    color: #ffffff;
+    /* Responsive padding for mobile */
+    padding: clamp(0.25rem, 0.5vw, 0.375rem) clamp(0.5rem, 1vw, 0.75rem) !important;
+    font-size: clamp(0.75rem, 1.5vw, 0.85rem) !important;
+    line-height: 1.2 !important;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 10px 36px rgba(193,18,31,0.22), 0 4px 10px rgba(0,0,0,0.14);
+    transform: translateZ(0);
+    position: relative;
+    white-space: nowrap;
+  }
+
+  /* Mobile specific button adjustments */
+  @media (max-width: 768px) {
+    .header-fanshop-btn {
+      padding: 0.3rem 0.6rem !important;
+      font-size: 0.75rem !important;
+      margin-left: 0.5rem;
+    }
+    
+    .header-fanshop-btn .fanshop-icon-wrap {
+      width: 14px;
+      height: 14px;
+    }
+    
+    .header-fanshop-btn .fanshop-icon {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .header-fanshop-btn:hover {
+    background: linear-gradient(135deg, #ff7b7b 0%, #c1121f 60%);
+    box-shadow: 0 12px 30px rgba(193,18,31,0.22), 0 4px 10px rgba(0,0,0,0.16);
+    /* Avoid large scaling on hover; keep to a small lift */
+    transform: translateY(-1px) scale(1.02);
+  }
+  .header-fanshop-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 6px rgba(193,18,31,0.18), 0 6px 22px rgba(193,18,31,0.18);
+    transform: translateY(-1px);
+  }
+
+  /* subtle pulsing halo to attract attention but respectful of reduced-motion */
+  .header-fanshop-btn::after {
+    content: '';
+    position: absolute;
+    left: -6px;
+    right: -6px;
+    top: -6px;
+    bottom: -6px;
+    border-radius: 999px;
+    background: radial-gradient(circle at 50% 50%, rgba(193,18,31,0.12), rgba(193,18,31,0) 40%);
+    z-index: -1;
+    opacity: 0.9;
+    transform: scale(1);
+    transition: opacity 320ms var(--motion-ease), transform 320ms var(--motion-ease);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .header-fanshop-btn.pulse::after,
+    .header-fanshop-btn:hover::after {
+      animation: fanshop-pulse 2.4s ease-in-out infinite;
+    }
+  }
+
+  @keyframes fanshop-pulse {
+    0% { transform: scale(0.98); opacity: 0.9; }
+    50% { transform: scale(1.06); opacity: 0.6; }
+    100% { transform: scale(0.98); opacity: 0.9; }
+  }
+
+  /* Icon sizing inside the button */
+  .fanshop-icon {
+    display: inline-block;
+    vertical-align: middle;
+    color: rgba(255,255,255,0.95);
+  }
+
+  /* Icon wrapper: circular light background to improve contrast against brand header */
+  .fanshop-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    /* Very compact icon wrapper */
+    width: 16px;
+    height: 16px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+    margin-right: 0.25rem;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(193,18,31,0.12) inset;
+  }
+
+  /* Header Fanshop white variant: allow placing a white button on brand header */
+  .header-fanshop-btn.white {
+    background: #ffffff;
+    color: var(--color-brand-primary);
+    border: 1px solid rgba(15,17,26,0.06);
+    box-shadow: 0 6px 18px rgba(2,6,23,0.08);
+  }
+
+  .header-fanshop-btn.white .fanshop-icon {
+    color: var(--color-brand-primary);
+  }
+
+  .header-fanshop-btn.white .fanshop-label {
+    color: var(--color-brand-primary);
+  }
+
+  .fanshop-label {
+    font-weight: 700;
+    color: #ffffff;
+    /* Very compact font-size */
+    font-size: 0.8rem !important;
+    line-height: 1.2 !important;
+    vertical-align: middle;
+  }
+
+  /* Make the whole CTA slightly larger on larger viewports for visibility */
+  @media (min-width: 768px) {
+   /* Very compact sizes on larger viewports */
+   .header-fanshop-btn { 
+     padding: 0.25rem 0.55rem !important; 
+     font-size: 0.8rem !important;
+   }
+   .fanshop-icon-wrap { width: 18px; height: 18px; margin-right: 0.3rem; }
+   .fanshop-label { font-size: 0.8rem !important; }
   }
 
   /* Eyebrow text utility: small, uppercased label above headlines */
@@ -454,29 +956,69 @@ h6 {
   /* Hero Section - Performance Optimized for LCP */
   .hero-section {
     @apply relative overflow-hidden;
-    /* Optimized padding - not forcing full viewport for better LCP positioning */
-    padding: clamp(3rem, 8vw, 6rem) 0;
-    /* Reasonable min-height that doesn't push content below fold - optimized for LCP */
-    min-height: clamp(400px, 60vh, 600px);
-    /* Ensure content is above the fold on most devices */
-    max-height: 80vh;
+    /* Optimized padding - responsive for mobile devices */
+    padding: clamp(2rem, 6vw, 6rem) 0;
+    /* Reasonable min-height that works well on mobile */
+    min-height: clamp(320px, 50vh, 600px);
+    /* Allow section to grow with content to avoid clipping CTAs */
+  }
+
+  /* Mobile-specific hero optimizations */
+  @media (max-width: 768px) {
+    .hero-section {
+      padding: clamp(1.5rem, 4vw, 3rem) 0;
+      min-height: clamp(280px, 40vh, 450px);
+    }
   }
 
   .hero-bg {
     @apply absolute inset-0 -z-10;
   }
 
-  /* Subtle CSS-only gradients - 2024 organic trend */
+  /* Subtle hero photo layer using a static JPG. This avoids layout shift
+     since it's a background on a positioned div. Keep opacity very low
+     and apply a slight blur to prevent text conflict. Image lives in
+     /public/images/hero-bg.jpg (1024+ px recommended). */
+  .hero-photo-bg {
+    position: absolute;
+    inset: 0;
+    /* Prefer modern formats when available */
+    background-image: url('/images/hero-bg.jpg');
+  /* biome-disable-next-line css/no-duplicate-properties */
+  background-image: image-set(
+      url('/images/hero-bg.avif') type('image/avif') 1x,
+      url('/images/hero-bg.webp') type('image/webp') 1x,
+      url('/images/hero-bg.jpg') type('image/jpeg') 1x
+    );
+  
+  background-position: center 35%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: var(--hero-photo-opacity);
+  filter: saturate(0.9) contrast(1.05) blur(0.5px);
+   /* Avoid permanently pinning a composited layer — use 'auto' here and
+     enable will-change only while an animation is active via
+     the `.animate-opacity-active` helper class. */
+   will-change: auto;
+    pointer-events: none;
+    z-index: -1; /* stays below gradient layers */
+  }
+
+  /* Subtle CSS-only gradients - removed opacity to reveal site watermark behind hero */
   .hero-gradient-1 {
     @apply absolute top-0 left-0 w-full h-full;
     background: linear-gradient(135deg, var(--color-brand-light) 0%, transparent 40%);
-    opacity: 0.3;
+    /* Disabled to show underlying site background/watermark */
+    opacity: 0;
+    pointer-events: none;
   }
 
   .hero-gradient-2 {
     @apply absolute bottom-0 right-0 w-4/5 h-4/5;
     background: linear-gradient(45deg, var(--color-neutral-100) 0%, transparent 70%);
-    opacity: 0.5;
+    /* Disabled to show underlying site background/watermark */
+    opacity: 0;
+    pointer-events: none;
   }
 
   /* Modern organic shapes - performance-friendly CSS */
@@ -500,12 +1042,7 @@ h6 {
   }
 
   /* Hero-only contrast overlay (sits above hero-bg, below content) */
-  .hero-overlay {
-    @apply absolute inset-0 z-0; /* behind hero-content (z-10), above hero-bg (-z-10) */
-    pointer-events: none;
-    background:
-      linear-gradient(180deg, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.66) 45%, rgba(255,255,255,0.42) 100%);
-  }
+  .hero-overlay { @apply absolute inset-0 z-0; pointer-events: none; background: transparent; }
 
   .hero-content {
     @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8 relative z-10 text-center flex flex-col justify-center;
@@ -529,47 +1066,70 @@ h6 {
   /* Hero ready state: animate hero text only after hero image has decoded.
      This prevents LCP jank by ensuring the hero image is ready before text
      animates into view. Animation uses only transform/opacity. */
+  /* Make hero content visible by default so failures in JS do not hide content.
+     Animations are opt-in via the `hero-animate` class which is added client-side
+     after the hero image decodes (see HeroReady hook). This preserves LCP
+     friendliness while guaranteeing a visible fallback when JS fails. */
   .hero-title,
   .hero-subtitle,
   .hero-ctas {
-    opacity: 0;
-    transform: translateY(12px);
-    transition-property: opacity, transform;
-    transition-duration: var(--motion-duration-md);
-    transition-timing-function: var(--motion-ease);
-    will-change: opacity, transform;
-  }
-
-  /* When the documentElement has .hero-ready, animate content in */
-  .hero-ready .hero-title,
-  .hero-ready .hero-subtitle,
-  .hero-ready .hero-ctas {
     opacity: 1;
     transform: none;
+    transition: none;
+    will-change: auto;
+  }
+
+  /* When JS determines the hero image is ready we add `hero-animate` to the
+     documentElement; apply a subtle fade/slide animation to the hero content.
+     Using animation (keyframes) here allows the element to be visible by
+     default but still animate when the class is applied. */
+  .hero-animate .hero-title,
+  .hero-animate .hero-subtitle,
+  .hero-animate .hero-ctas {
+    animation: fadeInUp var(--motion-duration-md) var(--motion-ease) both;
+    will-change: opacity, transform;
   }
 
   .hero-text {
     @apply mb-10 md:mb-14 lg:mb-16;
   }
 
-  /* Bold, athletic typography - 2024 sports design trend */
+  /* Bold, athletic typography - mobile-optimized */
   .hero-title {
     @apply font-black leading-none mb-6;
-    /* Responsive typography using clamp for better performance and CLS prevention */
-    font-size: clamp(2.5rem, 7vw, 5rem);
+    /* Mobile-first responsive typography using clamp for better mobile readability */
+    font-size: clamp(2rem, 6vw, 5rem);
     letter-spacing: -0.03em;
     font-family: var(--font-heading);
     /* Prevent layout shift during font loading */
     font-display: swap;
-    /* Reserve space to prevent CLS */
-    min-height: clamp(5rem, 14vw, 10rem);
+    /* Reserve space to prevent CLS - optimized for mobile */
+    min-height: clamp(4rem, 14vw, 12rem);
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
 
+  /* Mobile-specific hero title adjustments */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: clamp(1.75rem, 8vw, 3rem);
+      min-height: clamp(3rem, 16vw, 8rem);
+      margin-bottom: 1rem;
+    }
+  }
+
+  /* Horizontal row to place crest next to title on first line */
+  .hero-title-row {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.5rem, 1.5vw, 0.75rem);
+    margin-bottom: 0.5rem; /* matches former hero-title-main mb-2 */
+  }
+
   .hero-title-main {
-    @apply block mb-2;
+    @apply block;
     /* Modern gradient text effect - 2024 trend */
     background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-accent) 100%);
     background-clip: text;
@@ -577,6 +1137,24 @@ h6 {
     -webkit-text-fill-color: transparent;
     /* Subtle text shadow for depth */
     filter: drop-shadow(0 2px 4px rgba(193, 18, 31, 0.1));
+  }
+
+  /* Crest beside hero title: responsive, mobile-optimized */
+  .hero-badge {
+    /* Responsive badge sizing - smaller on mobile for better balance */
+    width: clamp(3rem, 12vw, 9rem); /* ~48px on mobile, up to 144px on large */
+    height: clamp(3rem, 12vw, 9rem);
+    flex: 0 0 auto;
+    filter: drop-shadow(0 2px 3px rgba(193,18,31,0.12));
+    transform: translateZ(0);
+  }
+
+  /* Mobile-specific badge optimizations */
+  @media (max-width: 768px) {
+    .hero-badge {
+      width: clamp(2.5rem, 10vw, 4rem); /* ~40px to ~64px on mobile */
+      height: clamp(2.5rem, 10vw, 4rem);
+    }
   }
 
   .hero-title-subtitle {
@@ -593,16 +1171,32 @@ h6 {
 
   .hero-subtitle {
     @apply text-ink-secondary max-w-4xl mx-auto leading-relaxed;
-    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+    /* Mobile-first font sizing for better readability */
+    font-size: clamp(1rem, 2.2vw, 1.5rem);
     font-weight: 400;
     font-family: var(--font-body);
   }
 
-  /* Three CTA grid - modern sports organization pattern */
+  /* Mobile-specific subtitle optimizations */
+  @media (max-width: 768px) {
+    .hero-subtitle {
+      font-size: clamp(0.95rem, 2.5vw, 1.25rem);
+      line-height: 1.5;
+      margin-bottom: 2rem;
+    }
+  }
+
+  /* Three CTA grid - mobile-first responsive design */
   .hero-ctas {
     @apply grid gap-4 md:gap-6 max-w-5xl mx-auto;
-    /* Responsive grid: stacked on mobile, 3 columns on desktop */
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    /* Mobile: single column, tablet and up: 3 columns */
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .hero-ctas {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
   }
 
   @media (min-width: 768px) {
@@ -887,6 +1481,48 @@ h6 {
     }
   }
 
+  /* Mobile-specific touch interactions for sponsor cards */
+  @media (hover: none) and (pointer: coarse) {
+    .sponsor-card:active {
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    .sponsor-card:active::before {
+      opacity: 0.6;
+    }
+  }
+
+  /* General mobile optimizations for touch targets */
+  @media (max-width: 768px) {
+    /* Ensure all interactive elements meet 44px minimum touch target */
+    a, button, [role="button"], [tabindex]:not([tabindex="-1"]) {
+      min-height: 44px;
+      min-width: 44px;
+    }
+    
+    /* Improve sponsor grid spacing on mobile */
+    .sponsors-grid {
+      gap: 1rem !important;
+      padding: 1rem !important;
+    }
+    
+    /* Better mobile padding for sections */
+    .hero-content,
+    .sponsor-teaser-section,
+    .contact-section {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    /* Optimize CTA buttons for mobile */
+    .hero-cta,
+    .cta-primary {
+      padding: 0.875rem 1.5rem;
+      font-size: 1rem;
+      min-height: 48px;
+    }
+  }
+
   /* Touch devices: use :active for immediate feedback and shorter duration */
   @media (hover: none) and (pointer: coarse) {
     .sponsor-card:active {
@@ -933,12 +1569,9 @@ h6 {
       transition: opacity 180ms cubic-bezier(0.2, 0, 0, 1);
     }
 
-    /* Enable CSS smooth scrolling when user has not requested reduced motion.
-       This keeps scroll-based navigation feeling polished while respecting
-       accessibility preferences per Requirement 3.1. */
-    html {
-      scroll-behavior: smooth;
-    }
+   /* Avoid global CSS smooth scrolling to reduce conflicts with JS smooth scroll
+     libraries and ensure consistent native wheel/touch behavior. */
+   html { scroll-behavior: auto; }
 
     /* Utility class to opt-in smooth scrolling on specific containers or
        for programmatic usage (e.g. internal nav wrappers) */
@@ -1017,7 +1650,9 @@ h6 {
      Uses slightly increased durations on touch devices to improve perceived feedback
      per Requirement 5.1 and 5.3 */
   .touch-feedback {
-    /* noop for non-touch environments; touch rules applied in media query below */
+    /* Ensure minimum touch target size for mobile accessibility */
+    min-height: 44px;
+    min-width: 44px;
   }
 
   @media (hover: none) and (pointer: coarse) {
@@ -1063,7 +1698,9 @@ h6 {
   @supports (content-visibility: auto) {
     section[data-heavy] {
       content-visibility: auto;
-      contain-intrinsic-size: 1px 800px;
+      contain-intrinsic-size: 1px 600px;
+      /* Optimize containment for better performance */
+      contain: layout style paint;
     }
   }
 
@@ -1071,6 +1708,8 @@ h6 {
     section[data-heavy] {
       /* Conservative fallback to reduce reflow impact on browsers without content-visibility */
       min-height: 400px;
+      /* Add transform isolation to prevent reflow */
+      transform: translateZ(0);
     }
   }
 
@@ -1082,6 +1721,18 @@ h6 {
   .single-transform-only {
     will-change: transform;
     /* keep hints minimal; remove will-change after animation completes in JS if used */
+  }
+
+  /* Helper: enable will-change for opacity only while an animation/transition
+     affecting opacity is active. Add this class via JS when starting an
+     animation and remove it when finished to avoid pinned composited layers. */
+  .animate-opacity-active {
+    will-change: opacity;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    /* Respect reduced-motion by preventing will-change hints for opacity */
+    .animate-opacity-active { will-change: auto !important; }
   }
 
   /* Stagger group helper: apply .stagger-group to a container and each direct child
@@ -1143,21 +1794,32 @@ h6 {
     transform: none;
   }
 
-  /* Simple marquee (sponsors) */
+  /* Simple marquee (sponsors) - optimized for performance */
   .marquee {
     display: inline-block;
     min-width: 200%;
-    animation: marquee-scroll 24s linear infinite;
+    animation: marquee-scroll 30s linear infinite;
+    /* Only set will-change during animation, remove when paused */
     will-change: transform;
+    transform: translateZ(0); /* Force GPU acceleration */
+  }
+
+  .marquee:hover {
+    animation-play-state: paused;
+    will-change: auto; /* Remove will-change when paused */
   }
 
   @keyframes marquee-scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .marquee { animation: none !important; transform: none !important; }
+    .marquee { 
+      animation: none !important; 
+      transform: none !important; 
+      will-change: auto !important;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1298,5 +1960,114 @@ h6 {
     pointer-events: none;
     opacity: 0.6;
     filter: blur(0.2px);
+  }
+
+  /* Make the footer visually transparent so the site background shows through
+     while keeping text readable and accessible. This keeps the semantic
+     structure (footer element) present for screen readers. */
+  .site-footer {
+    background: linear-gradient(to top, rgba(255,255,255,0.06), rgba(255,255,255,0));
+    border-top: none !important;
+    backdrop-filter: none; /* avoid double blur with site background */
+    /* Make the default footer more compact vertically to match header density */
+    padding-top: clamp(0.5rem, 1.5vw, 1rem);
+    padding-bottom: clamp(0.5rem, 1.5vw, 1rem);
+    /* Allow the site background to remain visible behind the footer content */
+    background-color: transparent;
+  }
+
+  /* Brand footer: solid brand color background with no overlay
+     Use this modifier when the footer should be rendered as a full-bleed
+     brand bar. Kept separate so default .site-footer can remain translucent
+     on other designs. */
+  .site-footer--brand {
+  /* Use the exact brand primary token so the footer color matches the header */
+  background: var(--color-brand-primary) !important;
+  background-image: none !important;
+  background-color: var(--color-brand-primary) !important;
+  border-top: none !important;
+  box-shadow: none !important;
+  /* Make the brand footer compact to visually align with the header */
+  padding-top: clamp(0.5rem, 1.5vw, 1rem) !important;
+  padding-bottom: clamp(0.5rem, 1.5vw, 1rem) !important;
+  /* Force fully opaque and remove decorative overlays behind the footer */
+  opacity: 1 !important;
+  background-blend-mode: normal !important;
+  /* Ensure the watermark or decorative background does not show through */
+  isolation: isolate; /* keep footer visually independent */
+  }
+
+  /* Utility: force fully white text inside a footer when placed over brand color */
+  .site-footer--force-white,
+  .site-footer--force-white,
+  .site-footer--force-white * {
+    color: #ffffff !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    text-shadow: none !important;
+  }
+
+  /* Ensure links, buttons and SVG icons inside the forced footer are white */
+  .site-footer--force-white a,
+  .site-footer--force-white a *,
+  .site-footer--force-white button,
+  .site-footer--force-white button *,
+  .site-footer--force-white svg,
+  .site-footer--force-white svg * {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+    stroke: #ffffff !important;
+    background: transparent !important;
+    border: none !important;
+  }
+
+  /* Also ensure plain text inside a brand footer is white for readability */
+  .site-footer--brand,
+  .site-footer--brand * {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+    stroke: #ffffff !important;
+  }
+
+  /* Strong guarantee: render an absolutely-positioned pseudo element to
+     ensure the footer shows a fully opaque brand color regardless of
+     decorative background layers or blending modes. The pseudo-element
+     sits behind content but inside the footer's stacking context. */
+  .site-footer--brand {
+    position: relative !important;
+    isolation: isolate !important;
+  }
+
+  .site-footer--brand::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--color-brand-primary) !important;
+    z-index: -1;
+    opacity: 1 !important;
+    pointer-events: none;
+  }
+
+  /* Footer meta row: keep spacing but remove the visual dividing rule */
+  .site-footer__meta {
+    border-top: none !important;
+  }
+
+  /* Increase contrast of footer text slightly when placed over the decorative background */
+  .site-footer,
+  .site-footer .site-footer__meta,
+  .site-footer address,
+  .site-footer a {
+    color: var(--color-ink-secondary);
+  }
+
+  /* On very light backgrounds, ensure the copyright text is slightly stronger */
+  .site-footer div {
+    color: var(--color-ink-tertiary);
+  }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .site-footer { transition: none !important; }
   }
 }

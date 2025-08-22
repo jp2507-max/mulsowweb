@@ -1,9 +1,12 @@
 'use client';
 
 import { getHomepageSponsors } from '../../app/data/sponsors';
-import { Card } from '../ui/Card';
+// Card component intentionally omitted here — teaser uses the sponsors page card layout inline
+import { Button } from '../ui/Button';
 import { ExternalLink } from '../ui/ExternalLink';
-import { LazyOnScroll } from '../utility/BundleOptimizer';
+// LazyOnScroll not needed here; render immediately to ensure visibility
+import { useEffect, useState } from 'react';
+import { prefersReducedMotion as prefersReducedMotionUtil } from '@/lib/utils/deviceCapabilities';
 
 interface SponsorTeaserProps {
   maxItems?: number;
@@ -12,6 +15,17 @@ interface SponsorTeaserProps {
 
 export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorTeaserProps) {
   const displaySponsors = getHomepageSponsors().slice(0, maxItems);
+
+  // Respect reduced motion at runtime
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    setReduced(prefersReducedMotionUtil());
+  }, []);
+
+  // We use Motion One (motion/react). Rather than Framer-style variants and
+  // viewport-based whileInView, we gate mount with LazyOnScroll and animate
+  // items on mount using initial/animate + per-item delays. Reduced motion is
+  // respected by disabling animations at runtime.
 
   return (
     <section data-heavy className={`relative py-16 md:py-20 ${className}`} aria-labelledby="sponsors-heading">
@@ -22,18 +36,36 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
       }} />
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
         {/* Section Header */}
-  <div className="text-center mb-12 md:mb-16 reveal-candidate reveal--fade">
+  <div className="text-center mb-12 md:mb-16">
           <h2 id="sponsors-heading" className="text-3xl md:text-4xl lg:text-5xl font-bold font-heading text-ink-primary mb-4">
             Unsere Partner
           </h2>
           <p className="text-lg md:text-xl text-ink-secondary max-w-2xl mx-auto">
             Wir danken unseren Sponsoren für die Unterstützung des Mulsower SV 61
+            <svg
+              aria-hidden="true"
+              className="inline-block ml-2 h-6 w-6 text-white/90"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            />
           </p>
         </div>
 
-        {/* Optional Sponsor marquee — shown above grid, pauses on hover/reduced motion */}
-        <div className="mb-10 overflow-hidden rounded-xl border border-neutral-200 bg-white/60 backdrop-blur-[1px]" aria-hidden="true">
-          <div className="marquee whitespace-nowrap">
+        <div aria-hidden="true" className="mb-10 overflow-hidden rounded-xl border border-neutral-200 bg-white/60 backdrop-blur-[1px] group"
+          onMouseEnter={(e) => {
+            const marquee = e.currentTarget.querySelector('.marquee') as HTMLElement;
+            if (marquee) marquee.style.animationPlayState = 'paused';
+          }}
+          onMouseLeave={(e) => {
+            const marquee = e.currentTarget.querySelector('.marquee') as HTMLElement;
+            if (marquee) marquee.style.animationPlayState = 'running';
+          }}
+        >
+          <div
+            className="marquee whitespace-nowrap"
+            style={reduced ? { animation: 'none' } : undefined}
+          >
             {displaySponsors.concat(displaySponsors).map((s, i) => (
               <span key={`mq-${s.id}-${i}`} className="inline-flex items-center px-6 py-3 text-ink-secondary text-sm">
                 {s.name}
@@ -43,73 +75,64 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
           </div>
         </div>
 
-        {/* Sponsor Grid - Responsive 2-3-6 columns with lazy loading */}
-        <LazyOnScroll
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 mb-12"
-          fallback={
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 md:gap-8 mb-12">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="bg-neutral-200 rounded-2xl h-32 md:h-40"></div>
-                </div>
-              ))}
-            </div>
-          }
-        >
-          <div
-            role="list"
-            aria-label="Sponsoren des Mulsower SV 61"
-          >
-            {displaySponsors.map((sponsor, index) => {
-              const delay = Math.min(index * 60, 400); // 60ms stagger, cap at 400ms
-              return (
-                <div
-                  key={sponsor.id}
-                  className="animate-fadeInUp"
-                  style={{
-                    animationDelay: `${delay}ms`,
-                    animationFillMode: 'both'
-                  }}
-                  role="listitem"
+        {/* Sponsor Grid - render detailed sponsor cards (preview of sponsors page). Render immediately to avoid IO visibility issues. */}
+        <div className="mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8" role="list" aria-label="Sponsoren Vorschau">
+            {displaySponsors.map((sponsor, i) => (
+              <div
+                key={sponsor.id}
+                role="listitem"
+                className=""
+                style={reduced ? {} : { animationDelay: `${i * 80}ms`, transitionDelay: `${i * 80}ms` }}
+              >
+                <ExternalLink
+                  href={sponsor.url}
+                  className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded-2xl"
+                  aria-label={`${sponsor.name} - Sponsor-Website besuchen`}
                 >
-                  <ExternalLink
-                    href={sponsor.url}
-                    className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded-2xl touch-feedback"
-                    aria-label={`${sponsor.name} - Sponsor-Website besuchen`}
-                  >
-                    <Card className="sponsor-card h-full bg-white border border-neutral-200 hover:border-brand-light hover:scale-105 transition-motion p-6 md:p-8 text-center">
-                      {/* Placeholder for logo - will be replaced with actual logos later */}
-                      <div
-                        className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-lg flex items-center justify-center"
-                        aria-hidden="true"
-                      >
-                        <span className="text-white font-bold text-lg md:text-xl">
-                          {sponsor.name.charAt(0)}
-                        </span>
-                      </div>
+                  <div className={`bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200 h-full flex flex-col transition-motion ${reduced ? '' : 'hover:scale-105 hover:border-brand-light'}`}>
+                    <div
+                      className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center shadow-lg"
+                      aria-hidden="true"
+                    >
+                      <span className="text-white font-bold text-2xl md:text-3xl" aria-hidden="true">
+                        {sponsor.name.charAt(0)}
+                      </span>
+                    </div>
 
-                      <h3 className="font-semibold text-ink-primary text-sm md:text-base mb-2 group-hover:text-brand-primary transition-colors duration-200">
-                        {sponsor.name}
-                      </h3>
+                    <h3 className="font-bold text-ink-primary text-lg md:text-xl mb-3 text-center group-hover:text-brand-primary transition-colors duration-300 font-heading">
+                      {sponsor.name}
+                    </h3>
 
-                      {sponsor.description && (
-                        <p className="text-xs md:text-sm text-ink-tertiary line-clamp-2">
-                          {sponsor.description}
-                        </p>
-                      )}
-                    </Card>
-                  </ExternalLink>
-                </div>
-              );
-            })}
+                    {sponsor.description && (
+                      <p className="text-sm md:text-base text-ink-secondary text-center leading-relaxed flex-grow">
+                        {sponsor.description}
+                      </p>
+                    )}
+
+                    <div className="mt-4 pt-4 border-t border-neutral-100 flex items-center justify-center text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
+                      <span className="text-sm font-medium mr-2">Website besuchen</span>
+                      <svg className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300 motion-reduce:transform-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      </svg>
+                    </div>
+                  </div>
+                </ExternalLink>
+              </div>
+            ))}
           </div>
-        </LazyOnScroll>
+        </div>
 
         {/* CTA to full sponsors page */}
-  <div className="text-center reveal-candidate reveal--slide-up">
-          <a
+  <div className="text-center">
+          <Button
             href="/sponsoren/"
-            className="inline-flex items-center px-8 py-4 bg-brand-primary text-white font-semibold rounded-xl hover:bg-brand-secondary hover:scale-105 active:scale-95 transition-motion shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 touch-feedback"
+            variant="primary"
+            size="md"
+            className={
+              `inline-flex items-center px-8 py-4 rounded-xl hover:scale-105 active:scale-95 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 touch-feedback ` +
+              (reduced ? '' : 'transition-motion')
+            }
             aria-label="Alle Sponsoren ansehen - Zur vollständigen Sponsoren-Übersicht"
           >
             Alle Sponsoren ansehen
@@ -122,7 +145,7 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
-          </a>
+          </Button>
         </div>
       </div>
     </section>

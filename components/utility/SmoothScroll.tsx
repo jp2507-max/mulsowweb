@@ -11,6 +11,10 @@ interface Options {
 // included in the client bundle if imported.
 export function SmoothScrollInit({ selector = 'a[href^="#"]', offset = 0 }: Options) {
   useEffect(() => {
+  // Always install our click handler. If a Lenis instance exists at click
+  // time we will delegate to it from inside the handler. This avoids
+  // early-bailing and ensures runtime detection of Lenis.
+
   // Respect reduced motion via media query, explicit HTML override, or device capability hints
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.documentElement.getAttribute('data-motion') === 'reduced' || shouldReduceAnimations();
   if (reduced) return;
@@ -30,6 +34,13 @@ export function SmoothScrollInit({ selector = 'a[href^="#"]', offset = 0 }: Opti
       const anchor = target.closest ? (target.closest(selector) as HTMLAnchorElement | null) : null;
       if (!anchor) return;
       if (!isSamePageLink(anchor)) return;
+      if (e.defaultPrevented) return;
+  // Only left-click
+  if (typeof e.button === 'number' && e.button !== 0) return;
+      // Respect modifier keys and explicit targets/downloads
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      if (anchor.target && anchor.target !== '_self') return;
+      if (anchor.hasAttribute('download')) return;
 
       const hash = anchor.hash;
       if (!hash) return;
@@ -40,8 +51,71 @@ export function SmoothScrollInit({ selector = 'a[href^="#"]', offset = 0 }: Opti
       // Prevent default navigation and perform smooth scroll
       e.preventDefault();
 
-      // Use scrollIntoView for smooth behavior, then adjust offset if provided
-      (el as Element).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Helper: focus element without causing the browser to scroll.
+      // If the element isn't focusable, add a temporary tabindex="-1",
+      // call focus({ preventScroll: true }), then remove/restore the tabindex.
+      function focusWithoutScroll(targetEl: Element | null) {
+        if (!targetEl) return;
+        const element = targetEl as HTMLElement;
+        if (!element || typeof element.focus !== 'function') return;
+
+        const hadTabIndex = element.hasAttribute('tabindex');
+        const prevTabIndex = hadTabIndex ? element.getAttribute('tabindex') : null;
+        let addedTabIndex = false;
+
+        try {
+          if (element.tabIndex < 0) {
+            // make focusable
+            element.setAttribute('tabindex', '-1');
+            addedTabIndex = true;
+          }
+
+          // focus without scrolling
+          // Some older browsers may not support preventScroll option, so guard it
+          try {
+            (element as HTMLElement).focus({ preventScroll: true } as FocusOptions);
+          } catch {
+            // Fallback: call focus() — this may scroll, but it's a last resort
+            (element as HTMLElement).focus();
+          }
+        } finally {
+          // restore previous tabindex state
+          if (addedTabIndex) {
+            if (prevTabIndex === null) {
+              element.removeAttribute('tabindex');
+            } else {
+              element.setAttribute('tabindex', prevTabIndex);
+            }
+          }
+        }
+      }
+
+      // If Lenis is available, delegate to it for smooth scroll with header offset.
+      // Otherwise, fall back to native scrollIntoView (offset handled via CSS scroll-margin-top).
+      const root = document.documentElement;
+      const cssOffset = parseInt(getComputedStyle(root).getPropertyValue('--scroll-offset')) || 0;
+      const headerOffset = Number.isFinite(offset) && offset !== 0 ? offset : cssOffset;
+
+  const maybeLenis: unknown = (window as unknown as { __lenis?: unknown }).__lenis;
+  const lenis = maybeLenis as { scrollTo?: (target: Element | string | number, options?: Record<string, unknown>) => void } | undefined;
+      if (lenis && typeof lenis.scrollTo === 'function') {
+        const targetEl = el as HTMLElement;
+        const y = Math.round(targetEl.getBoundingClientRect().top + window.scrollY - headerOffset);
+        try {
+          lenis.scrollTo(y);
+          // Move keyboard/screenreader focus to the target element without changing
+          // the user's scroll position. This ensures hash navigation works for
+          // assistive tech even though we prevented the default navigation.
+          focusWithoutScroll(targetEl);
+        } catch {
+          // Fallback to native on failure
+          (el as Element).scrollIntoView({ behavior: 'smooth', block: 'start' });
+          focusWithoutScroll(el as Element);
+        }
+      } else {
+        (el as Element).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        focusWithoutScroll(el as Element);
+      }
 
       // Update the URL hash without jumping; we rely on CSS `scroll-margin-top`
       // to offset the target for sticky headers. history.pushState keeps the

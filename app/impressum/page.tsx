@@ -1,21 +1,29 @@
 import type { Metadata } from "next";
 import { generatePageMetadata } from "../config/site";
+import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
+import { siteConfig } from "@/app/config/site";
 
 export const dynamic = "error";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Impressum & Rechtliche Angaben",
   description: "Rechtliche Angaben und Impressum des Mulsower SV 61 e.V. gemäß §5 DDG. Kontaktdaten, Vertretung und Haftungsausschluss.",
-  path: "/impressum"
+  path: "/impressum/"
 });
 
 export default function ImpressumPage() {
   return (
-    <main className="py-16 md:py-20" role="main" id="main-content">
+    <section className="py-16 md:py-20" id="main-content" aria-labelledby="impressum-title">
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Startseite', url: `${siteConfig.baseUrl}/` },
+          { name: 'Impressum', url: `${siteConfig.baseUrl}/impressum/` },
+        ]}
+      />
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
         {/* Page Header */}
         <div className="mb-12 md:mb-16">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-ink-primary mb-6">
+          <h1 id="impressum-title" className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-ink-primary mb-6">
             Impressum
           </h1>
           <p className="text-lg md:text-xl text-ink-secondary leading-relaxed">
@@ -39,17 +47,17 @@ export default function ImpressumPage() {
                 </div>
                 <div>
                   <strong className="text-ink-primary">Anschrift:</strong><br />
-                  Dorfstraße 12<br />
-                  19067 Mulsow<br />
+                  Garvensdorfer Weg 10<br />
+                  18233 Carinerland<br />
                   Deutschland
                 </div>
                 <div>
                   <strong className="text-ink-primary">E-Mail:</strong><br />
                   <a 
-                    href="mailto:info@mulsower-sv61.de" 
+                    href="mailto:info@mulsower-sv.de" 
                     className="text-brand-primary hover:text-brand-secondary transition-colors duration-200 underline"
                   >
-                    info@mulsower-sv61.de
+                    info@mulsower-sv.de
                   </a>
                 </div>
               </div>
@@ -192,17 +200,17 @@ export default function ImpressumPage() {
                 <div>
                   <strong className="text-ink-primary">E-Mail:</strong>{" "}
                   <a 
-                    href="mailto:info@mulsower-sv61.de" 
+                    href="mailto:info@mulsower-sv.de" 
                     className="text-brand-primary hover:text-brand-secondary transition-colors duration-200 underline"
                   >
-                    info@mulsower-sv61.de
+                    info@mulsower-sv.de
                   </a>
                 </div>
                 <div>
                   <strong className="text-ink-primary">Postanschrift:</strong><br />
                   Mulsower SV 61 e.V.<br />
-                  Dorfstraße 12<br />
-                  19067 Mulsow
+                  Garvensdorfer Weg 10<br />
+                  18233 Carinerland
                 </div>
               </div>
             </div>
@@ -221,6 +229,6 @@ export default function ImpressumPage() {
 
         </div>
       </div>
-    </main>
+  </section>
   );
 }

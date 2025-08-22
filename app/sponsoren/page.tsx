@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import { getAllSponsors } from '../data/sponsors';
 import { ExternalLink } from '../../components/ui/ExternalLink';
 import { generatePageMetadata } from '../config/site';
+import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
+import { siteConfig } from "@/app/config/site";
 
 export const dynamic = "error";
 
@@ -16,6 +18,12 @@ export default function SponsorsPage() {
 
   return (
     <main className="min-h-screen" role="main">
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Startseite', url: `${siteConfig.baseUrl}/` },
+          { name: 'Sponsoren', url: `${siteConfig.baseUrl}/sponsoren/` },
+        ]}
+      />
       {/* Hero Section */}
       <section className="border-b border-neutral-200/60" aria-labelledby="sponsors-page-title">
         <div className="container-site py-16 md:py-20 lg:py-24" id="main-content">
@@ -56,7 +64,7 @@ export default function SponsorsPage() {
                   aria-label={`${sponsor.name} - Sponsor-Website besuchen`}
                 >
                   {/* Detailed sponsor card with modern hover effects */}
-                  <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200 h-full flex flex-col transition-motion hover:scale-105 hover:border-brand-light group-hover:scale-105 group-hover:border-brand-light">
+                  <div className="sponsor-card bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200 h-full flex flex-col transition-motion hover:scale-105 hover:border-brand-light group-hover:scale-105 group-hover:border-brand-light">
                     {/* Logo placeholder with sponsor initial */}
                     <div 
                       className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300"
@@ -105,7 +113,7 @@ export default function SponsorsPage() {
 
           {/* Call to action for potential sponsors */}
           <div className="mt-16 md:mt-20 text-center">
-            <div className="bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-neutral-200 max-w-4xl mx-auto">
+            <div className="card card-hover bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-neutral-200 max-w-4xl mx-auto">
               <h2 className="text-2xl md:text-3xl font-bold font-heading text-ink-primary mb-4">
                 Werden Sie unser Partner
               </h2>
@@ -114,8 +122,9 @@ export default function SponsorsPage() {
                 Kontaktieren Sie uns für weitere Informationen über Sponsoring-Möglichkeiten.
               </p>
               <a
-                href="/mitgliedschaft/"
-                className="btn btn-lg btn-primary hover:scale-105 active:scale-95"
+                href={`mailto:info@mulsower-sv.de`}
+                className="btn btn-lg btn-primary hover:scale-105 active:scale-95 touch-feedback"
+                aria-label="Kontakt aufnehmen per E-Mail"
               >
                 Kontakt aufnehmen
               </a>
