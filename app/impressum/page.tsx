@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { generatePageMetadata } from "../config/site";
+import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
+import { siteConfig } from "@/app/config/site";
 
 export const dynamic = "error";
 
@@ -12,6 +14,12 @@ export const metadata: Metadata = generatePageMetadata({
 export default function ImpressumPage() {
   return (
     <section className="py-16 md:py-20" id="main-content" aria-labelledby="impressum-title">
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Startseite', url: `${siteConfig.baseUrl}/` },
+          { name: 'Impressum', url: `${siteConfig.baseUrl}/impressum/` },
+        ]}
+      />
       <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
         {/* Page Header */}
         <div className="mb-12 md:mb-16">

@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
 import FussballDeWidget from "@/components/utility/FussballDeWidget";
 import { generatePageMetadata } from "../config/site";
+import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
+import { siteConfig } from "@/app/config/site";
 
 export const dynamic = "error";
 
@@ -14,6 +16,12 @@ export const metadata: Metadata = generatePageMetadata({
 export default function SchedulePage() {
   return (
     <main data-heavy className="container-site py-16 md:py-24" role="main" id="main-content">
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Startseite', url: `${siteConfig.baseUrl}/` },
+          { name: 'Spielplan', url: `${siteConfig.baseUrl}/spielplan/` },
+        ]}
+      />
       <div className="max-w-4xl mx-auto text-center">
         {/* Header Section */}
         <div className="mb-12">

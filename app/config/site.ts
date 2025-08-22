@@ -129,6 +129,9 @@ export function generatePageMetadata({
     // Canonical URL
     alternates: {
       canonical: canonicalUrl,
+      languages: {
+        'x-default': canonicalUrl,
+      },
     },
     
     // Additional metadata
@@ -136,6 +139,11 @@ export function generatePageMetadata({
       'og:locale': siteConfig.locale,
     }
   };
+}
+
+export function absoluteUrl(path: string) {
+  const normalized = path ? (path.startsWith('/') ? path : `/${path}`) : '/';
+  return `${siteConfig.baseUrl}${normalized}`;
 }
 
 /**

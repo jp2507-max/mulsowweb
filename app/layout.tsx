@@ -17,6 +17,8 @@ import { SiteBackground } from "@/components/ui/SiteBackground";
 import InteractiveSpotlight from "@/components/ui/InteractiveSpotlight";
 import ViewTransitionRouter from "@/components/utility/ViewTransitionRouter";
 import { ScrollProvider } from "@/components/ScrollProvider";
+import { JsonLd } from "@/components/ui/JsonLd";
+import { siteConfig } from "@/app/config/site";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -81,6 +83,46 @@ export default function RootLayout({
         <PerformanceOptimizer />
   {/* Cross-document View Transitions for smooth static page changes */}
   <meta name="view-transition" content="same-origin" />
+        {/* JSON-LD: SportsOrganization + WebSite */}
+        <JsonLd
+          data={[
+            {
+              "@context": "https://schema.org",
+              "@type": "SportsOrganization",
+              name: siteConfig.name,
+              alternateName: "MSV 61",
+              url: siteConfig.baseUrl,
+              sport: "Soccer",
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: siteConfig.contact.address.street,
+                addressLocality: siteConfig.contact.address.city,
+                addressCountry: siteConfig.contact.address.country,
+              },
+              email: siteConfig.contact.email,
+              sameAs: [
+                siteConfig.externalLinks.fussballDe,
+                siteConfig.externalLinks.fanshop,
+                siteConfig.social.instagramMain.href,
+                siteConfig.social.instagramYouth.href,
+              ].filter(Boolean),
+              logo: `${siteConfig.baseUrl}/logo-512.png`,
+              image: `${siteConfig.baseUrl}${siteConfig.ogImage}`,
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: siteConfig.name,
+              url: siteConfig.baseUrl,
+              inLanguage: siteConfig.language,
+              potentialAction: {
+                "@type": "SearchAction",
+                target: `${siteConfig.baseUrl}/?q={search_term_string}`,
+                "query-input": "required name=search_term_string",
+              },
+            },
+          ]}
+        />
       </head>
       <body className={`${inter.className} antialiased`}>
   {/* Lightweight, CSS-driven reading progress bar */}

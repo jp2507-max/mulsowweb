@@ -24,9 +24,10 @@ export function Footer() {
       aria-label="Website-Fußzeile mit Kontaktinformationen"
   className="site-footer site-footer--brand site-footer--force-white text-white"
     >
-      <div className="mx-auto max-w-7xl px-3 py-1 md:py-1">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 items-start">
-          <div>
+      <div className="mx-auto max-w-7xl px-4 py-3 md:py-4">
+        {/* Mobile-first: stack and center; desktop: two columns with right-aligned utilities */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 items-start text-center md:text-left">
+          <div className="md:text-left">
             <h2 className="text-xs md:text-sm font-semibold mb-0.5 font-heading">
               {clubName}
             </h2>
@@ -37,12 +38,12 @@ export function Footer() {
             </address>
           </div>
 
-          <div className="text-left md:text-right flex flex-col md:items-end gap-1">
-            <div className="text-xs md:text-sm">
+          <div className="text-center md:text-right flex flex-col md:items-end gap-2">
+            <div className="text-xs md:text-sm flex justify-center md:justify-end">
               <span className="sr-only">Kontakt</span>
               <a
                 href={`mailto:${email}`}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white font-medium underline-offset-2"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white text-brand-primary border border-neutral-200 shadow-sm hover:bg-neutral-50 font-medium"
                 aria-label={`E-Mail senden an ${email}`}
               >
                 <svg
@@ -57,15 +58,15 @@ export function Footer() {
                   <path d="M3 6.5l9 6 9-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   <path d="M21 8.5v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                <span className="text-sm">{email}</span>
+        <span className="text-sm">{email}</span>
               </a>
             </div>
-            <div className="text-xs md:text-sm flex flex-wrap items-center gap-2 md:justify-end">
+      <div className="text-xs md:text-sm flex flex-wrap items-center justify-center gap-2 md:justify-end">
               <span className="sr-only">Soziale Medien</span>
               <ExternalLink
                 href={siteConfig.social.instagramMain.href}
                 aria-label={siteConfig.social.instagramMain.label}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white"
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-brand-primary border border-neutral-200 shadow-sm hover:bg-neutral-50"
               >
                 {/* Instagram Icon */}
                 <svg
@@ -84,7 +85,7 @@ export function Footer() {
               <ExternalLink
                 href={siteConfig.social.instagramYouth.href}
                 aria-label={siteConfig.social.instagramYouth.label}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 hover:bg-white/20 transition-colors text-white"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white text-brand-primary border border-neutral-200 shadow-sm hover:bg-neutral-50"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -100,7 +101,7 @@ export function Footer() {
                 <span className="font-medium">Nachwuchs</span>
               </ExternalLink>
             </div>
-            <div className="text-xs md:text-sm">
+            <div className="text-xs md:text-sm mt-1 md:mt-0">
               <Link href="/impressum/" className="underline hover:text-white/90" aria-label="Impressum öffnen">
                 Impressum
               </Link>
@@ -108,11 +109,8 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="site-footer__meta mt-1 pt-0 flex flex-col md:flex-row md:items-center justify-between gap-1 text-xs md:text-sm">
-          <div>
-            © {year} {clubName}
-          </div>
-          <div />
+        <div className="site-footer__meta mt-2 pt-0 flex flex-col md:flex-row md:items-center justify-center md:justify-between gap-1 text-xs md:text-sm">
+          <div>© {year} {clubName}</div>
         </div>
       </div>
     </footer>

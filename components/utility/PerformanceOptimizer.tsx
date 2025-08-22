@@ -46,12 +46,6 @@ const CRITICAL_CSS = `
           .font-loading {
             font-synthesis: none;
           }
-@font-face {
-  font-family: 'Inter';
-  /* Use stable public URL so preloads don't 404 when Next build hashes change. */
-  src: url('/fonts/inter-latin.woff2') format('woff2');
-  font-display: swap; /* Added font-display here */
-}
         `;
 
 export function PerformanceOptimizer({ nonce }: { nonce?: string } = {}) {
@@ -70,11 +64,8 @@ export function PerformanceOptimizer({ nonce }: { nonce?: string } = {}) {
       <link rel="preload" as="image" href="/logo-256.png" />
       
       {/* Font preloading for better CLS - Task 9.2: Enhanced font loading */}
-    {/* Preload fonts from stable /fonts paths in public/ to avoid build-hash 404s.
-      Place the .woff2 files at public/fonts/inter-latin.woff2 and
-      public/fonts/oswald-latin.woff2. */}
-    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-    <link rel="preload" href="/fonts/oswald-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+    {/* Rely on next/font self-hosted fonts from app/layout.tsx.
+      Manual font preloads removed to avoid 404s on /fonts/* when not present. */}
       
       {/* Task 9.2: Performance budget monitoring meta tag */}
       <meta name="performance-budget" content="js:200kb,css:50kb,animation-js:5kb" />

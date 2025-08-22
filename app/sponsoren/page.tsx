@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import { getAllSponsors } from '../data/sponsors';
 import { ExternalLink } from '../../components/ui/ExternalLink';
 import { generatePageMetadata } from '../config/site';
+import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
+import { siteConfig } from "@/app/config/site";
 
 export const dynamic = "error";
 
@@ -16,6 +18,12 @@ export default function SponsorsPage() {
 
   return (
     <main className="min-h-screen" role="main">
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Startseite', url: `${siteConfig.baseUrl}/` },
+          { name: 'Sponsoren', url: `${siteConfig.baseUrl}/sponsoren/` },
+        ]}
+      />
       {/* Hero Section */}
       <section className="border-b border-neutral-200/60" aria-labelledby="sponsors-page-title">
         <div className="container-site py-16 md:py-20 lg:py-24" id="main-content">
