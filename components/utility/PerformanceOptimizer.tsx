@@ -52,11 +52,13 @@ export function PerformanceOptimizer({ nonce }: { nonce?: string } = {}) {
   return (
     <>
       {/* DNS prefetch for external domains */}
-      <link rel="dns-prefetch" href="//www.fussball.de" />
+  <link rel="dns-prefetch" href="//www.fussball.de" />
+  <link rel="dns-prefetch" href="//next.fussball.de" />
       <link rel="dns-prefetch" href="//msv61.fan12.de" />
       
       {/* Preconnect to critical external resources */}
-      <link rel="preconnect" href="https://www.fussball.de" crossOrigin="anonymous" />
+  <link rel="preconnect" href="https://www.fussball.de" crossOrigin="anonymous" />
+  <link rel="preconnect" href="https://next.fussball.de" crossOrigin="anonymous" />
       
       {/* Resource hints for better LCP - Task 9.2: Ensure LCP image is preloaded */}
       <link rel="preload" as="image" href="/logo.svg" />

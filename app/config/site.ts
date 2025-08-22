@@ -5,7 +5,7 @@
 
 export const siteConfig = {
   // Base URL for the website (used for canonical URLs, sitemap, etc.)
-  baseUrl: 'https://mulsower-sv.de',
+  baseUrl: 'https://www.mulsower-sv.de',
   
   // Site metadata
   name: 'Mulsower SV 61',

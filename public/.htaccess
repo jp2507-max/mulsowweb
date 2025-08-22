@@ -8,6 +8,11 @@ Options -MultiViews
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+    # Canonical host: force www subdomain to match external widget configuration
+    # This ensures Referer header origin is https://www.mulsower-sv.de for embeds
+    RewriteCond %{HTTP_HOST} ^mulsower-sv\.de$ [NC]
+    RewriteRule ^(.*)$ https://www.mulsower-sv.de/$1 [L,R=301]
+
   # Never rewrite Next.js internal assets
   RewriteRule ^_next/ - [L]
 
