@@ -2,8 +2,6 @@
 trigger: always_on
 ---
 
-# Technology Stack & Build System
-
 ## Core Technologies
 
 ### Framework & Language

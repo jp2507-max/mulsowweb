@@ -22,63 +22,18 @@ export interface Sponsor {
   /** Optional description for detailed sponsor pages */
   description?: string;
 }
-
 /**
- * Sponsor data array - placeholder entries with proper structure
- * These are example sponsors that demonstrate the data structure.
- * Real sponsor data should replace these entries.
+ * Sponsor data array - to be populated with real sponsor entries
  */
 export const sponsors: Sponsor[] = [
   {
-    id: 'autohaus-mueller',
-    name: 'Autohaus Müller',
-    url: 'https://example.com',
-    description: 'Hauptsponsor der ersten Mannschaft seit 2018',
-    // logo: '/images/sponsors/autohaus-mueller.png' - to be added later
-  },
-  {
-    id: 'baeckerei-schmidt',
-    name: 'Bäckerei Schmidt',
-    url: 'https://example.com',
-    description: 'Unterstützt unsere Jugendarbeit mit frischen Backwaren',
-    // logo: '/images/sponsors/baeckerei-schmidt.png' - to be added later
-  },
-  {
-    id: 'sparkasse-regional',
-    name: 'Sparkasse Regional',
-    url: 'https://example.com',
-    description: 'Langjähriger Finanzpartner des Vereins',
-    // logo: '/images/sponsors/sparkasse-regional.png' - to be added later
-  },
-  {
-    id: 'gasthaus-zur-linde',
-    name: 'Gasthaus zur Linde',
-    url: 'https://example.com',
-    description: 'Traditioneller Vereinstreffpunkt und Sponsor',
-    // logo: '/images/sponsors/gasthaus-zur-linde.png' - to be added later
-  },
-  {
-    id: 'elektro-weber',
-    name: 'Elektro Weber',
-    url: 'https://example.com',
-    description: 'Technischer Partner für Flutlichtanlage',
-    // logo: '/images/sponsors/elektro-weber.png' - to be added later
-  },
-  {
-    id: 'landmaschinen-koch',
-    name: 'Landmaschinen Koch',
-    url: 'https://example.com',
-    description: 'Unterstützt die Platzpflege mit Geräten',
-    // logo: '/images/sponsors/landmaschinen-koch.png' - to be added later
+    id: 'voss-energy',
+    name: 'Voss Energy',
+    url: 'https://www.vossenergy.com/',
+    description: 'langjähriger und verlässlicher Partner des Vereins',
+    logo: '/images/sponsors/VE-Logo.svg',
   },
 ];
-
-/**
- * Helper function to get sponsor by ID
- */
-export function getSponsorById(id: string): Sponsor | undefined {
-  return sponsors.find(sponsor => sponsor.id === id);
-}
 
 /**
  * Helper function to get sponsors for home page teaser (first 6)

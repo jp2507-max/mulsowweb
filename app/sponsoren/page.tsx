@@ -59,15 +59,27 @@ export default function SponsorsPage() {
                   <div className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200 h-full flex flex-col transition-motion hover:scale-105 hover:border-brand-light group-hover:scale-105 group-hover:border-brand-light">
                     {/* Logo placeholder with sponsor initial */}
                     <div 
-                      className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300"
-                      aria-hidden="true"
+                      className={`w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300 overflow-hidden ${
+                        sponsor.logo ? 'bg-white/90' : 'bg-gradient-to-br from-brand-primary to-brand-secondary'
+                      }`}
+                      aria-hidden={sponsor.logo ? undefined : true}
                     >
-                      <span 
-                        className="text-white font-bold text-2xl md:text-3xl"
-                        aria-hidden="true"
-                      >
-                        {sponsor.name.charAt(0)}
-                      </span>
+                      {sponsor.logo ? (
+                        <img
+                          src={sponsor.logo}
+                          alt={`${sponsor.name} Logo`}
+                          className="h-full w-full object-contain"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      ) : (
+                        <span 
+                          className="text-white font-bold text-2xl md:text-3xl"
+                          aria-hidden="true"
+                        >
+                          {sponsor.name.charAt(0)}
+                        </span>
+                      )}
                     </div>
                     
                     {/* Sponsor name */}
