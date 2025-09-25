@@ -4,58 +4,29 @@ import { useEffect } from 'react';
 import { shouldReduceAnimations } from '@/lib/utils/deviceCapabilities';
 
 /**
- * Small, zero-config hook that waits for the hero image to decode
- * and then adds `hero-ready` to the documentElement. This is tiny
- * and only runs on the client.
+ * HeroReady - Simplified hero animation controller
+ * Ensures hero content is visible and ready for interaction
  */
-export function useHeroReady(): void {
+export function useHeroReady() {
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    // If device/user prefers reduced motion, mark hero ready immediately
+    // If animations are disabled, ensure content is immediately visible
     if (shouldReduceAnimations()) {
-      document.documentElement.classList.add('hero-ready');
+      const heroElements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-ctas');
+      heroElements.forEach(el => {
+        (el as HTMLElement).style.opacity = '1';
+        (el as HTMLElement).style.transform = 'none';
+      });
       return;
     }
 
-    try {
-      const img = document.getElementById('hero-img') as HTMLImageElement | null;
-      if (!img) {
-        // No image - still mark ready so animations can proceed
-        document.documentElement.classList.add('hero-ready');
-        return;
-      }
+    // Simple ready state - just ensure content is visible
+    const timer = setTimeout(() => {
+      const heroElements = document.querySelectorAll('.hero-title, .hero-subtitle, .hero-ctas');
+      heroElements.forEach(el => {
+        el.classList.add('hero-ready');
+      });
+    }, 100);
 
-      // If decode isn't supported, fallback to load event with a short timeout
-      const markReady = () => document.documentElement.classList.add('hero-ready');
-
-      if (img.decode) {
-        img.decode().then(markReady).catch(markReady);
-      } else if (img.complete && img.naturalWidth !== 0) {
-        markReady();
-      } else {
-        const onLoad = () => {
-          markReady();
-          img.removeEventListener('load', onLoad);
-          img.removeEventListener('error', onLoad);
-        };
-        img.addEventListener('load', onLoad);
-        img.addEventListener('error', onLoad);
-
-        // Safety timeout to avoid blocking animations forever
-        const t = window.setTimeout(() => {
-          markReady();
-          img.removeEventListener('load', onLoad);
-          img.removeEventListener('error', onLoad);
-        }, 1200);
-
-        return () => window.clearTimeout(t);
-      }
-    } catch {
-      // In case of any runtime errors, proceed with animations
-      document.documentElement.classList.add('hero-ready');
-    }
+    return () => clearTimeout(timer);
   }, []);
 }
-
-export default useHeroReady;

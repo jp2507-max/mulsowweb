@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Oswald } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/ui/Header";
 import { Footer } from "@/components/ui/Footer";
 import { PageFadeController } from "@/components/utility/PageFadeController";
 import { ScrollRevealController } from "@/components/utility/ScrollRevealController";
+import { OptimizedHoverController } from "@/components/utility/OptimizedHoverController";
+import { OptimizedBlobController } from "@/components/utility/OptimizedBlobController";
 import { SmoothScrollInit } from "@/components/utility/SmoothScroll";
 import HeaderOffsetSync from "@/components/utility/HeaderOffsetSync";
 import { PerformanceOptimizer, PerformanceMonitorWrapper } from "@/components/utility/PerformanceOptimizer";
@@ -14,6 +16,9 @@ import { generatePageMetadata } from "./config/site";
 import { SiteBackground } from "@/components/ui/SiteBackground";
 import InteractiveSpotlight from "@/components/ui/InteractiveSpotlight";
 import ViewTransitionRouter from "@/components/utility/ViewTransitionRouter";
+import { ScrollProvider } from "@/components/ScrollProvider";
+import { JsonLd } from "@/components/ui/JsonLd";
+import { siteConfig } from "@/app/config/site";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -37,22 +42,34 @@ export const metadata: Metadata = {
   ...generatePageMetadata({}),
   // Favicon and app icons
   icons: {
+    // Prefer the club logo assets so the browser tab shows the club emblem.
     icon: [
-      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/favicon.ico' },
-      { url: '/favicon.svg', type: 'image/svg+xml' }
+      { url: '/logo-128.png', sizes: '128x128', type: 'image/png' },
+      { url: '/logo-256.png', sizes: '256x256', type: 'image/png' },
+      { url: '/logo-512.png', sizes: '512x512', type: 'image/png' },
+      // favicon.ico kept for legacy support
+      { url: '/favicon.ico' }
     ],
     apple: [
+      // keep the existing apple touch icon (180x180)
       { url: '/apple-touch-icon-180.png', sizes: '180x180', type: 'image/png' }
     ],
     other: [
-      { url: '/logo-256.png', sizes: '192x192', type: 'image/png' },
-      { url: '/logo-512.png', sizes: '512x512', type: 'image/png' }
+      // small PNG fallbacks and the SVG logo (scales crisply in supporting browsers)
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/logo.svg', type: 'image/svg+xml' }
     ]
   },
   // Web app manifest (for PWA features)
   manifest: '/manifest.json'
+};
+
+// Viewport configuration for proper mobile rendering
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover'
 };
 
 export default function RootLayout({
@@ -66,8 +83,50 @@ export default function RootLayout({
         <PerformanceOptimizer />
   {/* Cross-document View Transitions for smooth static page changes */}
   <meta name="view-transition" content="same-origin" />
+        {/* JSON-LD: SportsOrganization + WebSite */}
+        <JsonLd
+          data={[
+            {
+              "@context": "https://schema.org",
+              "@type": "SportsOrganization",
+              name: siteConfig.name,
+              alternateName: "MSV 61",
+              url: siteConfig.baseUrl,
+              sport: "Soccer",
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: siteConfig.contact.address.street,
+                addressLocality: siteConfig.contact.address.city,
+                addressCountry: siteConfig.contact.address.country,
+              },
+              email: siteConfig.contact.email,
+              sameAs: [
+                siteConfig.externalLinks.fussballDe,
+                siteConfig.externalLinks.fanshop,
+                siteConfig.social.instagramMain.href,
+                siteConfig.social.instagramYouth.href,
+              ].filter(Boolean),
+              logo: `${siteConfig.baseUrl}/logo-512.png`,
+              image: `${siteConfig.baseUrl}${siteConfig.ogImage}`,
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: siteConfig.name,
+              url: siteConfig.baseUrl,
+              inLanguage: siteConfig.language,
+              potentialAction: {
+                "@type": "SearchAction",
+                target: `${siteConfig.baseUrl}/?q={search_term_string}`,
+                "query-input": "required name=search_term_string",
+              },
+            },
+          ]}
+        />
       </head>
       <body className={`${inter.className} antialiased`}>
+  {/* Lightweight, CSS-driven reading progress bar */}
+  <div className="reading-progress" aria-hidden="true" />
   <a href="#main" className="skip-link sr-only focusable">Zum Inhalt springen</a>
   <DeviceMotion />
         {/* Global decorative background (non-interactive, behind all content) */}
@@ -76,6 +135,8 @@ export default function RootLayout({
   <InteractiveSpotlight />
         <PageFadeController />
   <ScrollRevealController />
+  <OptimizedHoverController />
+  <OptimizedBlobController />
     <FocusReveal />
     {/* Initialize header offset sync so native hash navigation and
       scrollIntoView targets get automatically offset for a sticky header. */}
@@ -86,12 +147,16 @@ export default function RootLayout({
     <SmoothScrollInit />
   {/* Enable SPA view transitions where supported to complement cross-document meta */}
   <ViewTransitionRouter />
-        <Header />
-        <main id="main" tabIndex={-1}>
-          {children}
-        </main>
-        <Footer />
-        <PerformanceMonitorWrapper />
+        <ScrollProvider>
+          <Header />
+          {/* Sentinel used by the Header's IntersectionObserver to toggle scrolled state */}
+          <div id="header-sentinel" aria-hidden="true" style={{ blockSize: '1px', inlineSize: '1px' }} />
+          <main id="main" tabIndex={-1}>
+            {children}
+          </main>
+          <Footer />
+          <PerformanceMonitorWrapper />
+        </ScrollProvider>
       </body>
     </html>
   );

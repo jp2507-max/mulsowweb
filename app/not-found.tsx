@@ -115,17 +115,17 @@ export default function NotFoundPage() {
                 <div>
                   <strong className="text-ink-primary">E-Mail:</strong>{" "}
                   <a 
-                    href="mailto:info@mulsower-sv61.de" 
+                    href="mailto:info@mulsower-sv.de" 
                     className="text-brand-primary hover:text-brand-secondary transition-colors duration-200 underline"
                   >
-                    info@mulsower-sv61.de
+                    info@mulsower-sv.de
                   </a>
                 </div>
                 <div className="text-ink-secondary">
                   <strong className="text-ink-primary">Adresse:</strong><br />
                   Mulsower SV 61 e.V.<br />
-                  Dorfstraße 12<br />
-                  19067 Mulsow
+                  Garvensdorfer Weg 10<br />
+                  18233 Carinerland
                 </div>
               </div>
             </div>
