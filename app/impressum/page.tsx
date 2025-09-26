@@ -94,11 +94,10 @@ export default function ImpressumPage() {
               <div className="space-y-3 text-ink-secondary">
                 {/* Register information paragraph removed as requested */}
                 <div>
-                  <strong className="text-ink-primary">Vereinsregister:</strong>
+                  <strong className="text-ink-primary">Vereinsregister (mindestens erforderliche Angaben):</strong>
                   <ul className="list-disc list-inside mt-2">
-                    <li>Registergericht: Amtsgericht [Ort]</li>
-                    <li>Registernummer: VR [Nummer]</li>
-                    <li>Datum der Eintragung: [TT.MM.JJJJ]</li>
+                    <li>Registergericht: Amtsgericht Rostock</li>
+                    <li>Registernummer: VR 2594</li>
                   </ul>
                 </div>
                 {/* Removed hint paragraph per request */}
