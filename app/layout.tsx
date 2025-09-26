@@ -148,14 +148,16 @@ export default function RootLayout({
   {/* Enable SPA view transitions where supported to complement cross-document meta */}
   <ViewTransitionRouter />
         <ScrollProvider>
-          <Header />
-          {/* Sentinel used by the Header's IntersectionObserver to toggle scrolled state */}
-          <div id="header-sentinel" aria-hidden="true" style={{ blockSize: '1px', inlineSize: '1px' }} />
-          <main id="main" tabIndex={-1}>
-            {children}
-          </main>
-          <Footer />
-          <PerformanceMonitorWrapper />
+          <div data-page-fade-target>
+            <Header />
+            {/* Sentinel used by the Header's IntersectionObserver to toggle scrolled state */}
+            <div id="header-sentinel" aria-hidden="true" style={{ blockSize: '1px', inlineSize: '1px' }} />
+            <main id="main" tabIndex={-1}>
+              {children}
+            </main>
+            <Footer />
+            <PerformanceMonitorWrapper />
+          </div>
         </ScrollProvider>
       </body>
     </html>

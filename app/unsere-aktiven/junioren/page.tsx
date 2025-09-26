@@ -92,38 +92,39 @@ export default function JuniorenPage() {
                   Kontakt aufnehmen
                 </Button>
               </div>
-              {/* E-Junioren widget placed directly under CTA buttons (replace ID with real team UUID if needed) */}
-              <div className="mt-8">
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 <aside className="card border border-neutral-200/70 bg-white/95 p-6 shadow-lg">
                   <header className="mb-3">
-                    <p className="eyebrow">Nächste Spiele</p>
+                    <p className="eyebrow">Nächstes Spiel</p>
                     <h2 className="text-lg font-heading font-semibold text-ink-primary md:text-xl">E-Junioren</h2>
                   </header>
                   <FussballDeWidget
-                    id="0ceb56e4-cd70-45cc-ab25-b051dc83cf38"
-                    type="team-matches"
+                    id="8bf95935-f5a8-4696-90f3-967aa94d038b"
+                    type="next-match"
+                    engine="script"
+                    host="www.fussball.de"
                     className="w-full"
-                    title="FUSSBALL.DE – Nächste Spiele E-Junioren"
+                    title="FUSSBALL.DE – Nächstes Spiel E-Junioren"
+                  />
+                </aside>
+
+                <aside className="card border border-neutral-200/70 bg-white/95 p-6 shadow-lg">
+                  <header className="mb-3">
+                    <p className="eyebrow">Nächstes Spiel</p>
+                    <h2 className="text-lg font-heading font-semibold text-ink-primary md:text-xl">F-Junioren</h2>
+                  </header>
+                  <FussballDeWidget
+                    id="eb58e56c-0ea9-4c5d-b1dc-e1b6ceccca65"
+                    type="next-match"
+                    engine="script"
+                    host="www.fussball.de"
+                    className="w-full"
+                    title="FUSSBALL.DE – Nächstes Spiel F-Junioren"
                   />
                 </aside>
               </div>
               
             </div>
-
-            <aside className="card card-hover border border-neutral-200/70 bg-white/95 p-6 shadow-xl">
-              <header className="mb-4">
-                <p className="eyebrow">Nächste Spiele</p>
-                <h2 className="text-xl font-heading font-semibold text-ink-primary md:text-2xl">
-                  F-Junioren
-                </h2>
-              </header>
-              <FussballDeWidget
-                id="131d7e0c-30c9-4885-b22f-f90e0a244ad9"
-                type="team-matches"
-                className="w-full"
-                title="FUSSBALL.DE – Nächste Spiele F-Junioren"
-              />
-            </aside>
           </div>
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-neutral-200/70" aria-hidden="true" />

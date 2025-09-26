@@ -158,53 +158,30 @@ export function Header() {
                         }
                       }}
                     >
-                      <Link
-                        href={item.href || '#'}
-                        aria-current={isActive ? "page" : undefined}
-                        className={cx(
-                          "header-nav-link",
-                          item.children && "flex items-center gap-1.5",
-                          isActive && "header-nav-link-active",
-                          "touch-feedback"
-                        )}
-                        aria-haspopup={item.children ? "menu" : undefined}
-                        aria-expanded={item.children ? (isOpen ? "true" : "false") : undefined}
-                        {...(item.children && {
-                          'aria-controls': `${menuId}-submenu`,
-                          // When clicking the parent link: only prevent navigation
-                          // if we're opening the submenu. If we're closing the
-                          // submenu allow the click to proceed so the parent page
-                          // (e.g. /unsere-aktiven/) remains reachable.
-                          onClick: (e: React.MouseEvent) => {
-                            // keep the React type
-                            const willOpen = !isOpen;
-                            if (willOpen) {
-                              e.preventDefault();
-                            }
+                      {item.children ? (
+                        <button
+                          type="button"
+                          aria-current={isActive ? "page" : undefined}
+                          className={cx(
+                            "header-nav-link",
+                            "flex items-center gap-1.5",
+                            isActive && "header-nav-link-active",
+                            "touch-feedback"
+                          )}
+                          aria-haspopup="menu"
+                          aria-expanded={isOpen ? "true" : "false"}
+                          aria-controls={`${menuId}-submenu`}
+                          onClick={() => {
                             setOpenMenu(isOpen ? null : menuId);
-                          },
-                          onKeyDown: (e: React.KeyboardEvent) => {
-                            // Close with Escape
+                          }}
+                          onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
                             if (e.key === "Escape") {
                               setOpenMenu(null);
-                              return;
+                              e.stopPropagation();
                             }
-
-                            // Toggle with Spacebar for keyboard parity.
-                            // When opening via Space, prevent default so the
-                            // page doesn't scroll; when closing, allow default so
-                            // Enter/Space can activate the link.
-                            const spaceKeys = [" ", "Spacebar", "Space"];
-                            if (spaceKeys.includes(e.key)) {
-                              const willOpen = !isOpen;
-                              if (willOpen) e.preventDefault();
-                              setOpenMenu(isOpen ? null : menuId);
-                            }
-                          }
-                        })}
-                      >
-                        <span className="nav-link-underline">{item.label}</span>
-                        {item.children ? (
+                          }}
+                        >
+                          <span className="nav-link-underline">{item.label}</span>
                           <span
                             className={cx(
                               "ml-1 grid h-3.5 w-3.5 place-items-center text-white/80 transition-transform duration-200 ease-out",
@@ -222,8 +199,20 @@ export function Header() {
                               />
                             </svg>
                           </span>
-                        ) : null}
-                      </Link>
+                        </button>
+                      ) : (
+                        <Link
+                          href={item.href || '#'}
+                          aria-current={isActive ? "page" : undefined}
+                          className={cx(
+                            "header-nav-link",
+                            isActive && "header-nav-link-active",
+                            "touch-feedback"
+                          )}
+                        >
+                          <span className="nav-link-underline">{item.label}</span>
+                        </Link>
+                      )}
                       {item.children?.length ? (
                         <ul
                           id={`${menuId}-submenu`}
