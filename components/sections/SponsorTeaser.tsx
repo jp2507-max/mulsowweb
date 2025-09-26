@@ -65,7 +65,7 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
           </p>
         </div>
 
-  <div aria-hidden="true" className="mb-10 overflow-hidden rounded-2xl border border-neutral-200 bg-white/60 backdrop-blur-[1px] group"
+  <div className="mb-10 overflow-hidden rounded-2xl border border-neutral-200 bg-white/60 backdrop-blur-[1px] group"
           onMouseEnter={(e) => {
             const marquee = e.currentTarget.querySelector('.marquee') as HTMLElement;
             if (marquee) marquee.style.animationPlayState = 'paused';

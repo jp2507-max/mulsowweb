@@ -257,11 +257,7 @@ export default function ImpressumPage() {
           {/* Last Updated */}
           <section className="border-t border-neutral-200 pt-8">
             <p className="text-sm text-ink-tertiary text-center">
-              Stand: {new Date().toLocaleDateString('de-DE', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
+              Stand: 26. September 2025
             </p>
           </section>
 

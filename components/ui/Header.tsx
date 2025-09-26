@@ -171,12 +171,35 @@ export function Header() {
                         aria-expanded={item.children ? (isOpen ? "true" : "false") : undefined}
                         {...(item.children && {
                           'aria-controls': `${menuId}-submenu`,
+                          // When clicking the parent link: only prevent navigation
+                          // if we're opening the submenu. If we're closing the
+                          // submenu allow the click to proceed so the parent page
+                          // (e.g. /unsere-aktiven/) remains reachable.
                           onClick: (e: React.MouseEvent) => {
-                            e.preventDefault();
+                            // keep the React type
+                            const willOpen = !isOpen;
+                            if (willOpen) {
+                              e.preventDefault();
+                            }
                             setOpenMenu(isOpen ? null : menuId);
                           },
                           onKeyDown: (e: React.KeyboardEvent) => {
-                            if (e.key === "Escape") setOpenMenu(null);
+                            // Close with Escape
+                            if (e.key === "Escape") {
+                              setOpenMenu(null);
+                              return;
+                            }
+
+                            // Toggle with Spacebar for keyboard parity.
+                            // When opening via Space, prevent default so the
+                            // page doesn't scroll; when closing, allow default so
+                            // Enter/Space can activate the link.
+                            const spaceKeys = [" ", "Spacebar", "Space"];
+                            if (spaceKeys.includes(e.key)) {
+                              const willOpen = !isOpen;
+                              if (willOpen) e.preventDefault();
+                              setOpenMenu(isOpen ? null : menuId);
+                            }
                           }
                         })}
                       >
@@ -209,6 +232,7 @@ export function Header() {
                             isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
                           )}
                           aria-hidden={isOpen ? undefined : "true"}
+                          hidden={isOpen ? undefined : true}
                         >
                           {item.children.map((child) => {
                             const isChildActive = normalize(child.href) === normalizedPath;
