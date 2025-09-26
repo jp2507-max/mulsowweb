@@ -40,86 +40,62 @@ export function Header() {
   const headerRef = React.useRef<HTMLElement | null>(null);
   const [openMenu, setOpenMenu] = React.useState<string | null>(null);
 
-  // Toggle a scrolled state using IntersectionObserver to avoid per-scroll work.
-  // We observe a sentinel element rendered just after the Header in the layout.
+  // Toggle a compact header state once the visitor scrolls beyond the hero.
   React.useEffect(() => {
     const el = headerRef.current;
-    if (!el || typeof window === 'undefined') return;
+    if (!el || typeof window === "undefined") return;
 
-    const apply = (scrolled: boolean) => {
-      el.toggleAttribute('data-scrolled', scrolled);
+    const setScrolled = (scrolled: boolean) => {
+      el.toggleAttribute("data-scrolled", scrolled);
     };
 
-    const updateProgressNow = () => {
-      if (typeof window === 'undefined') return;
-      const currentHeight = Math.max(72, Math.round(el.getBoundingClientRect().height || 0));
-      const distance = Math.max(currentHeight * 1.6, currentHeight + 48);
-      const progress = Math.min(1, Math.max(0, window.scrollY / distance));
-      el.style.setProperty('--header-shrink-progress', progress.toFixed(3));
-    };
-
-    let progressRaf = 0;
-    const scheduleProgressUpdate = () => {
-      if (progressRaf) return;
-      progressRaf = window.requestAnimationFrame(() => {
-        progressRaf = 0;
-        updateProgressNow();
+    let raf = 0;
+    const scheduleScrollUpdate = () => {
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        setScrolled(window.scrollY > 56);
       });
     };
 
-    // Initial state (in case sentinel isn't available yet)
-    try {
-      const hh = Math.max(0, Math.round(el.getBoundingClientRect().height));
-      apply(window.scrollY > hh - 1);
-    } catch {
-      apply((typeof window !== 'undefined' ? window.scrollY : 0) > 4);
-    }
+    const sentinel = document.getElementById("header-sentinel");
+    let observer: IntersectionObserver | null = null;
 
-    updateProgressNow();
-    window.addEventListener('scroll', scheduleProgressUpdate, { passive: true });
-    window.addEventListener('resize', scheduleProgressUpdate);
-
-    const sentinel = document.getElementById('header-sentinel');
-    if (sentinel && 'IntersectionObserver' in window) {
-      const obs = new IntersectionObserver((entries) => {
-        const e = entries[0];
-        // When the sentinel leaves the viewport (scroll down), mark as scrolled
-        apply(!e.isIntersecting);
-        scheduleProgressUpdate();
-      }, { threshold: 0 });
-      try { obs.observe(sentinel); } catch {}
-
-      return () => {
-        try { obs.disconnect(); } catch {}
-        window.removeEventListener('scroll', scheduleProgressUpdate as EventListener);
-        window.removeEventListener('resize', scheduleProgressUpdate as EventListener);
-        if (progressRaf) {
-          window.cancelAnimationFrame(progressRaf);
-          progressRaf = 0;
+    if (sentinel && "IntersectionObserver" in window) {
+      observer = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (!entry) return;
+          const scrolled = !entry.isIntersecting || window.scrollY > 56;
+          setScrolled(scrolled);
+        },
+        {
+          rootMargin: "-72px 0px 0px 0px",
+          threshold: 0,
         }
-      };
+      );
+
+      try {
+        observer.observe(sentinel);
+      } catch {
+        observer.disconnect();
+        observer = null;
+      }
     }
 
-    // Fallback for very old browsers: throttle via rAF
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      apply((typeof window !== 'undefined' ? window.scrollY : 0) > 4);
-      scheduleProgressUpdate();
-    };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('load', update, { once: true });
-    updateProgressNow();
+  setScrolled(window.scrollY > 56);
+  scheduleScrollUpdate();
+    window.addEventListener("scroll", scheduleScrollUpdate, { passive: true });
+    window.addEventListener("resize", scheduleScrollUpdate);
+    window.addEventListener("orientationchange", scheduleScrollUpdate);
+
     return () => {
-      window.removeEventListener('scroll', onScroll as EventListener);
-      window.removeEventListener('load', update as EventListener);
-      window.removeEventListener('scroll', scheduleProgressUpdate as EventListener);
-      window.removeEventListener('resize', scheduleProgressUpdate as EventListener);
-      if (raf) cancelAnimationFrame(raf);
-      if (progressRaf) {
-        cancelAnimationFrame(progressRaf);
-        progressRaf = 0;
+      window.removeEventListener("scroll", scheduleScrollUpdate);
+      window.removeEventListener("resize", scheduleScrollUpdate);
+      window.removeEventListener("orientationchange", scheduleScrollUpdate);
+      if (observer) observer.disconnect();
+      if (raf) {
+        window.cancelAnimationFrame(raf);
       }
     };
   }, []);
@@ -134,8 +110,7 @@ export function Header() {
       <a href="#main" className="skip-link">
         Zum Hauptinhalt springen
       </a>
-      
-  <header
+      <header
         className="header text-white"
         role="banner"
         ref={headerRef}
