@@ -249,6 +249,15 @@ h6 {
 
 /* Core utilities for buttons and cards */
 @layer utilities {
+  /* Consistent vertical rhythm for sections */
+  .section-spacing {
+    padding-block: clamp(3rem, 8vw, 6rem);
+  }
+
+  .section-spacing-tight {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
   /* Cross-Page View Transitions: subtle fade that respects reduced motion */
   /* stylelint-disable selector-type-no-unknown -- Allow spec pseudo-elements ::view-transition-*(root) */
   /* biome-ignore next-line */
@@ -347,7 +356,7 @@ h6 {
     opacity: 0.95;
     font-size: var(--size);
     font-weight: 600;
-  margin: 1.5rem auto 1.5rem; /* extra spacing from subtitle and CTAs */
+  margin: 1rem auto 0.9rem; /* slightly tighter spacing to keep CTAs within viewport */
     max-width: 40ch; /* keep a tidy line length */
     text-align: center;
   position: relative;
@@ -956,18 +965,20 @@ h6 {
   /* Hero Section - Performance Optimized for LCP */
   .hero-section {
     @apply relative overflow-hidden;
-    /* Optimized padding - responsive for mobile devices */
-    padding: clamp(2rem, 6vw, 6rem) 0;
-    /* Reasonable min-height that works well on mobile */
-    min-height: clamp(320px, 50vh, 600px);
+    /* Move hero content slightly closer to the top for better above-fold visibility */
+    padding-top: clamp(0.75rem, 2.5vw, 3rem);
+    padding-bottom: clamp(2.25rem, 6.5vw, 5.5rem);
+    /* Slightly reduced min-height so content sits higher on the page */
+    min-height: clamp(280px, 42vh, 500px);
     /* Allow section to grow with content to avoid clipping CTAs */
   }
 
   /* Mobile-specific hero optimizations */
   @media (max-width: 768px) {
     .hero-section {
-      padding: clamp(1.5rem, 4vw, 3rem) 0;
-      min-height: clamp(280px, 40vh, 450px);
+      padding-top: clamp(0.5rem, 2.5vw, 1.75rem);
+      padding-bottom: clamp(1.25rem, 5vw, 2.75rem);
+      min-height: clamp(240px, 34vh, 380px);
     }
   }
 
@@ -1045,8 +1056,11 @@ h6 {
   .hero-overlay { @apply absolute inset-0 z-0; pointer-events: none; background: transparent; }
 
   .hero-content {
-    @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8 relative z-10 text-center flex flex-col justify-center;
-    min-height: clamp(350px, 40vh, 450px);
+    @apply mx-auto max-w-7xl px-4 md:px-6 lg:px-8 relative z-10 text-center flex flex-col;
+    /* Align content toward the top so CTAs are more likely to be visible on entry */
+    justify-content: flex-start;
+    padding-top: clamp(0.25rem, 1.5vw, 1.5rem);
+    min-height: clamp(260px, 34vh, 400px);
     /* Prevent layout shift by reserving space */
     contain: layout style;
   }
@@ -1091,7 +1105,7 @@ h6 {
   }
 
   .hero-text {
-    @apply mb-10 md:mb-14 lg:mb-16;
+    @apply mb-5 md:mb-8 lg:mb-10;
   }
 
   /* Bold, athletic typography - mobile-optimized */
@@ -1103,8 +1117,8 @@ h6 {
     font-family: var(--font-heading);
     /* Prevent layout shift during font loading */
     font-display: swap;
-    /* Reserve space to prevent CLS - optimized for mobile */
-    min-height: clamp(4rem, 14vw, 12rem);
+    /* Reserve space to prevent CLS - optimized for mobile; slightly reduced so title doesn't push CTAs down */
+    min-height: clamp(3rem, 12vw, 10rem);
     display: flex;
     flex-direction: column;
     justify-content: center;

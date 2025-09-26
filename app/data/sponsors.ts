@@ -19,7 +19,6 @@ export interface Sponsor {
   url: string;
   /** Optional logo path - PNG/SVG format (to be added later) */
   logo?: string;
-  /** Optional description for detailed sponsor pages */
   description?: string;
 }
 /**
@@ -32,6 +31,40 @@ export const sponsors: Sponsor[] = [
     url: 'https://www.vossenergy.com/',
     description: 'langjähriger und verlässlicher Partner des Vereins',
     logo: '/images/sponsors/VE-Logo.svg',
+  },
+  {
+    id: 'dirk-huelsmann-immobilien',
+    name: 'Dirk Hülsmann Immobilien',
+    url: 'https://www.immobilien-dh.de/',
+    description: 'langjähriger Partner der Sportgruppen',
+    logo: '/images/sponsors/Dirk Hülsmann Immobilien.jpg',
+  },
+  {
+    id: 'ostseesparkasse-rostock',
+    name: 'Ostseesparkasse Rostock',
+    url: 'https://www.ospa.de/de/home/ihre-sparkasse/gut-fuer-die-region.html?n=true&stref=hnav',
+    description: 'langjähriger Sponsor des Vereins',
+    logo: '/images/sponsors/OSPA_final_rgb_rot.jpg',
+  },
+  {
+    id: 'tischlerei-timm',
+    name: 'Tischlerei Timm',
+    url: 'https://www.tischlerei-timm.com/',
+    description: 'Sponsoring der Trainingsanzüge für den Mulsower SV',
+    logo: '/images/sponsors/Logo Tischlerei Timm_1.png',
+  },
+  {
+    id: 'dachdeckerbetrieb-martin-nerstheimer',
+    name: 'Dachdeckerbetrieb Martin Nerstheimer',
+    url: 'https://dach-nerstheimer.de/',
+    description: 'Ansprechpartner für Instandhaltung der Sportanlage',
+    logo: '/images/sponsors/Dachdecker-Nerstheimer_Logo_web.png',
+  },
+  {
+    id: 'firma-olaf-steffen',
+    name: 'Firma Olaf Steffen',
+    url: '',
+    description: 'Sponsor unserer Trainingsanzüge',
   },
 ];
 

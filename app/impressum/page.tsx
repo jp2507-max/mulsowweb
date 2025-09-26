@@ -13,16 +13,16 @@ export const metadata: Metadata = generatePageMetadata({
 
 export default function ImpressumPage() {
   return (
-    <section className="py-16 md:py-20" id="main-content" aria-labelledby="impressum-title">
+    <section className="section-spacing" id="main-content" aria-labelledby="impressum-title">
       <BreadcrumbJsonLd
         items={[
           { name: 'Startseite', url: `${siteConfig.baseUrl}/` },
           { name: 'Impressum', url: `${siteConfig.baseUrl}/impressum/` },
         ]}
       />
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
+  <div className="container-site max-w-4xl">
         {/* Page Header */}
-        <div className="mb-12 md:mb-16">
+  <div className="mb-10 md:mb-14">
           <h1 id="impressum-title" className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-ink-primary mb-6">
             Impressum
           </h1>
@@ -35,7 +35,7 @@ export default function ImpressumPage() {
         <div className="prose prose-lg max-w-none">
           
           {/* Provider Information - §5 DDG */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
               Anbieter (§5 DDG)
             </h2>
@@ -65,53 +65,49 @@ export default function ImpressumPage() {
           </section>
 
           {/* Representation */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
-              Vertretung
+              Vertretung / Vorstand
             </h2>
-            <div className="bg-yellow-50 rounded-xl p-6 md:p-8 border-l-4 border-yellow-400">
-              <div className="flex items-start space-x-3">
-                <svg className="w-6 h-6 text-yellow-600 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
+            <div className="bg-neutral-50 rounded-xl p-6 md:p-8 border-l-4 border-brand-primary">
+              <div className="space-y-3 text-ink-secondary">
+                <p className="text-ink-secondary">
+                  Der Mulsower SV 61 e.V. wird vertreten durch den Vorstand. Nachfolgend finden Sie die für die Vertretung des Vereins verantwortlichen Personen.
+                </p>
                 <div>
-                  <p className="font-semibold text-yellow-800 mb-2">TODO: Vorstandsinformationen ergänzen</p>
-                  <p className="text-yellow-700 text-sm">
-                    Die Angaben zu den vertretungsberechtigten Personen (Vorstand) müssen noch ergänzt werden.
-                    Erforderlich sind: Name, Anschrift und Funktion der vertretungsberechtigten Personen.
-                  </p>
+                  <strong className="text-ink-primary">Vorstand (vertretungsberechtigte Person):</strong>
+                  <ul className="list-disc list-inside mt-2">
+                    <li>Vorsitzender: Christian Fröhlich — Telefon: 0172 3162075 — E-Mail: <a href="mailto:info@mulsower-sv.de" className="text-brand-primary underline">info@mulsower-sv.de</a></li>
+                  </ul>
+                  
                 </div>
               </div>
             </div>
           </section>
 
           {/* Registry Information */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
               Registereintrag
             </h2>
-            <div className="bg-yellow-50 rounded-xl p-6 md:p-8 border-l-4 border-yellow-400">
-              <div className="flex items-start space-x-3">
-                <svg className="w-6 h-6 text-yellow-600 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
+            <div className="bg-neutral-50 rounded-xl p-6 md:p-8 border-l-4 border-brand-primary">
+              <div className="space-y-3 text-ink-secondary">
+                {/* Register information paragraph removed as requested */}
                 <div>
-                  <p className="font-semibold text-yellow-800 mb-2">TODO: Vereinsregisterdaten ergänzen</p>
-                  <p className="text-yellow-700 text-sm">
-                    Die Registerdaten müssen noch ergänzt werden. Erforderlich sind:
-                  </p>
-                  <ul className="text-yellow-700 text-sm mt-2 list-disc list-inside space-y-1">
-                    <li>Registergericht</li>
-                    <li>Registernummer</li>
-                    <li>Datum der Eintragung</li>
+                  <strong className="text-ink-primary">Vereinsregister:</strong>
+                  <ul className="list-disc list-inside mt-2">
+                    <li>Registergericht: Amtsgericht [Ort]</li>
+                    <li>Registernummer: VR [Nummer]</li>
+                    <li>Datum der Eintragung: [TT.MM.JJJJ]</li>
                   </ul>
                 </div>
+                {/* Removed hint paragraph per request */}
               </div>
             </div>
           </section>
 
           {/* VAT Information */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
               Umsatzsteuer-Identifikationsnummer
             </h2>
@@ -124,7 +120,7 @@ export default function ImpressumPage() {
           </section>
 
           {/* Liability Disclaimer */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
               Haftungsausschluss
             </h2>
@@ -154,7 +150,7 @@ export default function ImpressumPage() {
           </section>
 
           {/* Copyright */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
               Urheberrecht
             </h2>
@@ -167,7 +163,7 @@ export default function ImpressumPage() {
           </section>
 
           {/* Data Protection Reference */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
               Datenschutz
             </h2>

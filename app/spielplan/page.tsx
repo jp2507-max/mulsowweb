@@ -15,7 +15,7 @@ export const metadata: Metadata = generatePageMetadata({
 
 export default function SchedulePage() {
   return (
-    <main data-heavy className="container-site py-16 md:py-24" role="main" id="main-content">
+    <main data-heavy className="container-site section-spacing" role="main" id="main-content">
       <BreadcrumbJsonLd
         items={[
           { name: 'Startseite', url: `${siteConfig.baseUrl}/` },
@@ -35,7 +35,7 @@ export default function SchedulePage() {
         </div>
 
         {/* CTA Section */}
-        <div className="mb-16">
+  <div className="mb-14">
           <div className="card card-hover max-w-2xl mx-auto text-center">
             <div className="mb-6">
               <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-4">
@@ -77,7 +77,7 @@ export default function SchedulePage() {
         </div>
 
         {/* Fußball.de Widget (embedded table) */}
-        <section aria-labelledby="spielplan-widget-heading" className="mb-16">
+  <section aria-labelledby="spielplan-widget-heading" className="mb-14">
           <h2 id="spielplan-widget-heading" className="sr-only">Spielplan Widget</h2>
           <div className="card max-w-4xl mx-auto p-4" role="region" aria-label="Fussball.de Spielplan und Tabelle">
             <FussballDeWidget
@@ -90,7 +90,7 @@ export default function SchedulePage() {
         </section>
 
         {/* Additional Information */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+  <div className="grid gap-6 md:grid-cols-2 md:gap-8 max-w-4xl mx-auto">
           <div className="card card-hover text-left">
             <h3 className="text-xl font-semibold font-heading text-ink-primary mb-3">
               Was findest du dort?

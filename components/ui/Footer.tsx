@@ -11,7 +11,7 @@ export interface FooterProps {
 export function Footer() {
   const year = new Date().getFullYear();
 
-  const clubName = "Mulsower SV 61";
+  const clubName = "Mulsower SV 61 e.V.";
   const addressLines = [
   "Garvensdorfer Weg 10",
     "18233 Carinerland",
