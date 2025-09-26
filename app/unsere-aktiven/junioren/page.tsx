@@ -92,33 +92,7 @@ export default function JuniorenPage() {
                   Kontakt aufnehmen
                 </Button>
               </div>
-              <div className="mt-8 grid gap-4 sm:grid-cols-2">
-                <aside className="card border border-neutral-200/70 bg-white/95 p-6 shadow-lg">
-                  <header className="mb-3">
-                    <p className="eyebrow">Nächstes Spiel</p>
-                    <h2 className="text-lg font-heading font-semibold text-ink-primary md:text-xl">E-Junioren</h2>
-                  </header>
-                  <FussballDeWidget
-                    id="8bf95935-f5a8-4696-90f3-967aa94d038b"
-                    type="next-match"
-                    className="w-full"
-                    title="FUSSBALL.DE – Nächstes Spiel E-Junioren"
-                  />
-                </aside>
-
-                <aside className="card border border-neutral-200/70 bg-white/95 p-6 shadow-lg">
-                  <header className="mb-3">
-                    <p className="eyebrow">Nächstes Spiel</p>
-                    <h2 className="text-lg font-heading font-semibold text-ink-primary md:text-xl">F-Junioren</h2>
-                  </header>
-                  <FussballDeWidget
-                    id="eb58e56c-0ea9-4c5d-b1dc-e1b6ceccca65"
-                    type="next-match"
-                    className="w-full"
-                    title="FUSSBALL.DE – Nächstes Spiel F-Junioren"
-                  />
-                </aside>
-              </div>
+              {/* Next-match widgets removed — widgets moved to the bottom of the page */}
               
             </div>
           </div>
@@ -222,6 +196,32 @@ export default function JuniorenPage() {
               </div>
             </div>
           </aside>
+        </div>
+      </section>
+      
+      {/* Fußball.de Widgets - placed above footer */}
+      <section aria-labelledby="junioren-fussballde-heading" className="container-site py-12 md:py-16">
+        <h2 id="junioren-fussballde-heading" className="sr-only">Fussball.de Widgets</h2>
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="card border border-neutral-200/80 bg-white p-6 shadow-lg">
+            <h3 className="text-xl font-heading font-semibold text-ink-primary mb-3">Nächstes Spiel – E-Junioren</h3>
+            <FussballDeWidget
+              id="8bf95935-f5a8-4696-90f3-967aa94d038b"
+              type="next-match"
+              className="w-full"
+              title="FUSSBALL.DE – Nächstes Spiel E-Junioren"
+            />
+          </div>
+
+          <div className="card border border-neutral-200/80 bg-white p-6 shadow-lg">
+            <h3 className="text-xl font-heading font-semibold text-ink-primary mb-3">Nächstes Spiel – F-Junioren</h3>
+            <FussballDeWidget
+              id="eb58e56c-0ea9-4c5d-b1dc-e1b6ceccca65"
+              type="next-match"
+              className="w-full"
+              title="FUSSBALL.DE – Nächstes Spiel F-Junioren"
+            />
+          </div>
         </div>
       </section>
     </main>

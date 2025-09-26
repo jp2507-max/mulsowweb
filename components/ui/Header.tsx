@@ -50,6 +50,23 @@ export function Header() {
       el.toggleAttribute('data-scrolled', scrolled);
     };
 
+    const updateProgressNow = () => {
+      if (typeof window === 'undefined') return;
+      const currentHeight = Math.max(72, Math.round(el.getBoundingClientRect().height || 0));
+      const distance = Math.max(currentHeight * 1.6, currentHeight + 48);
+      const progress = Math.min(1, Math.max(0, window.scrollY / distance));
+      el.style.setProperty('--header-shrink-progress', progress.toFixed(3));
+    };
+
+    let progressRaf = 0;
+    const scheduleProgressUpdate = () => {
+      if (progressRaf) return;
+      progressRaf = window.requestAnimationFrame(() => {
+        progressRaf = 0;
+        updateProgressNow();
+      });
+    };
+
     // Initial state (in case sentinel isn't available yet)
     try {
       const hh = Math.max(0, Math.round(el.getBoundingClientRect().height));
@@ -58,17 +75,28 @@ export function Header() {
       apply((typeof window !== 'undefined' ? window.scrollY : 0) > 4);
     }
 
+    updateProgressNow();
+    window.addEventListener('scroll', scheduleProgressUpdate, { passive: true });
+    window.addEventListener('resize', scheduleProgressUpdate);
+
     const sentinel = document.getElementById('header-sentinel');
     if (sentinel && 'IntersectionObserver' in window) {
       const obs = new IntersectionObserver((entries) => {
         const e = entries[0];
         // When the sentinel leaves the viewport (scroll down), mark as scrolled
         apply(!e.isIntersecting);
+        scheduleProgressUpdate();
       }, { threshold: 0 });
       try { obs.observe(sentinel); } catch {}
 
       return () => {
         try { obs.disconnect(); } catch {}
+        window.removeEventListener('scroll', scheduleProgressUpdate as EventListener);
+        window.removeEventListener('resize', scheduleProgressUpdate as EventListener);
+        if (progressRaf) {
+          window.cancelAnimationFrame(progressRaf);
+          progressRaf = 0;
+        }
       };
     }
 
@@ -77,14 +105,22 @@ export function Header() {
     const update = () => {
       raf = 0;
       apply((typeof window !== 'undefined' ? window.scrollY : 0) > 4);
+      scheduleProgressUpdate();
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('load', update, { once: true });
+    updateProgressNow();
     return () => {
       window.removeEventListener('scroll', onScroll as EventListener);
       window.removeEventListener('load', update as EventListener);
+      window.removeEventListener('scroll', scheduleProgressUpdate as EventListener);
+      window.removeEventListener('resize', scheduleProgressUpdate as EventListener);
       if (raf) cancelAnimationFrame(raf);
+      if (progressRaf) {
+        cancelAnimationFrame(progressRaf);
+        progressRaf = 0;
+      }
     };
   }, []);
 

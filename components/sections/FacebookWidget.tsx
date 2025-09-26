@@ -8,8 +8,7 @@ export interface FacebookWidgetProps {
 }
 
 export default function FacebookWidget({ height = 700 }: FacebookWidgetProps) {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = React.useState(false);
+  const [status, setStatus] = React.useState<"loading" | "ready" | "fallback">("loading");
 
   const normalizedHeight = React.useMemo(() => {
     const parsed = Number(height);
@@ -32,60 +31,69 @@ export default function FacebookWidget({ height = 700 }: FacebookWidgetProps) {
   }, [normalizedHeight]);
 
   React.useEffect(() => {
-    const element = containerRef.current;
-    if (!element || isVisible) return;
+    if (typeof window === "undefined") return;
+    if (status !== "loading") return;
 
-    if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
-      setIsVisible(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "240px" }
-    );
-
-    observer.observe(element);
+    const timeout = window.setTimeout(() => {
+      setStatus((prev) => (prev === "ready" ? "ready" : "fallback"));
+    }, 6000);
 
     return () => {
-      observer.disconnect();
+      window.clearTimeout(timeout);
     };
-  }, [isVisible]);
+  }, [status]);
+
+  const handleLoad = React.useCallback(() => {
+    setStatus("ready");
+  }, []);
+
+  const handleError = React.useCallback(() => {
+    setStatus("fallback");
+  }, []);
 
   return (
     <div className="card card-hover p-0 h-full overflow-hidden" role="region" aria-label="Facebook Page Widget">
       <div
-        ref={containerRef}
         className="w-full max-w-full"
         style={{
           height: `${normalizedHeight}px`,
           maxHeight: "75vh",
           minHeight: "420px",
+          position: "relative",
         }}
       >
-        {isVisible ? (
-          <iframe
-            title="Mulsower SV 61 - Facebook"
-            src={iframeSrc}
-            width="100%"
-            height={String(normalizedHeight)}
-            style={{ border: "none", overflow: "hidden", display: "block" }}
-            scrolling="no"
-            allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="strict-origin-when-cross-origin"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center px-4 text-sm text-ink-secondary/70">
-            Facebook-Inhalte werden geladen …
+        {status !== "ready" && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-4 text-center text-sm text-ink-secondary/80">
+            {status === "fallback" ? (
+              <>
+                <p>Das Facebook-Plugin konnte nicht geladen werden.</p>
+                <a
+                  href="https://www.facebook.com/msv61"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-center rounded-full bg-brand-primary px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-brand-secondary"
+                >
+                  Zur Facebook-Seite
+                </a>
+              </>
+            ) : (
+              <p>Facebook-Inhalte werden geladen …</p>
+            )}
           </div>
         )}
+        <iframe
+          title="Mulsower SV 61 - Facebook"
+          src={iframeSrc}
+          width="100%"
+          height={String(normalizedHeight)}
+          style={{ border: "none", overflow: "hidden", display: "block" }}
+          scrolling="no"
+          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+          allowFullScreen
+          loading="lazy"
+          onLoad={handleLoad}
+          onError={handleError}
+        />
       </div>
     </div>
   );
