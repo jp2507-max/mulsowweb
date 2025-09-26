@@ -88,6 +88,7 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
           </div>
         </div>
 
+        
         {displaySponsors.length > 0 && (
           <div
             className="mb-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6 xl:gap-8"
@@ -151,29 +152,31 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
 
               if (hasWebsite) {
                 return (
-                  <Card
-                    key={sponsor.id}
-                    href={sponsor.url}
-                    title={sponsor.name}
-                    className={cx(
-                      'group h-full text-center shadow-sm border border-neutral-200 hover:border-brand-light',
-                      !reduced && 'transition-motion'
-                    )}
-                  >
-                    {content}
-                  </Card>
+                  <div key={sponsor.id} role="listitem" className="h-full">
+                    <Card
+                      href={sponsor.url}
+                      title={sponsor.name}
+                      className={cx(
+                        'group h-full text-center shadow-sm border border-neutral-200 hover:border-brand-light',
+                        !reduced && 'transition-motion'
+                      )}
+                    >
+                      {content}
+                    </Card>
+                  </div>
                 );
               }
 
               return (
-                <Card
-                  key={sponsor.id}
-                  title={sponsor.name}
-                  hover={false}
-                  className="h-full text-center shadow-sm border border-neutral-200 bg-white"
-                >
-                  {content}
-                </Card>
+                <div key={sponsor.id} role="listitem" className="h-full">
+                  <Card
+                    title={sponsor.name}
+                    hover={false}
+                    className="h-full text-center shadow-sm border border-neutral-200 bg-white"
+                  >
+                    {content}
+                  </Card>
+                </div>
               );
             })}
           </div>
