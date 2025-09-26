@@ -123,17 +123,16 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
                     )}
                   </div>
 
-                  {sponsor.description && (
-                    <p className="text-sm text-ink-secondary">
-                      {sponsor.description}
-                    </p>
-                  )}
+                  
 
                   {hasWebsite ? (
                     <div className="mt-4 inline-flex items-center justify-center text-sm font-medium text-brand-primary">
                       Website besuchen
                       <svg
-                        className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                        className={cx(
+                          'ml-2 h-4 w-4',
+                          !reduced && 'transition-transform duration-300 group-hover:translate-x-1'
+                        )}
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -156,7 +155,10 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
                     key={sponsor.id}
                     href={sponsor.url}
                     title={sponsor.name}
-                    className="group h-full text-center shadow-sm border border-neutral-200 hover:border-brand-light transition-motion"
+                    className={cx(
+                      'group h-full text-center shadow-sm border border-neutral-200 hover:border-brand-light',
+                      !reduced && 'transition-motion'
+                    )}
                   >
                     {content}
                   </Card>
@@ -183,10 +185,10 @@ export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorT
             href="/sponsoren/"
             variant="primary"
             size="md"
-            className={
-              `inline-flex items-center px-8 py-4 rounded-xl hover:scale-105 active:scale-95 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 touch-feedback ` +
-              (reduced ? '' : 'transition-motion')
-            }
+            className={cx(
+              'inline-flex items-center px-8 py-4 rounded-xl hover:scale-105 active:scale-95 shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 touch-feedback',
+              !reduced && 'transition-motion'
+            )}
             aria-label="Alle Sponsoren ansehen - Zur vollständigen Sponsoren-Übersicht"
           >
             Alle Sponsoren ansehen

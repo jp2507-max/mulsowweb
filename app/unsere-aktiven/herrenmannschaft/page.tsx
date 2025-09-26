@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Button } from "@/components/ui/Button";
 import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
-import FussballDeWidget from "@/components/utility/FussballDeWidget";
+import { FussballDeWidget } from "@/components/utility/FussballDeWidget";
 import { generatePageMetadata, siteConfig } from "../../config/site";
 
 const trainingSlots = [

@@ -35,6 +35,15 @@ const contact = {
   phone: "0179 5265795",
 };
 
+// Normalize telephone for href (keep leading + if present, strip other non-digit chars)
+function makeTelHref(phone: string) {
+  if (!phone) return "";
+  const trimmed = phone.trim();
+  const hasPlus = trimmed.startsWith("+");
+  const digits = trimmed.replace(/\D/g, "");
+  return `tel:${hasPlus ? "+" : ""}${digits}`;
+}
+
 export const metadata: Metadata = generatePageMetadata({
   title: "Sportgruppen",
   description: "Sportgruppen des Mulsower SV 61 – Fitnessangebote in Clausdorf mit Ansprechpartnerin und Trainingszeiten.",
@@ -67,7 +76,7 @@ export default function SportgruppenPage() {
               Anmeldung & Fragen
             </Button>
             <Button
-              href="tel:+491795265795"
+              href={makeTelHref(contact.phone)}
               variant="outline"
               className="bg-white/70 backdrop-blur transition duration-200 hover:bg-white"
             >
@@ -127,7 +136,7 @@ export default function SportgruppenPage() {
                   </a>
                 </p>
                 <p className="mt-1 text-sm">
-                  <a className="font-medium text-brand-primary hover:text-brand-secondary" href="tel:+491795265795">
+                  <a className="font-medium text-brand-primary hover:text-brand-secondary" href={makeTelHref(contact.phone)}>
                     {contact.phone}
                   </a>
                 </p>

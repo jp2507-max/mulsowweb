@@ -172,12 +172,54 @@ export default function ImpressumPage() {
                 <svg className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <div>
-                  <p className="text-blue-800 leading-relaxed">
-                    Diese Website erhebt keine personenbezogenen Daten und verwendet keine Cookies oder Tracking-Technologien. 
-                    Es werden keine Daten an Dritte weitergegeben. Bei Kontaktaufnahme per E-Mail werden die übermittelten 
-                    Daten ausschließlich zur Bearbeitung der Anfrage verwendet.
+                <div className="text-blue-800 leading-relaxed">
+                  <p>
+                    Wir nehmen den Schutz Ihrer personenbezogenen Daten ernst. Auf dieser Website verarbeiten wir nur die
+                    unbedingt erforderlichen Daten für den Betrieb der Seiten und die Kommunikation mit Ihnen. Bitte beachten
+                    Sie, dass durch eingebettete Inhalte Dritter (z. B. Widgets oder iFrames von externen Anbietern wie
+                    Fussball.de oder Facebook/Meta) beim Laden dieser Inhalte personenbezogene Daten an die jeweiligen
+                    Drittanbieter übermittelt werden können (z. B. Ihre IP-Adresse, Geräte- und Browserinformationen oder
+                    gesetzte Cookies). Wir haben keinen Einfluss auf Umfang und Zwecke der Datenverarbeitung durch diese
+                    Drittanbieter.
                   </p>
+
+                  <h3 className="text-sm font-semibold mt-3">Welche Daten können verarbeitet werden</h3>
+                  <p>
+                    Typischerweise werden folgende Daten durch Drittanbieter verarbeitet: IP-Adresse, Zeitpunkt der Anfrage,
+                    besuchte Seite, Referrer, Gerätedaten (z. B. User‑Agent) sowie ggf. Cookies und einzelne gerätespezifische
+                    Kennzahlen. Die genauen Datenarten hängen vom jeweiligen Anbieter ab.
+                  </p>
+
+                  <h3 className="text-sm font-semibold mt-3">Rechtsgrundlage</h3>
+                  <p>
+                    Soweit eine Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO erforderlich ist (z. B. für nicht essentielle
+                    Tracking‑Technologien), holen wir diese vor Aktivierung ein. Für andere Verarbeitungen stützt sich die
+                    Rechtsgrundlage überwiegend auf berechtigte Interessen (Art. 6 Abs. 1 lit. f DSGVO), z. B. zur sicheren
+                    Bereitstellung der Website oder zur Anzeige eingebetteter Drittinhalte.
+                  </p>
+
+                  <h3 className="text-sm font-semibold mt-3">Drittanbieter und Links zu Datenschutzhinweisen</h3>
+                  <ul className="list-disc list-inside mt-2">
+                    <li>
+                      Fussball.de / DFBnet: Beim Einbetten von Spielplänen und Widgets können Daten an Fussball.de bzw. den
+                      Betreiber übermittelt werden. Bitte beachten Sie die Datenschutzhinweise des Anbieters.
+                    </li>
+                    <li>
+                      Facebook / Meta Platforms: Inhalte von Facebook können personenbezogene Daten verarbeiten und Cookies
+                      setzen. Informationen zur Datenverarbeitung durch Meta finden Sie in den Datenschutzhinweisen von
+                      Meta (https://www.facebook.com/privacy/).
+                    </li>
+                  </ul>
+
+                  <h3 className="text-sm font-semibold mt-3">Kontakt und Auskunftsrechte</h3>
+                  <p>
+                    Wenn Sie Fragen zur Verarbeitung Ihrer personenbezogenen Daten haben oder Ihre Rechte nach der DSGVO
+                    (Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch, Datenübertragbarkeit) ausüben möchten,
+                    wenden Sie sich bitte an <a href="mailto:info@mulsower-sv.de" className="underline text-blue-800">info@mulsower-sv.de</a>.
+                    Sie haben zudem das Recht, eine Beschwerde bei der zuständigen Aufsichtsbehörde einzureichen.
+                  </p>
+
+                  
                 </div>
               </div>
             </div>

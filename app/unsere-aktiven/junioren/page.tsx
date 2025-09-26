@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
 import { Button } from "@/components/ui/Button";
-import FussballDeWidget from "@/components/utility/FussballDeWidget";
+import { FussballDeWidget } from "@/components/utility/FussballDeWidget";
 import { generatePageMetadata, siteConfig } from "../../config/site";
 
 const juniorTeams = [
@@ -118,7 +118,7 @@ export default function JuniorenPage() {
                 </h2>
               </header>
               <FussballDeWidget
-                id="0ceb56e4-cd70-45cc-ab25-b051dc83cf38"
+                id="131d7e0c-30c9-4885-b22f-f90e0a244ad9"
                 type="team-matches"
                 className="w-full"
                 title="FUSSBALL.DE – Nächste Spiele F-Junioren"

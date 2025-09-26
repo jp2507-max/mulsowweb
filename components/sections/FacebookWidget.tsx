@@ -8,6 +8,15 @@ export interface FacebookWidgetProps {
 }
 
 export default function FacebookWidget({ height = 700 }: FacebookWidgetProps) {
+  // normalize numeric height and ensure it's used consistently for iframe URL & sizing
+  const normalizedHeight = Math.max(0, Math.floor(Number(height) || 0)) || 700;
+
+  const fbUrl = `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(
+    'https://www.facebook.com/msv61'
+  )}&tabs=timeline&width=500&height=${encodeURIComponent(
+    String(normalizedHeight)
+  )}&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId`;
+
   return (
     // remove inner padding so iframe can fill the visible card area
     <div className="card card-hover p-0 h-full overflow-hidden" role="region" aria-label="Facebook Page Widget">
@@ -15,17 +24,17 @@ export default function FacebookWidget({ height = 700 }: FacebookWidgetProps) {
       <div
         className="w-full max-w-full"
         style={{
-          height: `${height}px`,
+          height: `${normalizedHeight}px`,
           maxHeight: '75vh',
           minHeight: '420px'
         }}
       >
         <iframe
           title="Mulsower SV 61 - Facebook"
-          src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Fmsv61&tabs=timeline&width=500&height=700&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
+          src={fbUrl}
           width="100%"
-          height="100%"
-          style={{ border: 'none', overflow: 'hidden', display: 'block' }}
+          height={String(normalizedHeight)}
+          style={{ border: 'none', overflow: 'hidden', display: 'block', height: '100%' }}
           scrolling="no"
           frameBorder={0}
           allowFullScreen={true}

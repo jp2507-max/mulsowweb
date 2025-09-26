@@ -167,8 +167,18 @@ export function Header() {
                           isActive && "header-nav-link-active",
                           "touch-feedback"
                         )}
-                        aria-haspopup={item.children ? "true" : undefined}
+                        aria-haspopup={item.children ? "menu" : undefined}
                         aria-expanded={item.children ? (isOpen ? "true" : "false") : undefined}
+                        {...(item.children && {
+                          'aria-controls': `${menuId}-submenu`,
+                          onClick: (e: React.MouseEvent) => {
+                            e.preventDefault();
+                            setOpenMenu(isOpen ? null : menuId);
+                          },
+                          onKeyDown: (e: React.KeyboardEvent) => {
+                            if (e.key === "Escape") setOpenMenu(null);
+                          }
+                        })}
                       >
                         <span className="nav-link-underline">{item.label}</span>
                         {item.children ? (
@@ -193,24 +203,25 @@ export function Header() {
                       </Link>
                       {item.children?.length ? (
                         <ul
+                          id={`${menuId}-submenu`}
                           className={cx(
                             "absolute left-0 top-full z-30 min-w-[14rem] rounded-xl border border-white/30 bg-white/95 p-2 text-ink-primary shadow-xl backdrop-blur-xl transition duration-200 ease-out md:left-1/2 md:-translate-x-1/2",
                             isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
                           )}
-                          role="menu"
+                          aria-hidden={isOpen ? undefined : "true"}
                         >
                           {item.children.map((child) => {
                             const isChildActive = normalize(child.href) === normalizedPath;
                             return (
-                              <li key={child.href} role="none">
+                              <li key={child.href}>
                                 <Link
                                   href={child.href}
-                                  role="menuitem"
                                   className={cx(
                                     "block rounded-lg px-4 py-2.5 text-sm font-semibold text-ink-primary transition-colors duration-200 hover:bg-neutral-100 focus-visible:bg-neutral-100 focus-visible:outline-none",
                                     isChildActive && "bg-brand-light/60 text-brand-secondary",
                                     "touch-feedback"
                                   )}
+                                  aria-current={isChildActive ? "page" : undefined}
                                 >
                                   {child.label}
                                 </Link>
