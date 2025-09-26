@@ -101,8 +101,6 @@ export default function JuniorenPage() {
                   <FussballDeWidget
                     id="8bf95935-f5a8-4696-90f3-967aa94d038b"
                     type="next-match"
-                    engine="script"
-                    host="www.fussball.de"
                     className="w-full"
                     title="FUSSBALL.DE – Nächstes Spiel E-Junioren"
                   />
@@ -116,8 +114,6 @@ export default function JuniorenPage() {
                   <FussballDeWidget
                     id="eb58e56c-0ea9-4c5d-b1dc-e1b6ceccca65"
                     type="next-match"
-                    engine="script"
-                    host="www.fussball.de"
                     className="w-full"
                     title="FUSSBALL.DE – Nächstes Spiel F-Junioren"
                   />

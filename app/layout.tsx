@@ -133,7 +133,6 @@ export default function RootLayout({
         <SiteBackground />
   {/* Desktop-only interactive ambience: moving stadium-light spotlight */}
   <InteractiveSpotlight />
-        <PageFadeController />
   <ScrollRevealController />
   <OptimizedHoverController />
   <OptimizedBlobController />
@@ -149,6 +148,7 @@ export default function RootLayout({
   <ViewTransitionRouter />
         <ScrollProvider>
           <div data-page-fade-target>
+            <PageFadeController />
             <Header />
             {/* Sentinel used by the Header's IntersectionObserver to toggle scrolled state */}
             <div id="header-sentinel" aria-hidden="true" style={{ blockSize: '1px', inlineSize: '1px' }} />
