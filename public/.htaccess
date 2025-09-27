@@ -135,7 +135,9 @@ ErrorDocument 404 /404.html
     BrotliCompressionQuality 5
     AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/xhtml+xml application/xml application/rss+xml image/svg+xml font/ttf font/otf font/woff font/woff2
     # Ensure caches respect negotiated encoding
-    Header merge Vary "Accept-Encoding"
+    <IfModule mod_headers.c>
+        Header merge Vary "Accept-Encoding"
+    </IfModule>
 </IfModule>
 
 # Enable gzip compression for better performance

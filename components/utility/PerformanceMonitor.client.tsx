@@ -17,6 +17,8 @@ export default function PerformanceMonitor() {
     let longTaskObserver: PerformanceObserver | null = null;
 
     try {
+      // cumulative CLS for the session (closure scope within this effect)
+      let cumulativeCls = 0;
       lcpObserver = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           const lcp = entry as PerformanceEntry & { startTime: number };
@@ -26,12 +28,12 @@ export default function PerformanceMonitor() {
       lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
 
       clsObserver = new PerformanceObserver((list) => {
-        let clsValue = 0;
         for (const entry of list.getEntries()) {
           const cls = entry as PerformanceEntry & { value: number; hadRecentInput: boolean };
-          if (!cls.hadRecentInput) clsValue += (cls.value || 0);
+          // only add layout shifts that weren't caused by recent user input
+          if (!cls.hadRecentInput) cumulativeCls += (cls.value || 0);
         }
-        if (clsValue > 0) console.log('CLS:', clsValue.toFixed(4), clsValue < 0.1 ? '✅ Good' : '❌ Needs improvement');
+        if (cumulativeCls > 0) console.log('CLS:', cumulativeCls.toFixed(4), cumulativeCls < 0.1 ? '✅ Good' : '❌ Needs improvement');
       });
       clsObserver.observe({ type: 'layout-shift', buffered: true });
 
