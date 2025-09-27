@@ -438,24 +438,20 @@ h6 {
   [data-page-fade-target] {
     opacity: 1;
     transform: none;
-    filter: none;
-    will-change: opacity, transform, filter;
+    will-change: opacity, transform;
     transition: opacity 220ms var(--motion-ease),
-                transform 260ms var(--motion-ease),
-                filter 260ms var(--motion-ease);
+                transform 260ms var(--motion-ease);
   }
 
   [data-page-fade-target][data-page-fade-state="out"] {
     opacity: 0.9;
     transform: translateY(6px) scale(0.995);
-    filter: saturate(0.92) blur(0.6px);
     pointer-events: none;
   }
 
   [data-page-fade-target][data-page-fade-state="in"] {
     opacity: 1;
     transform: none;
-    filter: none;
   }
 
   /* Hero ready state */
@@ -1262,7 +1258,6 @@ h6 {
     [data-page-fade-target] {
       opacity: 1 !important;
       transition: none !important;
-      filter: none !important;
       pointer-events: auto !important;
     }
 
@@ -1574,7 +1569,6 @@ h6 {
     [data-page-fade-target] {
       opacity: 1 !important;
       transition: none !important;
-      filter: none !important;
       pointer-events: auto !important;
     }
   }
@@ -1988,7 +1982,6 @@ h6 {
   }
 
   /* Utility: force fully white text inside a footer when placed over brand color */
-  .site-footer--force-white,
   .site-footer--force-white,
   .site-footer--force-white * {
     color: #ffffff !important;
