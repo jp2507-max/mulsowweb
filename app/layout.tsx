@@ -9,7 +9,9 @@ import { OptimizedHoverController } from "@/components/utility/OptimizedHoverCon
 import { OptimizedBlobController } from "@/components/utility/OptimizedBlobController";
 import { SmoothScrollInit } from "@/components/utility/SmoothScroll";
 import HeaderOffsetSync from "@/components/utility/HeaderOffsetSync";
-import { PerformanceOptimizer, PerformanceMonitorWrapper } from "@/components/utility/PerformanceOptimizer";
+import { PerformanceOptimizer } from "@/components/utility/PerformanceOptimizer";
+import PerformanceMonitorLoader from '@/components/utility/PerformanceMonitorLoader';
+// PerformanceMonitorLoader is a client component that mounts the dev-only monitor.
 import DeviceMotion from "@/components/utility/DeviceMotion";
 import FocusReveal from "@/components/utility/FocusReveal";
 import { generatePageMetadata } from "./config/site";
@@ -156,7 +158,7 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
-            <PerformanceMonitorWrapper />
+            <PerformanceMonitorLoader />
           </div>
         </ScrollProvider>
       </body>

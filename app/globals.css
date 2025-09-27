@@ -591,20 +591,37 @@ h6 {
     position: sticky;
     top: 0;
     z-index: 50;
-    overflow: hidden;
-    transform: translateZ(0);
-    background-color: rgba(193, 18, 31, 0.35);
+    overflow: visible;
+    background-color: rgba(193, 18, 31, 0.36);
     transition:
-      border-color 200ms var(--motion-ease),
-      box-shadow 200ms var(--motion-ease);
-    --header-cta-scale-scrolled: 0.9;
-    --header-padding-top: clamp(0.6rem, 1.6vw, 0.9rem);
-    --header-padding-bottom: clamp(0.6rem, 1.6vw, 0.9rem);
-    --header-padding-top-scrolled: clamp(0.35rem, 1.2vw, 0.55rem);
-    --header-padding-bottom-scrolled: clamp(0.32rem, 1.2vw, 0.5rem);
+      border-color 140ms var(--motion-ease),
+      box-shadow 140ms var(--motion-ease);
+    transform: translateZ(0);
+    --header-gap: clamp(0.75rem, 1.8vw, 1.2rem);
+    --header-padding-block: clamp(0.85rem, 2vw, 1.15rem);
+    --header-logo-width: clamp(2.5rem, 6vw, 3.5rem);
+    --header-logo-height: clamp(2.6rem, 6vw, 3.7rem);
+    --header-logo-text: clamp(1.28rem, 3.8vw, 1.6rem);
+    --header-link-font-size: clamp(0.92rem, 2vw, 1.05rem);
+    --header-link-padding-y: 0.45rem;
+    --header-link-padding-x: clamp(0.65rem, 2vw, 0.95rem);
+    --header-cta-scale: 1;
   }
 
-  /* GPU-friendly background overlay that fades in/out to full brand at top of page */
+  .header[data-scrolled] {
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    border-bottom: 1px solid rgba(255,255,255,0.16);
+    --header-gap: clamp(0.42rem, 1.4vw, 0.78rem);
+    --header-padding-block: clamp(0.3rem, 1.2vw, 0.44rem);
+    --header-logo-width: clamp(1.85rem, 4.2vw, 2.4rem);
+    --header-logo-height: clamp(1.95rem, 4.4vw, 2.8rem);
+    --header-logo-text: clamp(1rem, 3vw, 1.2rem);
+    --header-link-font-size: clamp(0.82rem, 1.4vw, 0.92rem);
+    --header-link-padding-y: 0.28rem;
+    --header-link-padding-x: clamp(0.48rem, 1.4vw, 0.7rem);
+    --header-cta-scale: 0.82;
+  }
+
   .header .header-bg {
     position: absolute;
     inset: 0;
@@ -613,18 +630,11 @@ h6 {
     background-color: var(--color-brand-primary);
     background-image: linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0));
     opacity: 1;
-    transition: opacity 220ms var(--motion-ease);
+    transition: opacity 180ms var(--motion-ease);
     transform: translateZ(0);
   }
 
-  .header[data-scrolled] .header-bg {
-    opacity: 0;
-  }
-
-  .header[data-scrolled] {
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
-    border-bottom: 1px solid rgba(255,255,255,0.16);
-  }
+  .header[data-scrolled] .header-bg { opacity: 0; }
 
   .header-container {
     @apply mx-auto max-w-7xl px-4 md:px-6;
@@ -636,227 +646,155 @@ h6 {
     display: grid;
     grid-template-columns: auto minmax(auto, 1fr) auto;
     align-items: center;
-    gap: clamp(0.65rem, 1.8vw, 1.1rem);
-    padding-top: var(--header-padding-top);
-    padding-bottom: var(--header-padding-bottom);
+    gap: var(--header-gap);
+    padding-block: var(--header-padding-block);
     transition:
-      padding 220ms var(--motion-ease),
-      gap 220ms var(--motion-ease);
+      padding 140ms var(--motion-ease),
+      gap 140ms var(--motion-ease);
   }
 
-  .header[data-scrolled] .header-content {
-    padding-top: var(--header-padding-top-scrolled);
-    padding-bottom: var(--header-padding-bottom-scrolled);
-  }
+  .header-nav-wrap { display: flex; justify-content: center; }
 
   .header-nav {
-    gap: clamp(0.65rem, 1.7vw, 1.1rem);
-    transition: gap 220ms var(--motion-ease);
+    @apply flex flex-wrap items-center list-none m-0 p-0;
+    gap: var(--header-gap);
+    transition: gap 140ms var(--motion-ease);
   }
 
-  .header[data-scrolled] .header-nav {
-    gap: clamp(0.45rem, 1.4vw, 0.85rem);
+  .header-logo {
+    @apply inline-flex items-center rounded-md p-1 transition-colors hover:bg-white/10;
+    gap: clamp(0.4rem, 1vw, 0.7rem);
+    transform-origin: left center;
+    transition: transform 140ms var(--motion-ease);
   }
 
-  .header .header-nav-link {
+  .header-logo-image {
+    @apply flex-shrink-0;
+    width: var(--header-logo-width);
+    height: var(--header-logo-height);
     transition:
-      font-size 200ms var(--motion-ease),
-      padding 200ms var(--motion-ease);
+      width 140ms var(--motion-ease),
+      height 140ms var(--motion-ease);
   }
+
+  .header-logo-text {
+    @apply font-extrabold text-white;
+    font-size: var(--header-logo-text);
+    letter-spacing: -0.02em;
+    font-family: var(--font-heading);
+    transition: font-size 140ms var(--motion-ease);
+  }
+
+  .header-nav-link {
+    @apply px-3 py-2 rounded-md text-white transition-colors font-medium;
+    font-size: var(--header-link-font-size);
+    padding: var(--header-link-padding-y) var(--header-link-padding-x);
+    min-height: clamp(38px, 7vw, 44px);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      font-size 140ms var(--motion-ease),
+      padding 140ms var(--motion-ease),
+      transform 140ms var(--motion-ease);
+  }
+
+  .header[data-scrolled] .header-nav-link {
+    transform: translateY(-1px);
+  }
+
+  .header-nav-link:hover {
+    @apply text-white;
+  }
+
+  .header-nav-link:focus-visible {
+    @apply outline-2 outline-white outline-offset-2;
+  }
+
+  .header-nav-link-active {
+    @apply text-white border-b-2 border-white font-semibold;
+  }
+
+  .header-cta { display: flex; justify-content: flex-end; }
 
   .header .header-fanshop-btn {
-    transition: transform 220ms var(--motion-ease);
-  }
-
-  .header[data-scrolled] .header-fanshop-btn {
-    transform: scale(var(--header-cta-scale-scrolled));
-    padding: clamp(0.22rem, 0.8vw, 0.4rem) clamp(0.45rem, 1vw, 0.65rem) !important;
+    transform-origin: right center;
+    transform: translateZ(0) scale(var(--header-cta-scale));
+    transition: transform 140ms var(--motion-ease);
   }
 
   @media (max-width: 768px) {
     .header {
-      --header-cta-scale-scrolled: 0.84;
-      --header-padding-top: clamp(0.75rem, 3vw, 1.05rem);
-      --header-padding-bottom: clamp(0.7rem, 3vw, 1rem);
-      --header-padding-top-scrolled: clamp(0.3rem, 2.4vw, 0.48rem);
-      --header-padding-bottom-scrolled: clamp(0.28rem, 2.4vw, 0.44rem);
+      --header-gap: clamp(0.6rem, 2.6vw, 0.9rem);
+      --header-padding-block: clamp(0.9rem, 3.6vw, 1.25rem);
+      --header-logo-width: clamp(2.2rem, 7vw, 3rem);
+      --header-logo-height: clamp(2.3rem, 7vw, 3.2rem);
+      --header-logo-text: clamp(1.1rem, 4.2vw, 1.35rem);
+      --header-link-font-size: clamp(0.88rem, 3.4vw, 1rem);
+      --header-link-padding-y: 0.46rem;
+      --header-link-padding-x: clamp(0.6rem, 4vw, 0.85rem);
+    }
+
+    .header[data-scrolled] {
+      --header-gap: clamp(0.28rem, 2.2vw, 0.55rem);
+      --header-padding-block: clamp(0.24rem, 2.1vw, 0.36rem);
+      --header-logo-width: clamp(1.6rem, 4.6vw, 2.1rem);
+      --header-logo-height: clamp(1.7rem, 4.8vw, 2.3rem);
+      --header-logo-text: clamp(0.92rem, 3.2vw, 1.08rem);
+      --header-link-font-size: clamp(0.74rem, 3vw, 0.86rem);
+      --header-link-padding-y: 0.24rem;
+      --header-link-padding-x: clamp(0.42rem, 3vw, 0.62rem);
+      --header-cta-scale: 0.74;
     }
 
     .header-content {
       grid-template-columns: auto 1fr auto;
       grid-template-rows: auto auto;
-      gap: 0.6rem 0.75rem;
       text-align: center;
     }
 
-    .header[data-scrolled] .header-content {
-      gap: 0.45rem 0.6rem;
-    }
-
-    .header-logo {
-      grid-column: 1;
-      grid-row: 1;
-      justify-self: start;
-    }
-
-    .header-cta {
-      grid-column: 3;
-      grid-row: 1;
-      justify-self: end;
-      display: flex;
-      align-items: center;
-    }
-
-    .header-nav-wrap {
-      grid-column: 1 / -1;
-      grid-row: 2;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-    }
+    .header-logo { grid-column: 1; grid-row: 1; justify-self: start; }
+    .header-cta { grid-column: 3; grid-row: 1; justify-self: end; align-items: center; }
+    .header-nav-wrap { grid-column: 1 / -1; grid-row: 2; width: 100%; }
 
     .header-nav {
-      gap: clamp(0.45rem, 2.6vw, 0.8rem);
       flex-wrap: wrap;
       justify-content: center;
     }
 
-    .header[data-scrolled] .header-nav {
-      gap: clamp(0.3rem, 2.2vw, 0.6rem);
-    }
-
     .header-nav-link {
-      font-size: clamp(0.85rem, 3.6vw, 0.95rem);
-      padding: 0.4rem clamp(0.55rem, 4vw, 0.75rem);
-      min-height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .header[data-scrolled] .header-nav-link {
-      font-size: clamp(0.76rem, 3.2vw, 0.88rem);
-      padding: 0.3rem clamp(0.5rem, 3.6vw, 0.65rem);
-    }
-  }
-
-  @media (min-width: 769px) {
-    .header {
-      --header-cta-scale-scrolled: 0.9;
-      --header-padding-top: clamp(0.55rem, 1.2vw, 0.8rem);
-      --header-padding-bottom: clamp(0.55rem, 1.2vw, 0.8rem);
-      --header-padding-top-scrolled: clamp(0.3rem, 0.9vw, 0.52rem);
-      --header-padding-bottom-scrolled: clamp(0.3rem, 0.9vw, 0.5rem);
-    }
-
-    .header-content {
-      grid-template-columns: auto minmax(auto, 1fr) auto;
-      gap: clamp(0.7rem, 1.5vw, 1.1rem);
-    }
-
-    .header[data-scrolled] .header-content {
-      gap: clamp(0.55rem, 1.3vw, 0.9rem);
-    }
-
-    .header-nav-link {
-      font-size: clamp(0.92rem, 1.4vw, 1.05rem);
-      padding: 0.45rem clamp(0.65rem, 1.7vw, 0.9rem);
-    }
-
-    .header[data-scrolled] .header-nav-link {
-      font-size: clamp(0.86rem, 1.1vw, 0.98rem);
-      padding: 0.35rem clamp(0.55rem, 1.5vw, 0.75rem);
+      min-height: 40px;
+      white-space: nowrap;
     }
   }
 
   @media (max-width: 480px) {
-    .header-nav-link {
-      font-size: 0.82rem;
-      padding-inline: 0.5rem;
+    .header-nav-link { font-size: 0.82rem; }
+  }
+
+  @media (min-width: 1200px) {
+    .header[data-scrolled] {
+      --header-cta-scale: 0.78;
     }
+  }
 
-    .header[data-scrolled] .header-nav-link {
-      font-size: 0.74rem;
+  @media (prefers-reduced-motion: reduce) {
+    .header-content,
+    .header-nav,
+    .header-nav-link,
+    .header-logo,
+    .header-logo-image,
+    .header-logo-text,
+    .header .header-fanshop-btn,
+    .header .header-bg {
+      transition: none !important;
     }
   }
-
-  .header-logo {
-    @apply inline-flex items-center rounded-md p-1 transition-colors hover:bg-white/10;
-    gap: clamp(0.5rem, 1.2vw, 0.75rem);
-    transition:
-      gap 220ms var(--motion-ease),
-      padding 220ms var(--motion-ease);
-  }
-
-  .header[data-scrolled] .header-logo {
-    gap: clamp(0.35rem, 1vw, 0.55rem);
-    padding: 0.25rem 0.35rem;
-  }
-
-  .header-logo-image {
-    @apply flex-shrink-0;
-    width: clamp(2.4rem, 6vw, 3.4rem);
-    height: clamp(2.5rem, 6vw, 3.6rem);
-    transition:
-      width 220ms var(--motion-ease),
-      height 220ms var(--motion-ease),
-      transform 220ms var(--motion-ease);
-    transform-origin: left center;
-  }
-
-  .header[data-scrolled] .header-logo-image {
-    width: clamp(2rem, 5vw, 2.8rem);
-    height: clamp(2.1rem, 5vw, 3rem);
-  }
-
-  .header-logo-text {
-    @apply font-extrabold text-white;
-    font-size: clamp(1.2rem, 3.8vw, 1.6rem);
-    letter-spacing: -0.02em;
-    font-family: var(--font-heading);
-    transition:
-      font-size 220ms var(--motion-ease),
-      transform 220ms var(--motion-ease);
-    transform-origin: left center;
-  }
-
-  .header[data-scrolled] .header-logo-text {
-    font-size: clamp(1.05rem, 3.4vw, 1.35rem);
-  }
-
-  .header-nav-wrap { display: flex; justify-content: center; }
-  .header-nav {
-    @apply flex flex-wrap items-center list-none m-0 p-0;
-  gap: clamp(0.625rem, 1.7vw, 1.1rem);
-  }
-
-  .header-nav-link {
-  @apply px-3 py-2 rounded-md text-white transition-colors font-medium;
-    font-size: clamp(0.875rem, 2vw, 1rem);
-  }
-
-  .header-nav-link:hover {
-  @apply text-white;
-  }
-
-  .header-nav-link:focus-visible {
-  @apply outline-2 outline-white outline-offset-2;
-  }
-
-  .header-nav-link-active {
-  @apply text-white border-b-2 border-white font-semibold;
-  }
-
-  /* Right-side container to push CTA to the far right */
-  .header-cta { display: flex; justify-content: flex-end; }
 
   /* Special Fanshop button styling - mobile optimized */
   .header-fanshop-btn {
-    /* Make the Fanshop button a prominent pill with strong contrast */
     background: linear-gradient(135deg, #ff6b6b 0%, #c1121f 60%);
     color: #ffffff;
-    /* Responsive padding for mobile */
     padding: clamp(0.25rem, 0.5vw, 0.375rem) clamp(0.5rem, 1vw, 0.75rem) !important;
     font-size: clamp(0.75rem, 1.5vw, 0.85rem) !important;
     line-height: 1.2 !important;
@@ -867,19 +805,14 @@ h6 {
     white-space: nowrap;
   }
 
-  /* Mobile specific button adjustments */
   @media (max-width: 768px) {
     .header-fanshop-btn {
       padding: 0.3rem 0.6rem !important;
       font-size: 0.75rem !important;
       margin-left: 0.5rem;
     }
-    
-    .header-fanshop-btn .fanshop-icon-wrap {
-      width: 14px;
-      height: 14px;
-    }
-    
+
+    .header-fanshop-btn .fanshop-icon-wrap,
     .header-fanshop-btn .fanshop-icon {
       width: 14px;
       height: 14px;
@@ -889,16 +822,15 @@ h6 {
   .header-fanshop-btn:hover {
     background: linear-gradient(135deg, #ff7b7b 0%, #c1121f 60%);
     box-shadow: 0 12px 30px rgba(193,18,31,0.22), 0 4px 10px rgba(0,0,0,0.16);
-    /* Avoid large scaling on hover; keep to a small lift */
-    transform: translateY(-1px) scale(1.02);
+    transform: translateY(-1px) scale(calc(var(--header-cta-scale, 1) * 1.02));
   }
+
   .header-fanshop-btn:focus-visible {
     outline: none;
     box-shadow: 0 0 0 6px rgba(193,18,31,0.18), 0 6px 22px rgba(193,18,31,0.18);
-    transform: translateY(-1px);
+    transform: translateY(-1px) scale(var(--header-cta-scale, 1));
   }
 
-  /* subtle pulsing halo to attract attention but respectful of reduced-motion */
   .header-fanshop-btn::after {
     content: '';
     position: absolute;
@@ -927,19 +859,16 @@ h6 {
     100% { transform: scale(0.98); opacity: 0.9; }
   }
 
-  /* Icon sizing inside the button */
   .fanshop-icon {
     display: inline-block;
     vertical-align: middle;
     color: rgba(255,255,255,0.95);
   }
 
-  /* Icon wrapper: circular light background to improve contrast against brand header */
   .fanshop-icon-wrap {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    /* Very compact icon wrapper */
     width: 16px;
     height: 16px;
     border-radius: 999px;
@@ -949,7 +878,6 @@ h6 {
     box-shadow: 0 4px 12px rgba(193,18,31,0.12) inset;
   }
 
-  /* Header Fanshop white variant: allow placing a white button on brand header */
   .header-fanshop-btn.white {
     background: #ffffff;
     color: var(--color-brand-primary);
@@ -957,10 +885,7 @@ h6 {
     box-shadow: 0 6px 18px rgba(2,6,23,0.08);
   }
 
-  .header-fanshop-btn.white .fanshop-icon {
-    color: var(--color-brand-primary);
-  }
-
+  .header-fanshop-btn.white .fanshop-icon,
   .header-fanshop-btn.white .fanshop-label {
     color: var(--color-brand-primary);
   }
@@ -968,21 +893,19 @@ h6 {
   .fanshop-label {
     font-weight: 700;
     color: #ffffff;
-    /* Very compact font-size */
     font-size: 0.8rem !important;
     line-height: 1.2 !important;
     vertical-align: middle;
   }
 
-  /* Make the whole CTA slightly larger on larger viewports for visibility */
   @media (min-width: 768px) {
-   /* Very compact sizes on larger viewports */
-   .header-fanshop-btn { 
-     padding: 0.25rem 0.55rem !important; 
-     font-size: 0.8rem !important;
-   }
-   .fanshop-icon-wrap { width: 18px; height: 18px; margin-right: 0.3rem; }
-   .fanshop-label { font-size: 0.8rem !important; }
+    .header-fanshop-btn {
+      padding: 0.25rem 0.55rem !important;
+      font-size: 0.8rem !important;
+    }
+
+    .fanshop-icon-wrap { width: 18px; height: 18px; margin-right: 0.3rem; }
+    .fanshop-label { font-size: 0.8rem !important; }
   }
 
   /* Eyebrow text utility: small, uppercased label above headlines */

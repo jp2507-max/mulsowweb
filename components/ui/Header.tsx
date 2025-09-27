@@ -40,62 +40,77 @@ export function Header() {
   const headerRef = React.useRef<HTMLElement | null>(null);
   const [openMenu, setOpenMenu] = React.useState<string | null>(null);
 
-  // Toggle a compact header state once the visitor scrolls beyond the hero.
+  // Toggle a compact header state without layout thrash once the visitor scrolls a tiny amount.
   React.useEffect(() => {
     const el = headerRef.current;
     if (!el || typeof window === "undefined") return;
 
-    const setScrolled = (scrolled: boolean) => {
+    const SCROLL_THRESHOLD = 12;
+    let lastState = false;
+    let rafId = 0;
+
+    const commit = (scrolled: boolean) => {
+      if (scrolled === lastState) return;
+      lastState = scrolled;
       el.toggleAttribute("data-scrolled", scrolled);
     };
 
-    let raf = 0;
-    const scheduleScrollUpdate = () => {
-      if (raf) return;
-      raf = window.requestAnimationFrame(() => {
-        raf = 0;
-        setScrolled(window.scrollY > 56);
+    const readScroll = () => window.scrollY > SCROLL_THRESHOLD;
+
+    const schedule = () => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = 0;
+        commit(readScroll());
       });
     };
 
     const sentinel = document.getElementById("header-sentinel");
-    let observer: IntersectionObserver | null = null;
 
     if (sentinel && "IntersectionObserver" in window) {
-      observer = new IntersectionObserver(
-        (entries) => {
-          const entry = entries[0];
+      const observer = new IntersectionObserver(
+        ([entry]) => {
           if (!entry) return;
-          const scrolled = !entry.isIntersecting || window.scrollY > 56;
-          setScrolled(scrolled);
+          commit(!entry.isIntersecting);
         },
         {
-          rootMargin: "-72px 0px 0px 0px",
+          rootMargin: "-12px 0px 0px 0px",
           threshold: 0,
         }
       );
 
-      try {
-        observer.observe(sentinel);
-      } catch {
+      observer.observe(sentinel);
+      commit(readScroll());
+
+      return () => {
         observer.disconnect();
-        observer = null;
-      }
+        if (rafId) {
+          window.cancelAnimationFrame(rafId);
+        }
+      };
     }
 
-  setScrolled(window.scrollY > 56);
-  scheduleScrollUpdate();
-    window.addEventListener("scroll", scheduleScrollUpdate, { passive: true });
-    window.addEventListener("resize", scheduleScrollUpdate);
-    window.addEventListener("orientationchange", scheduleScrollUpdate);
+    const handleScroll = schedule;
+    const handleResize = () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      commit(readScroll());
+    };
+
+    commit(readScroll());
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("orientationchange", handleResize);
 
     return () => {
-      window.removeEventListener("scroll", scheduleScrollUpdate);
-      window.removeEventListener("resize", scheduleScrollUpdate);
-      window.removeEventListener("orientationchange", scheduleScrollUpdate);
-      if (observer) observer.disconnect();
-      if (raf) {
-        window.cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("orientationchange", handleResize);
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
       }
     };
   }, []);

@@ -7,29 +7,29 @@ import { generatePageMetadata, siteConfig } from "../../config/site";
 const juniorTeams = [
   {
     name: "E-Junioren",
-    age: "Jahrgänge 2013/2014",
+    age: "Jahrgänge 2015/16",
     training: [
       { day: "Dienstag", time: "17:00 – 18:30 Uhr", location: "Sportplatz Mulsow" },
       { day: "Donnerstag", time: "17:00 – 18:30 Uhr", location: "Sportplatz Mulsow" },
     ],
     contact: {
-      name: "Martin Staack",
+      name: "Sebastian Kraatz",
       mail: "info@mulsower-sv.de",
-      phone: "0160 96074971",
+      phone: "0173 2729994",
     },
     focusColor: "from-sky-400 to-brand-primary",
   },
   {
     name: "F-Junioren",
-    age: "Jahrgänge 2013/2014",
+    age: "Jahrgänge 2017/18",
     training: [
       { day: "Dienstag", time: "17:00 – 18:30 Uhr", location: "Sportplatz Mulsow" },
       { day: "Donnerstag", time: "17:00 – 18:30 Uhr", location: "Sportplatz Mulsow" },
     ],
     contact: {
-      name: "Martin Staack",
+      name: "Sebastian Kraatz",
       mail: "info@mulsower-sv.de",
-      phone: "0160 96074971",
+      phone: "0173 2729994",
     },
     focusColor: "from-amber-400 to-orange-500",
   },
@@ -40,9 +40,9 @@ const juniorTeams = [
       { day: "Mittwoch", time: "16:30 – 17:30 Uhr", location: "Sporthalle Mulsow" },
     ],
     contact: {
-      name: "Martin Staack",
+      name: "Tim Deckert",
       mail: "info@mulsower-sv.de",
-      phone: "0160 96074971",
+      phone: "0152 02774309",
     },
     focusColor: "from-emerald-400 to-teal-500",
   },
