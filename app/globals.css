@@ -89,7 +89,6 @@ body {
   color: var(--color-ink-primary);
   background-color: var(--color-neutral-50);
   /* Prevent layout shift during font loading */
-  font-display: swap;
   /* Optimize text rendering */
   text-rendering: optimizeSpeed;
   -webkit-font-smoothing: antialiased;
@@ -236,7 +235,6 @@ h5,
 h6 {
   font-family: var(--font-heading);
   /* Prevent layout shift for headings */
-  font-display: swap;
 }
 
 /* Critical styles for LCP optimization */
@@ -1068,7 +1066,6 @@ h6 {
     letter-spacing: -0.03em;
     font-family: var(--font-heading);
     /* Prevent layout shift during font loading */
-    font-display: swap;
     /* Reserve space to prevent CLS - optimized for mobile; slightly reduced so title doesn't push CTAs down */
     min-height: clamp(3rem, 12vw, 10rem);
     display: flex;
