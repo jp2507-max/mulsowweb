@@ -43,7 +43,7 @@ export default function VisitorCounter() {
       <div className="max-w-xl mx-auto text-center">
         <p className="text-sm text-ink-tertiary mb-2">Besucher (geschätzt)</p>
         <div aria-live="polite" className="inline-flex items-baseline gap-3">
-          <span className="text-3xl font-semibold text-ink-primary" aria-hidden>
+          <span className="text-3xl font-semibold text-ink-primary">
             {display}
           </span>
           <span className="text-sm text-ink-secondary">Nutzer</span>

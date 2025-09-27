@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { generatePageMetadata } from "../config/site";
 import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
-import VisitorCounter from '@/components/ui/VisitorCounter';
 import { siteConfig } from "@/app/config/site";
 
 export const dynamic = "error";
@@ -261,8 +260,7 @@ export default function ImpressumPage() {
             </p>
           </section>
 
-          {/* Visitor counter added */}
-          <VisitorCounter />
+          {/* Visitor counter removed */}
 
         </div>
       </div>
