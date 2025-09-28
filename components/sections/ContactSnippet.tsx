@@ -8,10 +8,10 @@ interface ContactSnippetProps {
 
 export default function ContactSnippet({ className = '' }: ContactSnippetProps) {
   return (
-    <section className={`py-16 md:py-20 ${className}`} aria-labelledby="contact-heading">
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-7xl">
+    <section className={`section-spacing ${className}`} aria-labelledby="contact-heading">
+      <div className="container-site">
         {/* Section Header */}
-        <div className="text-center mb-12 md:mb-16">
+        <div className="text-center mb-10 md:mb-14">
           <h2 id="contact-heading" className="text-3xl md:text-4xl lg:text-5xl font-bold font-heading text-ink-primary mb-4">
             Kontakt
           </h2>
@@ -22,7 +22,7 @@ export default function ContactSnippet({ className = '' }: ContactSnippetProps) 
 
   {/* Contact Information */}
         <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-10">
             {/* Address Card */}
             <div className="card card-hover text-center md:text-left">
               <div className="mb-6">
@@ -92,8 +92,6 @@ export default function ContactSnippet({ className = '' }: ContactSnippetProps) 
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                     aria-hidden="true"
-                    role="img"
-                    aria-label="Externer Link"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
@@ -103,8 +101,8 @@ export default function ContactSnippet({ className = '' }: ContactSnippetProps) 
           </div>
 
           {/* Instagram CTA - match hero chip style */}
-          <div className="mt-12 md:mt-14">
-            <div className="flex flex-col items-center gap-2 rounded-2xl border border-ink-primary/10 bg-ink-primary/5 px-4 py-3 md:flex-row md:justify-center md:gap-3 md:rounded-full">
+          <div className="mt-10 md:mt-12">
+            <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-2 rounded-2xl border border-ink-primary/10 bg-ink-primary/5 px-4 py-3 md:flex-row md:justify-center md:gap-3 md:rounded-full">
               <span className="text-sm md:text-base font-medium text-ink-primary">Folge uns auf Instagram</span>
               <div className="flex flex-wrap items-center justify-center gap-2">
                 <ExternalLink

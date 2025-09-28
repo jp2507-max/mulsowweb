@@ -25,8 +25,8 @@ export default function SponsorsPage() {
         ]}
       />
       {/* Hero Section */}
-      <section className="border-b border-neutral-200/60" aria-labelledby="sponsors-page-title">
-        <div className="container-site py-16 md:py-20 lg:py-24" id="main-content">
+      <section className="section-spacing border-b border-neutral-200/60" aria-labelledby="sponsors-page-title">
+        <div className="container-site" id="main-content">
           <div className="text-center max-w-4xl mx-auto">
             <h1 id="sponsors-page-title" className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-ink-primary mb-6">
               Unsere Sponsoren
@@ -40,92 +40,114 @@ export default function SponsorsPage() {
       </section>
 
       {/* Sponsors Grid Section */}
-      <section className="py-16 md:py-20 lg:py-24">
+      <section className="section-spacing">
         <div className="container-site">
           {/* Responsive sponsor grid - 2-3-4 columns as specified */}
           <div 
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8"
+            className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 sm:gap-6 md:gap-8"
             role="list"
             aria-label="Liste aller Sponsoren"
           >
-            {sponsors.map((sponsor, index) => (
-              <div
-                key={sponsor.id}
-                className="animate-fadeInUp"
-                style={{ 
-                  animationDelay: `${index * 100}ms`,
-                  animationFillMode: 'both'
-                }}
-                role="listitem"
-              >
-                <ExternalLink 
-                  href={sponsor.url} 
-                  className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded-2xl"
-                  aria-label={`${sponsor.name} - Sponsor-Website besuchen`}
-                >
-                  {/* Detailed sponsor card with modern hover effects */}
-                  <div className="sponsor-card bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-neutral-200 h-full flex flex-col transition-motion hover:scale-105 hover:border-brand-light group-hover:scale-105 group-hover:border-brand-light">
-                    {/* Logo placeholder with sponsor initial */}
-                    <div 
-                      className={`w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow duration-300 overflow-hidden ${
-                        sponsor.logo ? 'bg-white/90' : 'bg-gradient-to-br from-brand-primary to-brand-secondary'
-                      }`}
-                      aria-hidden={sponsor.logo ? undefined : true}
-                    >
-                      {sponsor.logo ? (
-                        <img
-                          src={sponsor.logo}
-                          alt={`${sponsor.name} Logo`}
-                          className="h-full w-full object-contain"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      ) : (
-                        <span 
-                          className="text-white font-bold text-2xl md:text-3xl"
-                          aria-hidden="true"
-                        >
-                          {sponsor.name.charAt(0)}
-                        </span>
-                      )}
-                    </div>
-                    
-                    {/* Sponsor name */}
-                    <h2 className="font-bold text-ink-primary text-lg md:text-xl mb-3 text-center group-hover:text-brand-primary transition-colors duration-300 font-heading">
-                      {sponsor.name}
-                    </h2>
-                    
-                    {/* Sponsor description */}
-                    {sponsor.description && (
-                      <p className="text-sm md:text-base text-ink-secondary text-center leading-relaxed flex-grow">
-                        {sponsor.description}
-                      </p>
-                    )}
+            {sponsors.map((sponsor, index) => {
+              const hasWebsite = Boolean(sponsor.url);
+              const cardBaseClasses = "sponsor-card bg-white rounded-2xl p-5 md:p-8 shadow-sm border border-neutral-200 h-full flex flex-col";
+              const cardInteractiveClasses = hasWebsite ? " transition-motion hover:scale-105 hover:border-brand-light" : "";
+              const logoWrapperBase = "w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 rounded-xl flex items-center justify-center shadow-lg overflow-hidden";
+              const logoWrapperInteractive = hasWebsite ? " transition-shadow duration-300 group-hover:shadow-xl" : "";
+              const logoBackground = sponsor.logo ? ' bg-white/90' : ' bg-gradient-to-br from-brand-primary to-brand-secondary';
+              const headingClasses = hasWebsite
+                ? "font-bold text-ink-primary text-lg md:text-xl mb-3 text-center group-hover:text-brand-primary transition-colors duration-300 font-heading"
+                : "font-bold text-ink-primary text-lg md:text-xl mb-3 text-center font-heading";
 
-                    {/* External link indicator */}
+              const cardContent = (
+                <div className={`${cardBaseClasses}${cardInteractiveClasses}`}>
+                  <div
+                    className={`${logoWrapperBase}${logoWrapperInteractive}${logoBackground}`}
+                    aria-hidden={sponsor.logo ? undefined : true}
+                  >
+                    {sponsor.logo ? (
+                      <img
+                        src={sponsor.logo}
+                        alt={`${sponsor.name} Logo`}
+                        className="h-full w-full object-contain"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    ) : (
+                      <span
+                        className="text-white font-bold text-2xl md:text-3xl"
+                        aria-hidden="true"
+                      >
+                        {sponsor.name.charAt(0)}
+                      </span>
+                    )}
+                  </div>
+
+                  <h2 className={headingClasses}>
+                    {sponsor.name}
+                  </h2>
+
+                  {sponsor.description && (
+                    <p className="text-sm md:text-base text-ink-secondary text-center leading-relaxed flex-grow">
+                      {sponsor.description}
+                    </p>
+                  )}
+
+                  {hasWebsite ? (
                     <div className="mt-4 pt-4 border-t border-neutral-100 flex items-center justify-center text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
                       <span className="text-sm font-medium mr-2">Website besuchen</span>
-                      <svg 
-                        className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300" 
-                        fill="none" 
-                        stroke="currentColor" 
+                      <svg
+                        className="w-4 h-4 transform group-hover:translate-x-1 transition-transform duration-300"
+                        fill="none"
+                        stroke="currentColor"
                         viewBox="0 0 24 24"
                         aria-hidden="true"
-                        role="img"
-                        aria-label="Externer Link"
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                       </svg>
                     </div>
-                  </div>
-                </ExternalLink>
-              </div>
-            ))}
+                  ) : (
+                    <div className="mt-4 pt-4 border-t border-neutral-100 text-sm text-ink-tertiary text-center">
+                      Kein Webauftritt verfügbar
+                    </div>
+                  )}
+                </div>
+              );
+
+              return (
+                <div
+                  key={sponsor.id}
+                  className="animate-fadeInUp"
+                  style={{
+                    animationDelay: `${index * 100}ms`,
+                    animationFillMode: 'both',
+                  }}
+                  role="listitem"
+                >
+                  {hasWebsite ? (
+                    <ExternalLink
+                      href={sponsor.url}
+                      className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary focus-visible:ring-offset-2 rounded-2xl"
+                      aria-label={`${sponsor.name} - Sponsor-Website besuchen`}
+                    >
+                      {cardContent}
+                    </ExternalLink>
+                  ) : (
+                    <div
+                      className="block rounded-2xl bg-white"
+                      aria-label={`${sponsor.name} - Sponsor ohne Website`}
+                    >
+                      {cardContent}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {/* Call to action for potential sponsors */}
           <div className="mt-16 md:mt-20 text-center">
-            <div className="card card-hover bg-white rounded-2xl p-8 md:p-12 shadow-sm border border-neutral-200 max-w-4xl mx-auto">
+            <div className="card card-hover bg-white rounded-2xl p-6 md:p-10 shadow-sm border border-neutral-200 max-w-4xl mx-auto">
               <h2 className="text-2xl md:text-3xl font-bold font-heading text-ink-primary mb-4">
                 Werden Sie unser Partner
               </h2>

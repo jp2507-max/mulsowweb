@@ -8,64 +8,116 @@ import { Button } from './Button';
 import { siteConfig } from '@/app/config/site';
 // secureRel not needed in Header since Button handles external rel generation
 
-const navItems = [
+type NavChild = {
+  label: string;
+  href: string;
+};
+
+type NavItem = {
+  label: string;
+  href: string;
+  children?: readonly NavChild[];
+};
+
+const navItems: readonly NavItem[] = [
   { label: "Spielplan", href: "/spielplan/" },
+  {
+    label: "Unsere Aktiven",
+    href: "/unsere-aktiven/",
+    children: [
+      { label: "Herrenmannschaft", href: "/unsere-aktiven/herrenmannschaft/" },
+      { label: "Junioren", href: "/unsere-aktiven/junioren/" },
+      { label: "Sportgruppen", href: "/unsere-aktiven/sportgruppen/" },
+    ],
+  },
   { label: "Mitgliedschaft", href: "/mitgliedschaft/" },
   { label: "Sponsoren", href: "/sponsoren/" },
-] as const;
+];
 
 export function Header() {
   const pathname = usePathname() || "/";
   const normalize = (p: string) => (p !== "/" && p.endsWith("/") ? p.slice(0, -1) : p);
   const headerRef = React.useRef<HTMLElement | null>(null);
+  const [openMenu, setOpenMenu] = React.useState<string | null>(null);
 
-  // Toggle a scrolled state using IntersectionObserver to avoid per-scroll work.
-  // We observe a sentinel element rendered just after the Header in the layout.
+  // Toggle a compact header state without layout thrash once the visitor scrolls a tiny amount.
   React.useEffect(() => {
     const el = headerRef.current;
-    if (!el || typeof window === 'undefined') return;
+    if (!el || typeof window === "undefined") return;
 
-    const apply = (scrolled: boolean) => {
-      el.toggleAttribute('data-scrolled', scrolled);
+    const SCROLL_THRESHOLD = 12;
+    let lastState = false;
+    let rafId = 0;
+
+    const commit = (scrolled: boolean) => {
+      if (scrolled === lastState) return;
+      lastState = scrolled;
+      el.toggleAttribute("data-scrolled", scrolled);
     };
 
-    // Initial state (in case sentinel isn't available yet)
-    try {
-      const hh = Math.max(0, Math.round(el.getBoundingClientRect().height));
-      apply(window.scrollY > hh - 1);
-    } catch {
-      apply((typeof window !== 'undefined' ? window.scrollY : 0) > 4);
-    }
+    const readScroll = () => window.scrollY > SCROLL_THRESHOLD;
 
-    const sentinel = document.getElementById('header-sentinel');
-    if (sentinel && 'IntersectionObserver' in window) {
-      const obs = new IntersectionObserver((entries) => {
-        const e = entries[0];
-        // When the sentinel leaves the viewport (scroll down), mark as scrolled
-        apply(!e.isIntersecting);
-      }, { threshold: 0 });
-      try { obs.observe(sentinel); } catch {}
+    const schedule = () => {
+      if (rafId) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = 0;
+        commit(readScroll());
+      });
+    };
+
+    const sentinel = document.getElementById("header-sentinel");
+
+    if (sentinel && "IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry) return;
+          commit(!entry.isIntersecting);
+        },
+        {
+          rootMargin: "-12px 0px 0px 0px",
+          threshold: 0,
+        }
+      );
+
+      observer.observe(sentinel);
+      commit(readScroll());
 
       return () => {
-        try { obs.disconnect(); } catch {}
+        observer.disconnect();
+        if (rafId) {
+          window.cancelAnimationFrame(rafId);
+        }
       };
     }
 
-    // Fallback for very old browsers: throttle via rAF
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      apply((typeof window !== 'undefined' ? window.scrollY : 0) > 4);
+    const handleScroll = schedule;
+    const handleResize = () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      commit(readScroll());
     };
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('load', update, { once: true });
+
+    commit(readScroll());
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("orientationchange", handleResize);
+
     return () => {
-      window.removeEventListener('scroll', onScroll as EventListener);
-      window.removeEventListener('load', update as EventListener);
-      if (raf) cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("orientationchange", handleResize);
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
     };
   }, []);
+
+  React.useEffect(() => {
+    setOpenMenu(null);
+  }, [pathname]);
 
   return (
     <>
@@ -73,8 +125,12 @@ export function Header() {
       <a href="#main" className="skip-link">
         Zum Hauptinhalt springen
       </a>
-      
-  <header className="header text-white" role="banner" ref={headerRef}>
+      <header
+        className="header text-white"
+        role="banner"
+        ref={headerRef}
+        style={{ overflow: "visible" }}
+      >
         {/* GPU-friendly background overlay that fades in/out via opacity */}
         <div className="header-bg" aria-hidden="true" />
         <div className="header-container">
@@ -101,24 +157,118 @@ export function Header() {
             <nav aria-label="Hauptnavigation" role="navigation" className="header-nav-wrap">
               <ul className="header-nav" role="list">
                 {navItems.map((item) => {
-                  // Normalize both the current pathname and the nav item's href so
-                  // trailing-slash differences don't prevent a match. This keeps
-                  // active-state behavior consistent for internal routes like
-                  // "/spielplan" vs "/spielplan/".
-                  const isActive = normalize(pathname) === normalize(item.href as string);
+                  const normalizedPath = normalize(pathname);
+                  const normalizedHref = normalize(item.href);
+                  const childMatch = item.children?.some((child) => normalize(child.href) === normalizedPath);
+                  const isActive = normalizedPath === normalizedHref || childMatch;
+                  const menuId = normalize(item.href);
+                  const isOpen = item.children ? openMenu === menuId : false;
                   return (
-                    <li key={String(item.href)} role="listitem">
-                      <Link
-                        href={(item.href as string) || '#'}
-                        aria-current={isActive ? "page" : undefined}
-                        className={cx(
-                          "header-nav-link",
-                          isActive && "header-nav-link-active",
-                          "touch-feedback"
-                        )}
-                      >
+                    <li
+                      key={item.href}
+                      role="listitem"
+                      className="relative"
+                      onMouseEnter={() => {
+                        if (item.children) setOpenMenu(menuId);
+                      }}
+                      onMouseLeave={() => {
+                        if (item.children) setOpenMenu(null);
+                      }}
+                      onFocus={() => {
+                        if (item.children) setOpenMenu(menuId);
+                      }}
+                      onBlur={(event) => {
+                        if (!item.children) return;
+                        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                          setOpenMenu(null);
+                        }
+                      }}
+                    >
+                      {item.children ? (
+                        <button
+                          type="button"
+                          aria-current={isActive ? "page" : undefined}
+                          className={cx(
+                            "header-nav-link",
+                            "flex items-center gap-1.5",
+                            isActive && "header-nav-link-active",
+                            "touch-feedback"
+                          )}
+                          aria-haspopup="menu"
+                          aria-expanded={isOpen ? "true" : "false"}
+                          aria-controls={`${menuId}-submenu`}
+                          onClick={() => {
+                            setOpenMenu(isOpen ? null : menuId);
+                          }}
+                          onKeyDown={(e: React.KeyboardEvent<HTMLButtonElement>) => {
+                            if (e.key === "Escape") {
+                              setOpenMenu(null);
+                              e.stopPropagation();
+                            }
+                          }}
+                        >
                           <span className="nav-link-underline">{item.label}</span>
-                      </Link>
+                          <span
+                            className={cx(
+                              "ml-1 grid h-3.5 w-3.5 place-items-center text-white/80 transition-transform duration-200 ease-out",
+                              isOpen && "rotate-180"
+                            )}
+                            aria-hidden="true"
+                          >
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path
+                                d="M3 4.5L6 7.5L9 4.5"
+                                stroke="currentColor"
+                                strokeWidth="1.4"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              />
+                            </svg>
+                          </span>
+                        </button>
+                      ) : (
+                        <Link
+                          href={item.href || '#'}
+                          aria-current={isActive ? "page" : undefined}
+                          className={cx(
+                            "header-nav-link",
+                            isActive && "header-nav-link-active",
+                            "touch-feedback"
+                          )}
+                        >
+                          <span className="nav-link-underline">{item.label}</span>
+                        </Link>
+                      )}
+                      {item.children?.length ? (
+                        <ul
+                          id={`${menuId}-submenu`}
+                          className={cx(
+                            "absolute left-0 top-full z-30 min-w-[14rem] rounded-xl border border-white/30 bg-white/95 p-2 text-ink-primary shadow-xl backdrop-blur-xl transition duration-200 ease-out md:left-1/2 md:-translate-x-1/2",
+                            isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+                          )}
+                          aria-hidden={isOpen ? undefined : "true"}
+                          hidden={isOpen ? undefined : true}
+                        >
+                          {item.children.map((child) => {
+                            const isChildActive = normalize(child.href) === normalizedPath;
+                            return (
+                              <li key={child.href}>
+                                <Link
+                                  href={child.href}
+                                  className={cx(
+                                    "block rounded-lg px-4 py-2.5 text-sm font-semibold text-ink-primary transition-colors duration-200 hover:bg-neutral-100 focus-visible:bg-neutral-100 focus-visible:outline-none",
+                                    isChildActive && "bg-brand-light/60 text-brand-secondary",
+                                    "touch-feedback"
+                                  )}
+                                  aria-current={isChildActive ? "page" : undefined}
+                                >
+                                  {child.label}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      ) : null}
                     </li>
                   );
                 })}

@@ -65,7 +65,9 @@ ErrorDocument 404 /404.html
     # Optional: Basic Content Security Policy
     # Allow self-hosted assets, external images, inline styles and scripts required by Next.js static export
     # Note: Tighten this further if you pin nonces/hashes. For static export, allowing inline is practical.
-    Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.fussball.de; font-src 'self' data:; frame-src 'self' https://www.fussball.de https://next.fussball.de; connect-src 'self'"
+    # Allow facebook frames (facebook.com and www.facebook.com) for the FB Page Plugin
+    # Permit Facebook SDK XHR/fetch calls by allowing connect-src to Facebook origins.
+    Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://www.fussball.de https://connect.facebook.net; font-src 'self' data:; frame-src 'self' https://www.fussball.de https://next.fussball.de https://www.facebook.com https://facebook.com; connect-src 'self' https://connect.facebook.net https://graph.facebook.com https://*.facebook.com"
 </IfModule>
 
 # ============================================================================
@@ -126,6 +128,17 @@ ErrorDocument 404 /404.html
 # ============================================================================
 # COMPRESSION
 # ============================================================================
+
+# Prefer Brotli when available (falls back to gzip automatically)
+<IfModule mod_brotli.c>
+    # Quality 5 balances size and CPU for static hosting
+    BrotliCompressionQuality 5
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/xhtml+xml application/xml application/rss+xml image/svg+xml font/ttf font/otf font/woff font/woff2
+    # Ensure caches respect negotiated encoding
+    <IfModule mod_headers.c>
+        Header merge Vary "Accept-Encoding"
+    </IfModule>
+</IfModule>
 
 # Enable gzip compression for better performance
 <IfModule mod_deflate.c>

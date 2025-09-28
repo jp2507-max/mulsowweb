@@ -1,6 +1,5 @@
-"use client";
-
-import React, { useEffect } from 'react';
+// Server component: emits resource hints and critical CSS without shipping client JS
+import React from 'react';
 
 /**
  * Performance optimization component for Core Web Vitals
@@ -60,10 +59,8 @@ export function PerformanceOptimizer({ nonce }: { nonce?: string } = {}) {
   <link rel="preconnect" href="https://www.fussball.de" crossOrigin="anonymous" />
   <link rel="preconnect" href="https://next.fussball.de" crossOrigin="anonymous" />
       
-      {/* Resource hints for better LCP - Task 9.2: Ensure LCP image is preloaded */}
-      <link rel="preload" as="image" href="/logo.svg" />
-      <link rel="preload" as="image" href="/logo-128.png" />
-      <link rel="preload" as="image" href="/logo-256.png" />
+  {/* Resource hint for the crest (shared by header + hero) */}
+  <link rel="preload" as="image" href="/logo.svg" fetchPriority="high" />
       
       {/* Font preloading for better CLS - Task 9.2: Enhanced font loading */}
     {/* Rely on next/font self-hosted fonts from app/layout.tsx.
@@ -79,61 +76,4 @@ export function PerformanceOptimizer({ nonce }: { nonce?: string } = {}) {
       <style nonce={nonce}>{CRITICAL_CSS}</style>
     </>
   );
-}
-
-/**
- * Lightweight performance monitoring component (no external dependencies)
- */
-function PerformanceMonitor() {
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (process.env.NODE_ENV !== 'development') return;
-    if (typeof PerformanceObserver === 'undefined') return;
-
-    let lcpObserver: PerformanceObserver | null = null;
-    let clsObserver: PerformanceObserver | null = null;
-    let longTaskObserver: PerformanceObserver | null = null;
-
-    try {
-      lcpObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          const lcp = entry as PerformanceEntry & { startTime: number };
-          console.log('LCP:', Math.round(lcp.startTime), lcp.startTime < 2500 ? '✅ Good' : '❌ Needs improvement');
-        }
-      });
-      lcpObserver.observe({ type: 'largest-contentful-paint', buffered: true });
-
-      clsObserver = new PerformanceObserver((list) => {
-        let clsValue = 0;
-        for (const entry of list.getEntries()) {
-          const cls = entry as PerformanceEntry & { value: number; hadRecentInput: boolean };
-          if (!cls.hadRecentInput) clsValue += cls.value;
-        }
-        if (clsValue > 0) console.log('CLS:', clsValue.toFixed(4), clsValue < 0.1 ? '✅ Good' : '❌ Needs improvement');
-      });
-      clsObserver.observe({ type: 'layout-shift', buffered: true });
-
-      longTaskObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          const dur = entry.duration;
-          if (dur > 50) console.warn('Dev Performance: long task', Math.round(dur));
-        }
-      });
-      longTaskObserver.observe({ type: 'longtask', buffered: true });
-    } catch {
-      // ignore - best-effort dev monitoring
-    }
-
-    return () => {
-      lcpObserver?.disconnect();
-      clsObserver?.disconnect();
-      longTaskObserver?.disconnect();
-    };
-  }, []);
-  
-  return null;
-}
-
-export function PerformanceMonitorWrapper() {
-  return <PerformanceMonitor />;
 }

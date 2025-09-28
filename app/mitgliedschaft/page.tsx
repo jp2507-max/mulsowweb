@@ -14,7 +14,7 @@ export const metadata: Metadata = generatePageMetadata({
 
 export default function MembershipPage() {
   return (
-    <main className="container-site py-16 md:py-24" role="main" id="main-content">
+    <main className="container-site section-spacing" role="main" id="main-content">
       <BreadcrumbJsonLd
         items={[
           { name: 'Startseite', url: `${siteConfig.baseUrl}/` },
@@ -34,7 +34,7 @@ export default function MembershipPage() {
         </div>
 
         {/* Membership Information */}
-        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 mb-12 md:mb-16">
+  <div className="grid gap-6 md:gap-10 lg:grid-cols-2 mb-12 md:mb-16">
           {/* Why Join Section */}
           <div className="card card-hover">
             <div className="mb-6">
@@ -159,7 +159,7 @@ export default function MembershipPage() {
         </div>
 
         {/* Contact Information */}
-        <div className="grid md:grid-cols-2 gap-8 md:gap-12">
+  <div className="grid gap-6 md:grid-cols-2 md:gap-10">
           {/* Address Card */}
           <div className="card card-hover text-center md:text-left">
             <div className="mb-6">
@@ -235,7 +235,7 @@ export default function MembershipPage() {
         </div>
 
         {/* Additional Information */}
-        <div className="mt-12 text-center">
+  <div className="mt-10 text-center">
           <div className="inline-flex items-center px-6 py-3 bg-neutral-100 rounded-xl text-ink-secondary">
             <svg 
               className="w-5 h-5 mr-3 text-brand-primary" 

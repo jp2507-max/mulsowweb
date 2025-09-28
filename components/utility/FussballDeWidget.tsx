@@ -18,7 +18,7 @@ export interface FussballDeWidgetProps {
   title?: string;
   /** Optional host override (e.g., "next.fussball.de" or "www.fussball.de"). Defaults to next.fussball.de */
   host?: string;
-  /** Rendering engine: our iframe (default) or the official script-based embed */
+  /** Rendering engine: currently only "iframe"; passing "script" falls back to iframe for compatibility */
   engine?: "iframe" | "script";
 }
 
@@ -44,72 +44,23 @@ export function FussballDeWidget({ id, type = "table", className, title, host, e
     return h.startsWith("http") ? h.replace(/^https?:\/\//, "") : h;
   }, [host]);
 
-  // Official script-based embed (fallback for strict widgets)
+  const resolvedEngine = engine === "script" ? "iframe" : engine;
+
   useEffect(() => {
-    if (engine !== "script") return;
-    const el = containerRef.current;
-    if (!el) return;
-
-    // Ensure the official script is loaded once
-    const SCRIPT_SRC = "https://www.fussball.de/widgets.js";
-    type FlaggedScript = HTMLScriptElement & { _loaded?: boolean; _loading?: boolean };
-    function ensureScript(): Promise<void> {
-      const existing = document.querySelector(`script[src="${SCRIPT_SRC}"]`) as FlaggedScript | null;
-      if (existing && existing._loaded) return Promise.resolve();
-      if (existing && !existing._loading) {
-        return new Promise((resolve, reject) => {
-          existing.addEventListener("load", () => resolve());
-          existing.addEventListener("error", () => reject(new Error("Failed to load fussball.de widgets.js")));
-        });
-      }
-      const s: FlaggedScript = existing ?? (document.createElement("script") as FlaggedScript);
-      s.src = SCRIPT_SRC;
-      s.async = true;
-      s._loading = true;
-      return new Promise((resolve, reject) => {
-        s.addEventListener("load", () => { s._loaded = true; resolve(); });
-        s.addEventListener("error", () => reject(new Error("Failed to load fussball.de widgets.js")));
-        if (!existing) document.head.appendChild(s);
-      });
-    }
-
-    // Create the placeholder div exactly as their docs show
-    const placeholder = document.createElement("div");
-    placeholder.className = "fussballde_widget";
-    placeholder.setAttribute("data-id", id);
-    placeholder.setAttribute("data-type", String(type));
-    placeholder.style.width = "100%";
-    el.appendChild(placeholder);
-
-    let cancelled = false;
-    ensureScript().catch(() => {/* allow graceful failure; their script may still be cached */}).finally(() => {
-      if (cancelled) return;
-      // The official script scans the DOM and initializes the widget automatically.
-    });
-
-    return () => {
-      cancelled = true;
-      try { el.removeChild(placeholder); } catch {}
-    };
-  }, [engine, id, type]);
-
-  // Our default iframe-based embed (works for tables and many others)
-  useEffect(() => {
-    if (engine !== "iframe") return;
+    if (resolvedEngine !== "iframe") return;
     const container = containerRef.current;
     if (!container) return;
 
     // Create iframe once
     const iframe = document.createElement("iframe");
     iframe.name = iframeName;
-  iframe.src = `https://${widgetHost}/widget/${type}/${id}`;
+    iframe.src = `https://${widgetHost}/widget/${type}/${id}`;
     iframe.style.width = "100%";
     iframe.style.border = "none";
     iframe.setAttribute("frameborder", "0");
     iframe.setAttribute("scrolling", "no");
-  // Ensure the widget receives a consistent origin-only Referer for domain verification.
-  // This matches how many widgets store the Website as just the host.
-  iframe.setAttribute("referrerpolicy", "origin");
+    iframe.setAttribute("loading", "lazy");
+    iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
     iframe.setAttribute("title", title ?? "FUSSBALL.DE Widget");
     // Provide a conservative min-height so there is something visible before the first resize
     iframe.style.height = "480px";
@@ -187,7 +138,7 @@ export function FussballDeWidget({ id, type = "table", className, title, host, e
     };
     // Only run once for this id/type pair
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [engine, id, type, iframeName, widgetHost]);
+  }, [resolvedEngine, id, type, iframeName, widgetHost]);
 
   return (
     <div className={className}>

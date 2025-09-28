@@ -9,7 +9,9 @@ import { OptimizedHoverController } from "@/components/utility/OptimizedHoverCon
 import { OptimizedBlobController } from "@/components/utility/OptimizedBlobController";
 import { SmoothScrollInit } from "@/components/utility/SmoothScroll";
 import HeaderOffsetSync from "@/components/utility/HeaderOffsetSync";
-import { PerformanceOptimizer, PerformanceMonitorWrapper } from "@/components/utility/PerformanceOptimizer";
+import { PerformanceOptimizer } from "@/components/utility/PerformanceOptimizer";
+import PerformanceMonitorLoader from '@/components/utility/PerformanceMonitorLoader';
+// PerformanceMonitorLoader is a client component that mounts the dev-only monitor.
 import DeviceMotion from "@/components/utility/DeviceMotion";
 import FocusReveal from "@/components/utility/FocusReveal";
 import { generatePageMetadata } from "./config/site";
@@ -133,7 +135,6 @@ export default function RootLayout({
         <SiteBackground />
   {/* Desktop-only interactive ambience: moving stadium-light spotlight */}
   <InteractiveSpotlight />
-        <PageFadeController />
   <ScrollRevealController />
   <OptimizedHoverController />
   <OptimizedBlobController />
@@ -148,14 +149,17 @@ export default function RootLayout({
   {/* Enable SPA view transitions where supported to complement cross-document meta */}
   <ViewTransitionRouter />
         <ScrollProvider>
-          <Header />
-          {/* Sentinel used by the Header's IntersectionObserver to toggle scrolled state */}
-          <div id="header-sentinel" aria-hidden="true" style={{ blockSize: '1px', inlineSize: '1px' }} />
-          <main id="main" tabIndex={-1}>
-            {children}
-          </main>
-          <Footer />
-          <PerformanceMonitorWrapper />
+          <div data-page-fade-target>
+            <PageFadeController />
+            <Header />
+            {/* Sentinel used by the Header's IntersectionObserver to toggle scrolled state */}
+            <div id="header-sentinel" aria-hidden="true" style={{ blockSize: '1px', inlineSize: '1px' }} />
+            <main id="main" tabIndex={-1}>
+              {children}
+            </main>
+            <Footer />
+            <PerformanceMonitorLoader />
+          </div>
         </ScrollProvider>
       </body>
     </html>

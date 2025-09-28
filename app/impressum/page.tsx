@@ -13,16 +13,16 @@ export const metadata: Metadata = generatePageMetadata({
 
 export default function ImpressumPage() {
   return (
-    <section className="py-16 md:py-20" id="main-content" aria-labelledby="impressum-title">
+    <section className="section-spacing" id="main-content" aria-labelledby="impressum-title">
       <BreadcrumbJsonLd
         items={[
           { name: 'Startseite', url: `${siteConfig.baseUrl}/` },
           { name: 'Impressum', url: `${siteConfig.baseUrl}/impressum/` },
         ]}
       />
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 max-w-4xl">
+  <div className="container-site max-w-4xl">
         {/* Page Header */}
-        <div className="mb-12 md:mb-16">
+  <div className="mb-10 md:mb-14">
           <h1 id="impressum-title" className="text-4xl md:text-5xl lg:text-6xl font-bold font-heading text-ink-primary mb-6">
             Impressum
           </h1>
@@ -35,7 +35,7 @@ export default function ImpressumPage() {
         <div className="prose prose-lg max-w-none">
           
           {/* Provider Information - §5 DDG */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
               Anbieter (§5 DDG)
             </h2>
@@ -65,53 +65,48 @@ export default function ImpressumPage() {
           </section>
 
           {/* Representation */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
-              Vertretung
+              Vertretung / Vorstand
             </h2>
-            <div className="bg-yellow-50 rounded-xl p-6 md:p-8 border-l-4 border-yellow-400">
-              <div className="flex items-start space-x-3">
-                <svg className="w-6 h-6 text-yellow-600 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
+            <div className="bg-neutral-50 rounded-xl p-6 md:p-8 border-l-4 border-brand-primary">
+              <div className="space-y-3 text-ink-secondary">
+                <p className="text-ink-secondary">
+                  Der Mulsower SV 61 e.V. wird vertreten durch den Vorstand. Nachfolgend finden Sie die für die Vertretung des Vereins verantwortlichen Personen.
+                </p>
                 <div>
-                  <p className="font-semibold text-yellow-800 mb-2">TODO: Vorstandsinformationen ergänzen</p>
-                  <p className="text-yellow-700 text-sm">
-                    Die Angaben zu den vertretungsberechtigten Personen (Vorstand) müssen noch ergänzt werden.
-                    Erforderlich sind: Name, Anschrift und Funktion der vertretungsberechtigten Personen.
-                  </p>
+                  <strong className="text-ink-primary">Vorstand (vertretungsberechtigte Person):</strong>
+                  <ul className="list-disc list-inside mt-2">
+                    <li>Vorsitzender: Christian Fröhlich — Telefon: 0172 3162075 — E-Mail: <a href="mailto:info@mulsower-sv.de" className="text-brand-primary underline">info@mulsower-sv.de</a></li>
+                  </ul>
+                  
                 </div>
               </div>
             </div>
           </section>
 
           {/* Registry Information */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
               Registereintrag
             </h2>
-            <div className="bg-yellow-50 rounded-xl p-6 md:p-8 border-l-4 border-yellow-400">
-              <div className="flex items-start space-x-3">
-                <svg className="w-6 h-6 text-yellow-600 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
+            <div className="bg-neutral-50 rounded-xl p-6 md:p-8 border-l-4 border-brand-primary">
+              <div className="space-y-3 text-ink-secondary">
+                {/* Register information paragraph removed as requested */}
                 <div>
-                  <p className="font-semibold text-yellow-800 mb-2">TODO: Vereinsregisterdaten ergänzen</p>
-                  <p className="text-yellow-700 text-sm">
-                    Die Registerdaten müssen noch ergänzt werden. Erforderlich sind:
-                  </p>
-                  <ul className="text-yellow-700 text-sm mt-2 list-disc list-inside space-y-1">
-                    <li>Registergericht</li>
-                    <li>Registernummer</li>
-                    <li>Datum der Eintragung</li>
+                  <strong className="text-ink-primary">Vereinsregister (mindestens erforderliche Angaben):</strong>
+                  <ul className="list-disc list-inside mt-2">
+                    <li>Registergericht: Amtsgericht Rostock</li>
+                    <li>Registernummer: VR 2594</li>
                   </ul>
                 </div>
+                {/* Removed hint paragraph per request */}
               </div>
             </div>
           </section>
 
           {/* VAT Information */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
               Umsatzsteuer-Identifikationsnummer
             </h2>
@@ -124,7 +119,7 @@ export default function ImpressumPage() {
           </section>
 
           {/* Liability Disclaimer */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
               Haftungsausschluss
             </h2>
@@ -154,7 +149,7 @@ export default function ImpressumPage() {
           </section>
 
           {/* Copyright */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
               Urheberrecht
             </h2>
@@ -167,7 +162,7 @@ export default function ImpressumPage() {
           </section>
 
           {/* Data Protection Reference */}
-          <section className="mb-12">
+          <section className="mb-10">
             <h2 className="text-2xl md:text-3xl font-semibold font-heading text-ink-primary mb-6 border-b-2 border-brand-primary pb-2">
               Datenschutz
             </h2>
@@ -176,12 +171,54 @@ export default function ImpressumPage() {
                 <svg className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <div>
-                  <p className="text-blue-800 leading-relaxed">
-                    Diese Website erhebt keine personenbezogenen Daten und verwendet keine Cookies oder Tracking-Technologien. 
-                    Es werden keine Daten an Dritte weitergegeben. Bei Kontaktaufnahme per E-Mail werden die übermittelten 
-                    Daten ausschließlich zur Bearbeitung der Anfrage verwendet.
+                <div className="text-blue-800 leading-relaxed">
+                  <p>
+                    Wir nehmen den Schutz Ihrer personenbezogenen Daten ernst. Auf dieser Website verarbeiten wir nur die
+                    unbedingt erforderlichen Daten für den Betrieb der Seiten und die Kommunikation mit Ihnen. Bitte beachten
+                    Sie, dass durch eingebettete Inhalte Dritter (z. B. Widgets oder iFrames von externen Anbietern wie
+                    Fussball.de oder Facebook/Meta) beim Laden dieser Inhalte personenbezogene Daten an die jeweiligen
+                    Drittanbieter übermittelt werden können (z. B. Ihre IP-Adresse, Geräte- und Browserinformationen oder
+                    gesetzte Cookies). Wir haben keinen Einfluss auf Umfang und Zwecke der Datenverarbeitung durch diese
+                    Drittanbieter.
                   </p>
+
+                  <h3 className="text-sm font-semibold mt-3">Welche Daten können verarbeitet werden</h3>
+                  <p>
+                    Typischerweise werden folgende Daten durch Drittanbieter verarbeitet: IP-Adresse, Zeitpunkt der Anfrage,
+                    besuchte Seite, Referrer, Gerätedaten (z. B. User‑Agent) sowie ggf. Cookies und einzelne gerätespezifische
+                    Kennzahlen. Die genauen Datenarten hängen vom jeweiligen Anbieter ab.
+                  </p>
+
+                  <h3 className="text-sm font-semibold mt-3">Rechtsgrundlage</h3>
+                  <p>
+                    Soweit eine Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO erforderlich ist (z. B. für nicht essentielle
+                    Tracking‑Technologien), holen wir diese vor Aktivierung ein. Für andere Verarbeitungen stützt sich die
+                    Rechtsgrundlage überwiegend auf berechtigte Interessen (Art. 6 Abs. 1 lit. f DSGVO), z. B. zur sicheren
+                    Bereitstellung der Website oder zur Anzeige eingebetteter Drittinhalte.
+                  </p>
+
+                  <h3 className="text-sm font-semibold mt-3">Drittanbieter und Links zu Datenschutzhinweisen</h3>
+                  <ul className="list-disc list-inside mt-2">
+                    <li>
+                      Fussball.de / DFBnet: Beim Einbetten von Spielplänen und Widgets können Daten an Fussball.de bzw. den
+                      Betreiber übermittelt werden. Bitte beachten Sie die Datenschutzhinweise des Anbieters.
+                    </li>
+                    <li>
+                      Facebook / Meta Platforms: Inhalte von Facebook können personenbezogene Daten verarbeiten und Cookies
+                      setzen. Informationen zur Datenverarbeitung durch Meta finden Sie in den Datenschutzhinweisen von
+                      Meta (https://www.facebook.com/privacy/).
+                    </li>
+                  </ul>
+
+                  <h3 className="text-sm font-semibold mt-3">Kontakt und Auskunftsrechte</h3>
+                  <p>
+                    Wenn Sie Fragen zur Verarbeitung Ihrer personenbezogenen Daten haben oder Ihre Rechte nach der DSGVO
+                    (Auskunft, Berichtigung, Löschung, Einschränkung, Widerspruch, Datenübertragbarkeit) ausüben möchten,
+                    wenden Sie sich bitte an <a href="mailto:info@mulsower-sv.de" className="underline text-blue-800">info@mulsower-sv.de</a>.
+                    Sie haben zudem das Recht, eine Beschwerde bei der zuständigen Aufsichtsbehörde einzureichen.
+                  </p>
+
+                  
                 </div>
               </div>
             </div>
@@ -219,13 +256,11 @@ export default function ImpressumPage() {
           {/* Last Updated */}
           <section className="border-t border-neutral-200 pt-8">
             <p className="text-sm text-ink-tertiary text-center">
-              Stand: {new Date().toLocaleDateString('de-DE', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
+              Stand: 26. September 2025
             </p>
           </section>
+
+          {/* Visitor counter removed */}
 
         </div>
       </div>

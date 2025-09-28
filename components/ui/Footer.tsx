@@ -1,17 +1,11 @@
-"use client";
 import * as React from "react";
 import Link from "next/link";
 import { siteConfig } from "../../app/config/site";
 import { ExternalLink } from "./ExternalLink";
-
-export interface FooterProps {
-  className?: string;
-}
+import { CurrentYear } from "./CurrentYear";
 
 export function Footer() {
-  const year = new Date().getFullYear();
-
-  const clubName = "Mulsower SV 61";
+  const clubName = "Mulsower SV 61 e.V.";
   const addressLines = [
   "Garvensdorfer Weg 10",
     "18233 Carinerland",
@@ -110,7 +104,9 @@ export function Footer() {
         </div>
 
         <div className="site-footer__meta mt-2 pt-0 flex flex-col md:flex-row md:items-center justify-center md:justify-between gap-1 text-xs md:text-sm">
-          <div>© {year} {clubName}</div>
+          <div>
+            © <CurrentYear /> {clubName}
+          </div>
         </div>
       </div>
     </footer>

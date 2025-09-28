@@ -157,8 +157,8 @@ export default function Hero() {
         </div>
 
         {/* Instagram CTA - mobile-first design (stacked label + chips) */}
-        <div className="mt-4 md:mt-6">
-          <div className="flex flex-col items-center gap-2 rounded-2xl border border-ink-primary/10 bg-ink-primary/5 px-4 py-3 md:flex-row md:justify-center md:gap-3 md:rounded-full">
+        <div className="mt-6 md:mt-8 w-full">
+          <div className="mx-auto flex w-full max-w-xl flex-col items-center gap-2 rounded-2xl border border-ink-primary/10 bg-ink-primary/5 px-4 py-3 md:flex-row md:justify-center md:gap-3 md:rounded-full">
             <span className="text-sm md:text-base font-medium text-ink-primary">Folge uns auf Instagram</span>
             <div className="flex flex-wrap items-center justify-center gap-2">
               <ExternalLink
