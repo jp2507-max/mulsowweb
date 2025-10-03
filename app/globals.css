@@ -587,10 +587,12 @@ h6 {
     z-index: 50;
     overflow: visible;
     background-color: rgba(193, 18, 31, 0.36);
-    transition:
-      border-color 140ms var(--motion-ease),
-      box-shadow 140ms var(--motion-ease);
-    transform: translateZ(0);
+    transition-property: border-color, box-shadow;
+    transition-duration: 140ms;
+    transition-timing-function: var(--motion-ease);
+    will-change: border-color, box-shadow;
+    /* Add CSS containment for better rendering performance */
+    contain: layout style;
     --header-gap: clamp(0.75rem, 1.8vw, 1.2rem);
     --header-padding-block: clamp(0.85rem, 2vw, 1.15rem);
     --header-logo-width: clamp(2.5rem, 6vw, 3.5rem);
@@ -626,8 +628,10 @@ h6 {
     background-color: var(--color-brand-primary);
     background-image: linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0));
     opacity: 1;
-    transition: opacity 180ms var(--motion-ease);
-    transform: translateZ(0);
+    transition-property: opacity;
+    transition-duration: 180ms;
+    transition-timing-function: var(--motion-ease);
+    will-change: opacity;
   }
 
   .header[data-scrolled] {
@@ -637,6 +641,7 @@ h6 {
   .header[data-scrolled] .header-bg {
     opacity: 0.6;
     background-image: linear-gradient(to bottom, rgba(255,255,255,0.04), rgba(255,255,255,0));
+    will-change: auto; /* Remove compositing hint after scroll */
   }
 
   .header-container {
@@ -651,9 +656,9 @@ h6 {
     align-items: center;
     gap: var(--header-gap);
     padding-block: var(--header-padding-block);
-    transition:
-      padding 140ms var(--motion-ease),
-      gap 140ms var(--motion-ease);
+    transition-property: padding, gap;
+    transition-duration: 140ms;
+    transition-timing-function: var(--motion-ease);
   }
 
   .header-nav-wrap { display: flex; justify-content: center; }
@@ -661,23 +666,29 @@ h6 {
   .header-nav {
     @apply flex flex-wrap items-center list-none m-0 p-0;
     gap: var(--header-gap);
-    transition: gap 140ms var(--motion-ease);
+    transition-property: gap;
+    transition-duration: 140ms;
+    transition-timing-function: var(--motion-ease);
   }
 
   .header-logo {
-    @apply inline-flex items-center rounded-md p-1 transition-colors hover:bg-white/10;
+    @apply inline-flex items-center rounded-md p-1;
     gap: clamp(0.4rem, 1vw, 0.7rem);
     transform-origin: left center;
-    transition: transform 140ms var(--motion-ease);
+    transition-property: background-color;
+    transition-duration: 140ms;
+    transition-timing-function: var(--motion-ease);
+  }
+
+  .header-logo:hover {
+    background-color: rgba(255, 255, 255, 0.1);
   }
 
   .header-logo-image {
     @apply flex-shrink-0;
     width: var(--header-logo-width);
     height: var(--header-logo-height);
-    transition:
-      width 140ms var(--motion-ease),
-      height 140ms var(--motion-ease);
+    /* Remove transitions on width/height - causes layout recalculation */
   }
 
   .header-logo-text {
@@ -685,21 +696,20 @@ h6 {
     font-size: var(--header-logo-text);
     letter-spacing: -0.02em;
     font-family: var(--font-heading);
-    transition: font-size 140ms var(--motion-ease);
+    /* Remove font-size transitions - causes text reflow */
   }
 
   .header-nav-link {
-    @apply px-3 py-2 rounded-md text-white transition-colors font-medium;
+    @apply px-3 py-2 rounded-md text-white font-medium;
     font-size: var(--header-link-font-size);
     padding: var(--header-link-padding-y) var(--header-link-padding-x);
-  min-height: var(--header-link-min-height);
+    min-height: var(--header-link-min-height);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition:
-      font-size 140ms var(--motion-ease),
-      padding 140ms var(--motion-ease),
-      transform 140ms var(--motion-ease);
+    transition-property: background-color;
+    transition-duration: 140ms;
+    transition-timing-function: var(--motion-ease);
   }
 
   /* keep scrolled nav link transform only; visual chrome left to theme */
@@ -728,33 +738,86 @@ h6 {
   .header .header-fanshop-btn {
     transform-origin: right center;
     transform: translateZ(0) scale(var(--header-cta-scale));
-    transition: transform 140ms var(--motion-ease);
+    transition-property: transform;
+    transition-duration: 140ms;
+    transition-timing-function: var(--motion-ease);
+    will-change: transform;
+  }
+
+  /* Hide hamburger button by default (desktop) */
+  .header-hamburger {
+    display: none;
   }
 
   @media (max-width: 768px) {
     .header {
-      --header-gap: clamp(0.6rem, 2.6vw, 0.9rem);
-      --header-padding-block: clamp(0.9rem, 3.6vw, 1.25rem);
-      --header-logo-width: clamp(2.2rem, 7vw, 3rem);
-      --header-logo-height: clamp(2.3rem, 7vw, 3.2rem);
-      --header-logo-text: clamp(1.1rem, 4.2vw, 1.35rem);
-      --header-link-font-size: clamp(0.88rem, 3.4vw, 1rem);
-      --header-link-padding-y: 0.48rem;
-      --header-link-padding-x: clamp(0.64rem, 4vw, 0.92rem);
-      --header-link-min-height: 44px;
+      --header-gap: clamp(0.35rem, 1.8vw, 0.6rem);
+      --header-padding-block: clamp(0.45rem, 2vw, 0.7rem);
+      --header-logo-width: clamp(1.8rem, 5vw, 2.4rem);
+      --header-logo-height: clamp(1.9rem, 5.2vw, 2.6rem);
+      --header-logo-text: clamp(0.95rem, 3.2vw, 1.15rem);
+      --header-link-font-size: clamp(0.8rem, 2.8vw, 0.92rem);
+      --header-link-padding-y: 0.32rem;
+      --header-link-padding-x: clamp(0.48rem, 2.8vw, 0.72rem);
+      --header-link-min-height: 42px;
     }
 
+    /* Ultra-compact scrolled header on mobile */
     .header[data-scrolled] {
-      --header-gap: clamp(0.24rem, 2.2vw, 0.56rem);
-      --header-padding-block: clamp(0.18rem, 1.8vw, 0.32rem);
-      --header-logo-width: clamp(1.45rem, 3.8vw, 1.9rem);
-      --header-logo-height: clamp(1.55rem, 4vw, 2.1rem);
-      --header-logo-text: clamp(0.88rem, 2.8vw, 1.04rem);
-      --header-link-font-size: clamp(0.76rem, 2.8vw, 0.9rem);
-      --header-link-padding-y: 0.22rem;
-      --header-link-padding-x: clamp(0.42rem, 2.8vw, 0.64rem);
-      --header-cta-scale: 0.7;
+      --header-gap: clamp(0.4rem, 2vw, 0.6rem);
+      --header-padding-block: clamp(0.3rem, 1.5vw, 0.45rem);
+      --header-logo-width: clamp(1.6rem, 4vw, 2rem);
+      --header-logo-height: clamp(1.7rem, 4.2vw, 2.2rem);
+      --header-logo-text: clamp(0.88rem, 2.6vw, 1rem);
+      --header-link-font-size: clamp(0.74rem, 2.4vw, 0.86rem);
+      --header-link-padding-y: 0.2rem;
+      --header-link-padding-x: clamp(0.38rem, 2.2vw, 0.56rem);
+      --header-cta-scale: 0.8;
       --header-link-min-height: 38px;
+    }
+
+    /* Hide nav links when scrolled on mobile, show hamburger instead */
+    .header[data-scrolled] .header-nav-wrap {
+      display: none;
+    }
+
+    /* Show hamburger button only when scrolled on mobile */
+    .header-hamburger {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      padding: 8px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background-color var(--motion-duration-sm) var(--motion-ease);
+    }
+
+    .header[data-scrolled] .header-hamburger[data-visible="true"] {
+      display: flex;
+    }
+
+    .header-hamburger:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .header-hamburger:active {
+      transform: scale(0.95);
+    }
+
+    .hamburger-line {
+      width: 20px;
+      height: 2px;
+      background: white;
+      border-radius: 2px;
+      transition: all var(--motion-duration-sm) var(--motion-ease);
+    }
+
+    .hamburger-line + .hamburger-line {
+      margin-top: 4px;
     }
 
     /* mobile scrolled styles are driven by the variables above; keep layout minimal here */
@@ -790,6 +853,222 @@ h6 {
       .header[data-scrolled] .header-nav::-webkit-scrollbar { display: none; }
     }
   }
+
+  /* Mobile drawer styles - portal-based, always fixed to viewport */
+  @media (max-width: 768px) {
+    .mobile-drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100; /* Above header (z-50) */
+      animation: fadeIn var(--motion-duration-md) var(--motion-ease);
+      touch-action: none; /* Prevent scrolling the page behind */
+      transform: translateZ(0); /* Force GPU acceleration */
+    }
+
+    .mobile-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: auto;
+      width: min(300px, 85vw);
+      max-height: 100vh;
+      max-height: 100dvh;
+      background: white;
+      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.2);
+      z-index: 101; /* Above overlay */
+      display: flex;
+      flex-direction: column;
+      animation: slideInRight var(--motion-duration-md) var(--motion-ease);
+      overflow: hidden; /* Prevent drawer itself from scrolling */
+      transform: translateZ(0); /* Force GPU acceleration */
+      will-change: transform;
+      border-radius: 0; /* Keep sharp edge for full-height drawer */
+    }
+
+    .mobile-drawer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--color-neutral-200);
+      background: var(--color-brand-primary);
+      color: white;
+      flex-shrink: 0; /* Prevent header from shrinking */
+    }
+
+    .mobile-drawer-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      font-family: var(--font-heading);
+      color: white;
+    }
+
+    .mobile-drawer-close {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: white;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background-color var(--motion-duration-sm) var(--motion-ease);
+    }
+
+    .mobile-drawer-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .mobile-drawer-close:active {
+      transform: scale(0.95);
+    }
+
+    .mobile-drawer-nav {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0; /* Remove padding to eliminate whitespace */
+      -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+      overscroll-behavior: contain; /* Prevent scroll chaining */
+      background: white; /* Ensure white background */
+    }
+
+    .mobile-drawer-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+
+    .mobile-drawer-item {
+      /* Remove border to clean up appearance */
+      border-bottom: none;
+    }
+
+    /* Add subtle divider only between main items */
+    .mobile-drawer-item:not(:last-child) {
+      border-bottom: 1px solid var(--color-neutral-100);
+    }
+
+    .mobile-drawer-link {
+      display: flex;
+      align-items: center;
+      padding: 1.125rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-ink-primary);
+      text-decoration: none;
+      transition: all var(--motion-duration-sm) var(--motion-ease);
+      position: relative;
+    }
+
+    .mobile-drawer-link::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 0;
+      background: var(--color-brand-primary);
+      border-radius: 0 4px 4px 0;
+      transition: height var(--motion-duration-sm) var(--motion-ease);
+    }
+
+    .mobile-drawer-link:hover,
+    .mobile-drawer-link:focus {
+      background: var(--color-neutral-50);
+      padding-left: 1.75rem;
+    }
+
+    .mobile-drawer-link-active {
+      color: var(--color-brand-primary);
+      background: var(--color-brand-light);
+      font-weight: 700;
+    }
+
+    .mobile-drawer-link-active::before {
+      height: 32px; /* Show accent bar on active item */
+    }
+
+    .mobile-drawer-sublist {
+      list-style: none;
+      margin: 0;
+      padding: 0.25rem 0;
+      background: linear-gradient(to bottom, var(--color-neutral-50), white);
+    }
+
+    .mobile-drawer-sublink {
+      display: flex;
+      align-items: center;
+      padding: 0.875rem 1.5rem 0.875rem 3rem;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--color-ink-secondary);
+      text-decoration: none;
+      transition: all var(--motion-duration-sm) var(--motion-ease);
+      position: relative;
+    }
+
+    .mobile-drawer-sublink::before {
+      content: '›';
+      position: absolute;
+      left: 2.25rem;
+      color: var(--color-ink-tertiary);
+      font-size: 1.25rem;
+      font-weight: 400;
+      transition: all var(--motion-duration-sm) var(--motion-ease);
+    }
+
+    .mobile-drawer-sublink:hover,
+    .mobile-drawer-sublink:focus {
+      background: var(--color-neutral-100);
+      padding-left: 3.25rem;
+      color: var(--color-ink-primary);
+    }
+
+    .mobile-drawer-sublink:hover::before,
+    .mobile-drawer-sublink:focus::before {
+      color: var(--color-brand-primary);
+      transform: translateX(4px);
+    }
+
+    .mobile-drawer-sublink-active {
+      color: var(--color-brand-primary);
+      font-weight: 600;
+      background: rgba(193, 18, 31, 0.05);
+    }
+
+    .mobile-drawer-sublink-active::before {
+      color: var(--color-brand-primary);
+      font-weight: 700;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translate3d(100%, 0, 0);
+      }
+      to {
+        transform: translate3d(0, 0, 0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mobile-drawer-overlay,
+      .mobile-drawer {
+        animation: none !important;
+      }
+    }
+  } /* End mobile drawer styles */
 
   @media (max-width: 480px) {
     .header-nav-link { font-size: 0.82rem; }
@@ -1345,26 +1624,25 @@ h6 {
     }
   }
 
-  /* Logo micro-interaction: subtle scale and tiny rotation (<=3deg), transform-only */
+  /* Logo micro-interaction: only background color change on hover (no transforms to avoid reflow) */
   .header-logo-interactive {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    transition-property: transform;
+    transition-property: background-color;
     transition-duration: var(--motion-duration-sm);
     transition-timing-function: var(--motion-ease);
-    will-change: transform;
   }
 
   @media (hover: hover) and (pointer: fine) {
     .header-logo-interactive:hover {
-      transform: translateY(-2px) scale(1.03) rotate(-1.5deg);
+      background-color: rgba(255, 255, 255, 0.15);
     }
   }
 
   @media (hover: none) and (pointer: coarse) {
     .header-logo-interactive:active {
-      transform: scale(0.98);
+      opacity: 0.9;
       transition-duration: var(--motion-duration-xxs);
     }
   }
