@@ -126,7 +126,9 @@ export function PageFadeController() {
     }
 
     const doc = document as DocumentWithViewTransition;
-    if (typeof doc.startViewTransition === "function") {
+    const html = document.documentElement;
+    const spaViewTransitionEnabled = html?.dataset?.spaViewTransition === "enabled";
+    if (typeof doc.startViewTransition === "function" && spaViewTransitionEnabled) {
       return;
     }
 

@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { shouldReduceAnimations } from "@/lib/utils/deviceCapabilities";
+import { shouldReduceAnimations, isTouchDevice } from "@/lib/utils/deviceCapabilities";
 
 /**
  * ViewTransitionRouter
@@ -16,9 +16,21 @@ export default function ViewTransitionRouter() {
   const router = useRouter();
 
   useEffect(() => {
-    // Guard: feature + pref
-  const supports = typeof document !== "undefined" && ("startViewTransition" in document);
-    if (!supports || shouldReduceAnimations()) return;
+    if (typeof document === "undefined") return;
+
+    const html = document.documentElement;
+    const docWithVT = document as DocWithVT;
+    const allowTransitions =
+      typeof docWithVT.startViewTransition === "function" &&
+      !shouldReduceAnimations() &&
+      !isTouchDevice();
+
+    if (!allowTransitions) {
+      html.removeAttribute("data-spa-view-transition");
+      return;
+    }
+
+    html.dataset.spaViewTransition = "enabled";
 
     const onClick = (e: MouseEvent) => {
       if (e.defaultPrevented) return;
@@ -40,9 +52,8 @@ export default function ViewTransitionRouter() {
 
       // Internal navigation: perform SPA transition using Next router
       e.preventDefault();
-      const d = document as DocWithVT;
-      if (typeof d.startViewTransition === 'function') {
-        d.startViewTransition(() => {
+      if (typeof docWithVT.startViewTransition === "function") {
+        docWithVT.startViewTransition(() => {
           router.push(url.pathname + url.search + url.hash);
         });
       } else {
@@ -50,8 +61,11 @@ export default function ViewTransitionRouter() {
       }
     };
 
-  document.addEventListener("click", onClick, { capture: true });
-  return () => document.removeEventListener("click", onClick, { capture: true });
+    document.addEventListener("click", onClick, { capture: true });
+    return () => {
+      document.removeEventListener("click", onClick, { capture: true });
+      html.removeAttribute("data-spa-view-transition");
+    };
   }, [router]);
 
   return null;

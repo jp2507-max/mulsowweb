@@ -149,9 +149,9 @@ export default function RootLayout({
   {/* Enable SPA view transitions where supported to complement cross-document meta */}
   <ViewTransitionRouter />
         <ScrollProvider>
+          <PageFadeController />
+          <Header />
           <div data-page-fade-target>
-            <PageFadeController />
-            <Header />
             <main id="main" tabIndex={-1}>
               {children}
             </main>

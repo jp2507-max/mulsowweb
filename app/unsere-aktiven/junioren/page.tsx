@@ -188,7 +188,10 @@ export default function JuniorenPage() {
                   </a>
                 </p>
                 <p className="mt-1 text-sm">
-                  <a className="font-medium text-brand-primary hover:text-brand-secondary" href={`tel:${team.contact.phone.replace(/[^+\\d]/g, "")}`}>
+                  <a
+                    className="font-medium text-brand-primary hover:text-brand-secondary"
+                    href={`tel:${(team.contact.phone.trim().startsWith('+') ? '+' : '') + team.contact.phone.replace(/\D/g, '')}`}
+                  >
                     {team.contact.phone}
                   </a>
                 </p>

@@ -437,21 +437,17 @@ h6 {
   /* Page fade transitions for navigation */
   [data-page-fade-target] {
     opacity: 1;
-    transform: none;
-    will-change: opacity, transform;
-    transition: opacity 220ms var(--motion-ease),
-                transform 260ms var(--motion-ease);
+    will-change: opacity;
+    transition: opacity 220ms var(--motion-ease);
   }
 
   [data-page-fade-target][data-page-fade-state="out"] {
     opacity: 0.9;
-    transform: translateY(6px) scale(0.995);
     pointer-events: none;
   }
 
   [data-page-fade-target][data-page-fade-state="in"] {
     opacity: 1;
-    transform: none;
   }
 
   /* Hero ready state */
@@ -872,9 +868,11 @@ h6 {
       right: 0;
       bottom: 0;
       left: auto;
-      width: min(300px, 85vw);
-      max-height: 100vh;
-      max-height: 100dvh;
+    width: min(300px, 85vw);
+    /* Prefer dynamic viewport height when available but fall back to legacy
+      viewport units for compatibility. Use a single declaration to avoid
+      duplicate-property lint warnings. */
+    max-height: min(100dvh, 100vh);
       background: white;
       box-shadow: -8px 0 32px rgba(0, 0, 0, 0.2);
       z-index: 101; /* Above overlay */
