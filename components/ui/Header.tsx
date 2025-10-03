@@ -5,6 +5,7 @@ import Link from "next/link";
 import { cx } from "@/lib/utils/cx";
 import { Image } from "./Image";
 import { Button } from './Button';
+import { MobileDrawer } from './MobileDrawer';
 import { siteConfig } from '@/app/config/site';
 // secureRel not needed in Header since Button handles external rel generation
 
@@ -39,6 +40,8 @@ export function Header() {
   const normalize = (p: string) => (p !== "/" && p.endsWith("/") ? p.slice(0, -1) : p);
   const headerRef = React.useRef<HTMLElement | null>(null);
   const [openMenu, setOpenMenu] = React.useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [isScrolled, setIsScrolled] = React.useState(false);
 
   // Toggle a compact header state without layout thrash once the visitor scrolls a tiny amount.
   React.useEffect(() => {
@@ -53,6 +56,10 @@ export function Header() {
       if (scrolled === lastState) return;
       lastState = scrolled;
       el.toggleAttribute("data-scrolled", scrolled);
+      setIsScrolled(scrolled);
+      if (scrolled) {
+        setMobileMenuOpen(false);
+      }
     };
 
     const readScroll = () => window.scrollY > SCROLL_THRESHOLD;
@@ -64,31 +71,6 @@ export function Header() {
         commit(readScroll());
       });
     };
-
-    const sentinel = document.getElementById("header-sentinel");
-
-    if (sentinel && "IntersectionObserver" in window) {
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (!entry) return;
-          commit(!entry.isIntersecting);
-        },
-        {
-          rootMargin: "-12px 0px 0px 0px",
-          threshold: 0,
-        }
-      );
-
-      observer.observe(sentinel);
-      commit(readScroll());
-
-      return () => {
-        observer.disconnect();
-        if (rafId) {
-          window.cancelAnimationFrame(rafId);
-        }
-      };
-    }
 
     const handleScroll = schedule;
     const handleResize = () => {
@@ -117,6 +99,7 @@ export function Header() {
 
   React.useEffect(() => {
     setOpenMenu(null);
+    setMobileMenuOpen(false);
   }, [pathname]);
 
   return (
@@ -152,6 +135,20 @@ export function Header() {
                 Mulsower SV 61
               </span>
             </Link>
+
+            {/* Hamburger button - only visible on mobile when scrolled */}
+            <button
+              type="button"
+              className="header-hamburger"
+              aria-label="Menü öffnen"
+              aria-expanded={mobileMenuOpen}
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              data-visible={isScrolled ? "true" : "false"}
+            >
+              <span className="hamburger-line" />
+              <span className="hamburger-line" />
+              <span className="hamburger-line" />
+            </button>
 
             {/* Center-aligned navigation with improved mobile layout */}
             <nav aria-label="Hauptnavigation" role="navigation" className="header-nav-wrap">
@@ -191,8 +188,7 @@ export function Header() {
                           className={cx(
                             "header-nav-link",
                             "flex items-center gap-1.5",
-                            isActive && "header-nav-link-active",
-                            "touch-feedback"
+                            isActive && "header-nav-link-active"
                           )}
                           aria-haspopup="menu"
                           aria-expanded={isOpen ? "true" : "false"}
@@ -232,8 +228,7 @@ export function Header() {
                           aria-current={isActive ? "page" : undefined}
                           className={cx(
                             "header-nav-link",
-                            isActive && "header-nav-link-active",
-                            "touch-feedback"
+                            isActive && "header-nav-link-active"
                           )}
                         >
                           <span className="nav-link-underline">{item.label}</span>
@@ -243,7 +238,7 @@ export function Header() {
                         <ul
                           id={`${menuId}-submenu`}
                           className={cx(
-                            "absolute left-0 top-full z-30 min-w-[14rem] rounded-xl border border-white/30 bg-white/95 p-2 text-ink-primary shadow-xl backdrop-blur-xl transition duration-200 ease-out md:left-1/2 md:-translate-x-1/2",
+                            "absolute left-0 top-full z-30 min-w-[14rem] rounded-xl border border-neutral-200 bg-white p-2 text-ink-primary shadow-xl transition-opacity duration-200 ease-out md:left-1/2 md:-translate-x-1/2",
                             isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
                           )}
                           aria-hidden={isOpen ? undefined : "true"}
@@ -257,8 +252,7 @@ export function Header() {
                                   href={child.href}
                                   className={cx(
                                     "block rounded-lg px-4 py-2.5 text-sm font-semibold text-ink-primary transition-colors duration-200 hover:bg-neutral-100 focus-visible:bg-neutral-100 focus-visible:outline-none",
-                                    isChildActive && "bg-brand-light/60 text-brand-secondary",
-                                    "touch-feedback"
+                                    isChildActive && "bg-brand-light/60 text-brand-secondary"
                                   )}
                                   aria-current={isChildActive ? "page" : undefined}
                                 >
@@ -298,6 +292,15 @@ export function Header() {
           </div>
         </div>
       </header>
+
+      {/* Mobile navigation drawer - rendered via portal to document.body */}
+      <MobileDrawer
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        navItems={navItems}
+        pathname={pathname}
+        normalize={normalize}
+      />
     </>
   );
 }
