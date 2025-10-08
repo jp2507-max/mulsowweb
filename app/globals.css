@@ -583,10 +583,9 @@ h6 {
     z-index: 50;
     overflow: visible;
     background-color: rgba(193, 18, 31, 0.36);
-    transition-property: border-color, box-shadow;
-    transition-duration: 140ms;
+    transition-property: border-color, box-shadow, background-color;
+    transition-duration: 200ms;
     transition-timing-function: var(--motion-ease);
-    will-change: border-color, box-shadow;
     /* Add CSS containment for better rendering performance */
     contain: layout style;
     --header-gap: clamp(0.75rem, 1.8vw, 1.2rem);
@@ -624,10 +623,7 @@ h6 {
     background-color: var(--color-brand-primary);
     background-image: linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0));
     opacity: 1;
-    transition-property: opacity;
-    transition-duration: 180ms;
-    transition-timing-function: var(--motion-ease);
-    will-change: opacity;
+    transition: opacity 200ms var(--motion-ease), background-image 200ms var(--motion-ease);
   }
 
   .header[data-scrolled] {
@@ -637,7 +633,6 @@ h6 {
   .header[data-scrolled] .header-bg {
     opacity: 0.6;
     background-image: linear-gradient(to bottom, rgba(255,255,255,0.04), rgba(255,255,255,0));
-    will-change: auto; /* Remove compositing hint after scroll */
   }
 
   .header-container {
@@ -652,9 +647,7 @@ h6 {
     align-items: center;
     gap: var(--header-gap);
     padding-block: var(--header-padding-block);
-    transition-property: padding, gap;
-    transition-duration: 140ms;
-    transition-timing-function: var(--motion-ease);
+    transition: padding 200ms var(--motion-ease), gap 200ms var(--motion-ease);
   }
 
   .header-nav-wrap { display: flex; justify-content: center; }
@@ -662,18 +655,14 @@ h6 {
   .header-nav {
     @apply flex flex-wrap items-center list-none m-0 p-0;
     gap: var(--header-gap);
-    transition-property: gap;
-    transition-duration: 140ms;
-    transition-timing-function: var(--motion-ease);
+    transition: gap 200ms var(--motion-ease);
   }
 
   .header-logo {
     @apply inline-flex items-center rounded-md p-1;
     gap: clamp(0.4rem, 1vw, 0.7rem);
     transform-origin: left center;
-    transition-property: background-color;
-    transition-duration: 140ms;
-    transition-timing-function: var(--motion-ease);
+    transition: background-color 200ms var(--motion-ease);
   }
 
   .header-logo:hover {
@@ -684,7 +673,7 @@ h6 {
     @apply flex-shrink-0;
     width: var(--header-logo-width);
     height: var(--header-logo-height);
-    /* Remove transitions on width/height - causes layout recalculation */
+    transition: width 200ms var(--motion-ease), height 200ms var(--motion-ease);
   }
 
   .header-logo-text {
@@ -692,7 +681,7 @@ h6 {
     font-size: var(--header-logo-text);
     letter-spacing: -0.02em;
     font-family: var(--font-heading);
-    /* Remove font-size transitions - causes text reflow */
+    transition: font-size 200ms var(--motion-ease);
   }
 
   .header-nav-link {
@@ -703,9 +692,7 @@ h6 {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition-property: background-color;
-    transition-duration: 140ms;
-    transition-timing-function: var(--motion-ease);
+    transition: background-color 200ms var(--motion-ease), font-size 200ms var(--motion-ease), padding 200ms var(--motion-ease);
   }
 
   /* keep scrolled nav link transform only; visual chrome left to theme */
@@ -734,10 +721,7 @@ h6 {
   .header .header-fanshop-btn {
     transform-origin: right center;
     transform: translateZ(0) scale(var(--header-cta-scale));
-    transition-property: transform;
-    transition-duration: 140ms;
-    transition-timing-function: var(--motion-ease);
-    will-change: transform;
+    transition: transform 200ms var(--motion-ease);
   }
 
   /* Hide hamburger button by default (desktop) */

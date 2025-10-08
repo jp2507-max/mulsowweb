@@ -9,22 +9,14 @@ import { Card } from '../ui/Card';
 // LazyOnScroll not needed here; render immediately to ensure visibility
 import { useEffect, useState } from 'react';
 import { prefersReducedMotion as prefersReducedMotionUtil } from '@/lib/utils/deviceCapabilities';
+import { shuffleArray } from '@/lib/utils/shuffle';
+
 interface SponsorTeaserProps {
   maxItems?: number;
   className?: string;
 }
 
 export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorTeaserProps) {
-  // Shuffle only after client mount to avoid hydration mismatch
-  function shuffleArray<T>(arr: T[]): T[] {
-    const a = arr.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
   // Get deterministic base list (used for server render)
   const baseSponsors = React.useMemo(() => getHomepageSponsors().slice(0, maxItems), [maxItems]);
 

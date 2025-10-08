@@ -1,20 +1,24 @@
-import { Metadata } from 'next';
+'use client';
+
+import React from 'react';
 import { getAllSponsors } from '../data/sponsors';
 import { ExternalLink } from '../../components/ui/ExternalLink';
-import { generatePageMetadata } from '../config/site';
 import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
 import { siteConfig } from "@/app/config/site";
-
-export const dynamic = "error";
-
-export const metadata: Metadata = generatePageMetadata({
-  title: "Unsere Sponsoren & Partner",
-  description: "Unsere Sponsoren und Partner unterstützen den Mulsower SV 61. Erfahren Sie mehr über die lokalen Unternehmen, die unseren Amateurfußballverein fördern.",
-  path: "/sponsoren"
-});
+import { shuffleArray } from '@/lib/utils/shuffle';
 
 export default function SponsorsPage() {
-  const sponsors = getAllSponsors();
+  // Get deterministic base list for server render
+  const baseSponsors = React.useMemo(() => getAllSponsors(), []);
+  
+  // Keep sponsors in state; initialize with baseSponsors for hydration match
+  const [sponsors, setSponsors] = React.useState(() => baseSponsors);
+  
+  // Shuffle once after mount to randomize order on each page visit
+  React.useEffect(() => {
+    const shuffled = shuffleArray(baseSponsors);
+    setSponsors(shuffled);
+  }, [baseSponsors]);
 
   return (
     <main className="min-h-screen" role="main">

@@ -48,21 +48,41 @@ export function Header() {
     const el = headerRef.current;
     if (!el || typeof window === "undefined") return;
 
-    const SCROLL_THRESHOLD = 12;
+    const SCROLL_THRESHOLD = 20;
     let lastState = false;
     let rafId = 0;
+    let debounceTimer: ReturnType<typeof setTimeout> | null = null;
 
     const commit = (scrolled: boolean) => {
       if (scrolled === lastState) return;
       lastState = scrolled;
-      el.toggleAttribute("data-scrolled", scrolled);
-      setIsScrolled(scrolled);
-      if (scrolled) {
-        setMobileMenuOpen(false);
-      }
+      
+      // Use a single class toggle with slight delay for smoother transitions
+      if (debounceTimer) clearTimeout(debounceTimer);
+      
+      debounceTimer = setTimeout(() => {
+        el.toggleAttribute("data-scrolled", scrolled);
+        setIsScrolled(scrolled);
+        if (scrolled) {
+          setMobileMenuOpen(false);
+        }
+      }, 10); // Small delay to batch rapid scroll changes
     };
 
-    const readScroll = () => window.scrollY > SCROLL_THRESHOLD;
+    const readScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrolled = currentScrollY > SCROLL_THRESHOLD;
+      
+      // Add hysteresis to prevent rapid toggling near threshold
+      if (lastState && currentScrollY < SCROLL_THRESHOLD - 5) {
+        return false;
+      }
+      if (!lastState && currentScrollY > SCROLL_THRESHOLD + 5) {
+        return true;
+      }
+      
+      return scrolled;
+    };
 
     const schedule = () => {
       if (rafId) return;
@@ -93,6 +113,9 @@ export function Header() {
       window.removeEventListener("orientationchange", handleResize);
       if (rafId) {
         window.cancelAnimationFrame(rafId);
+      }
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
       }
     };
   }, []);
