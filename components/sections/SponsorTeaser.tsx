@@ -15,10 +15,29 @@ interface SponsorTeaserProps {
 }
 
 export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorTeaserProps) {
-  const displaySponsors = React.useMemo(
-    () => getHomepageSponsors().slice(0, maxItems),
-    [maxItems]
-  );
+  // Shuffle only after client mount to avoid hydration mismatch
+  function shuffleArray<T>(arr: T[]): T[] {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  // Get deterministic base list (used for server render)
+  const baseSponsors = React.useMemo(() => getHomepageSponsors().slice(0, maxItems), [maxItems]);
+
+  // Keep sponsors in state; initialize with baseSponsors so server/client markup matches.
+  const [displaySponsors, setDisplaySponsors] = React.useState(() => baseSponsors);
+
+  // Shuffle once after mount to change order per-open without causing hydration mismatch
+  React.useEffect(() => {
+    // Shuffle a fresh copy and set it after mount
+    const shuffled = shuffleArray(baseSponsors);
+    setDisplaySponsors(shuffled);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [/* run on mount or when baseSponsors identity changes */]);
 
   // Respect reduced motion at runtime
   const [reduced, setReduced] = useState(false);

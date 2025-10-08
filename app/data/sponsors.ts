@@ -26,6 +26,27 @@ export interface Sponsor {
  */
 export const sponsors: Sponsor[] = [
   {
+    id: 'ing-froehlich',
+    name: 'Ing. Fröhlich',
+    url: 'https://ing-froehlich.com/',
+    description: 'Sponsor unserer Fußbälle',
+    logo: '/images/sponsors/Ing. Fröhlich_Logo.svg',
+  },
+  {
+    id: 'eno-energy',
+    name: 'Eno Energy',
+    url: 'https://www.eno-energy.com/',
+    description: 'langjähriger Sponsor des Vereins',
+    logo: '/images/sponsors/Eno_Energy_Logo.png',
+  },
+  {
+    id: 'haffdroom',
+    name: 'Haffdroom',
+    url: 'https://www.haffdroom.de/',
+    description: 'langjähriger Sponsor des Vereins',
+    logo: '/images/sponsors/Haffdroom.png',
+  },
+  {
     id: 'voss-energy',
     name: 'Voss Energy',
     url: 'https://www.vossenergy.com/',
