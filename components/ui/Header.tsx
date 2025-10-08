@@ -71,17 +71,17 @@ export function Header() {
 
     const readScroll = () => {
       const currentScrollY = window.scrollY;
-      const scrolled = currentScrollY > SCROLL_THRESHOLD;
       
       // Add hysteresis to prevent rapid toggling near threshold
-      if (lastState && currentScrollY < SCROLL_THRESHOLD - 5) {
+      if (currentScrollY < SCROLL_THRESHOLD - 5) {
         return false;
       }
-      if (!lastState && currentScrollY > SCROLL_THRESHOLD + 5) {
+      if (currentScrollY > SCROLL_THRESHOLD + 5) {
         return true;
       }
       
-      return scrolled;
+      // Within hysteresis band: maintain previous state
+      return lastState;
     };
 
     const schedule = () => {

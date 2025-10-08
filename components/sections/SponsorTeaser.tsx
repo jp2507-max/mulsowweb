@@ -16,7 +16,7 @@ interface SponsorTeaserProps {
   className?: string;
 }
 
-export default function SponsorTeaser({ maxItems = 6, className = '' }: SponsorTeaserProps) {
+export function SponsorTeaser({ maxItems = 6, className = '' }: SponsorTeaserProps) {
   // Get deterministic base list (used for server render)
   const baseSponsors = React.useMemo(() => getHomepageSponsors().slice(0, maxItems), [maxItems]);
 

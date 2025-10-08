@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { generatePageMetadata } from '../config/site';
+import { generatePageMetadata } from '@/app/config/site';
 
 export const dynamic = "error";
 

@@ -1,7 +1,7 @@
 /**
  * Fisher-Yates shuffle algorithm
- * Randomly shuffles array elements in-place
- * Returns a new array to avoid mutating the original
+ * Randomly shuffles a shallow copy of the input array and returns the new array.
+ * The original array is not modified.
  */
 export function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
