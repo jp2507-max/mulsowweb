@@ -48,7 +48,7 @@ export const sponsors: Sponsor[] = [
   },
   {
     id: 'voss-energy',
-    name: 'Voss Energy',
+    name: 'VOSS Energy',
     url: 'https://www.vossenergy.com/',
     description: 'langjähriger und verlässlicher Partner des Vereins',
     logo: '/images/sponsors/VE-Logo.svg',

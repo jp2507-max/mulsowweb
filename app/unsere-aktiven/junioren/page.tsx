@@ -3,6 +3,7 @@ import { BreadcrumbJsonLd } from "@/components/ui/JsonLd";
 import { Button } from "@/components/ui/Button";
 import { FussballDeWidget } from "@/components/utility/FussballDeWidget";
 import { generatePageMetadata, siteConfig } from "../../config/site";
+// Duplicate imports removed
 
 const juniorTeams = [
   {
@@ -52,7 +53,7 @@ export const metadata: Metadata = generatePageMetadata({
   title: "Junioren",
   description:
     "Die Nachwuchsteams des Mulsower SV 61 – E-, F- und Bambini-Mannschaften mit Trainingszeiten, Ansprechpartnern und Spielplänen.",
-  path: "/unsere-aktiven/junioren"
+  path: "/unsere-aktiven/junioren",
 });
 
 export default function JuniorenPage() {
@@ -74,7 +75,7 @@ export default function JuniorenPage() {
               <h1 className="mt-4 max-w-2xl text-4xl font-heading font-black tracking-tight text-ink-primary md:text-5xl lg:text-6xl">
                 Nachwuchsarbeit beim Mulsower SV 61
               </h1>
-              
+
               <p className="mt-6 max-w-2xl text-lg text-ink-secondary md:text-xl">
                 Wir fördern junge Talente mit Herzblut. Ob erste Ballkontakte bei den Bambini oder ambitioniertes Training bei den
                 E- und F-Junioren – der Spaß am Spiel steht immer im Mittelpunkt.
@@ -92,9 +93,61 @@ export default function JuniorenPage() {
                   Kontakt aufnehmen
                 </Button>
               </div>
+              {/* Mobile: stack both E- and F-Jugend images one-by-one */}
+              <div className="mt-8 lg:hidden flex flex-col gap-6">
+                <figure className="overflow-hidden rounded-2xl border border-neutral-200/70 bg-white/80 shadow-sm">
+                  <img
+                    src="/IMG_2882.JPG"
+                    alt="Mulsower E-Jugend mit ihrem Trainer Jakob Saufklever"
+                    className="w-full h-auto block object-cover"
+                    loading="lazy"
+                  />
+                  <figcaption className="px-4 py-3 text-sm font-semibold text-ink-primary">Mulsower E-Jugend mit ihrem Trainer Jakob Saufklever</figcaption>
+                </figure>
+
+                <figure className="overflow-hidden rounded-2xl border border-neutral-200/70 bg-white/80 shadow-sm">
+                  <img
+                    src="/IMG_2883.JPG"
+                    alt="Mulsower F-Jugend mit ihrem Trainer Sebastian Kraatz"
+                    className="w-full h-auto block object-cover"
+                    loading="lazy"
+                  />
+                  <figcaption className="px-4 py-3 text-sm font-semibold text-ink-primary">Mulsower F-Jugend mit ihrem Trainer Sebastian Kraatz</figcaption>
+                </figure>
+              </div>
+
+              {/* Desktop: show F-Jugend in left column only on lg+ */}
+              <div className="mt-8 lg:mt-10 hidden lg:block">
+                <figure className="overflow-hidden rounded-2xl border border-neutral-200/70 bg-white/80 shadow-sm">
+                  <img
+                    src="/IMG_2883.JPG"
+                    alt="Mulsower F-Jugend mit ihrem Trainer Sebastian Kraatz"
+                    className="w-full h-auto block object-cover"
+                    loading="lazy"
+                  />
+                  <figcaption className="px-4 py-3 text-sm font-semibold text-ink-primary">Mulsower F-Jugend mit ihrem Trainer Sebastian Kraatz</figcaption>
+                </figure>
+              </div>
               {/* Next-match widgets removed — widgets moved to the bottom of the page */}
-              
             </div>
+
+            {/* Right-side photo column (E- and F-Jugend) */}
+            <aside className="hidden lg:block">
+              <div className="flex w-full flex-col gap-6">
+                <figure className="overflow-hidden rounded-2xl border border-neutral-200/70 bg-white/80 shadow-sm">
+                  <img
+                    src="/IMG_2882.JPG"
+                    alt="Mulsower E-Jugend mit ihrem Trainer Jakob Saufklever"
+                    className="w-full h-auto block object-cover"
+                    loading="lazy"
+                  />
+                  <figcaption className="px-4 py-3 text-sm font-semibold text-ink-primary">Mulsower E-Jugend mit ihrem Trainer Jakob Saufklever</figcaption>
+                </figure>
+
+                {/* F-Jugend image moved to left column to reduce large empty space under header */}
+              </div>
+            </aside>
+
           </div>
         </div>
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-neutral-200/70" aria-hidden="true" />
@@ -135,7 +188,10 @@ export default function JuniorenPage() {
                   </a>
                 </p>
                 <p className="mt-1 text-sm">
-                  <a className="font-medium text-brand-primary hover:text-brand-secondary" href={`tel:${team.contact.phone.replace(/[^+\d]/g, "")}`}>
+                  <a
+                    className="font-medium text-brand-primary hover:text-brand-secondary"
+                    href={`tel:${(team.contact.phone.trim().startsWith('+') ? '+' : '') + team.contact.phone.replace(/\D/g, '')}`}
+                  >
                     {team.contact.phone}
                   </a>
                 </p>
@@ -198,7 +254,7 @@ export default function JuniorenPage() {
           </aside>
         </div>
       </section>
-      
+
       {/* Fußball.de Widgets - placed above footer */}
       <section aria-labelledby="junioren-fussballde-heading" className="container-site py-12 md:py-16">
         <h2 id="junioren-fussballde-heading" className="sr-only">Fussball.de Widgets</h2>
@@ -227,3 +283,4 @@ export default function JuniorenPage() {
     </main>
   );
 }
+    
